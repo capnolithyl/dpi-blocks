@@ -1,0 +1,16 @@
+{
+  "key": "group_dpi_accordion",
+  "title": "DPI Accordion / FAQ Block",
+  "fields": [
+    {"key":"field_dpi_accordion_eyebrow","label":"Eyebrow","name":"eyebrow","type":"text","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"placeholder":"Common Questions"},
+    {"key":"field_dpi_accordion_heading","label":"Heading","name":"heading","type":"text","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"placeholder":"Frequently Asked Questions"},
+    {"key":"field_dpi_accordion_items","label":"Items","name":"items","type":"repeater","instructions":"","required":1,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"layout":"block","pagination":0,"min":1,"max":20,"collapsed":"field_dpi_accordion_question","button_label":"Add Item","rows_per_page":20,"sub_fields":[
+      {"key":"field_dpi_accordion_question","label":"Question","name":"question","type":"text","instructions":"","required":1,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""}},
+      {"key":"field_dpi_accordion_answer","label":"Answer","name":"answer","type":"wysiwyg","instructions":"","required":1,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"default_value":"","tabs":"all","toolbar":"basic","media_upload":0,"delay":0}
+    ]},
+    {"key":"field_dpi_accordion_allow_multiple","label":"Allow Multiple Open Items","name":"allow_multiple","type":"true_false","instructions":"When enabled, opening an item does not close other items.","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"ui":1,"default_value":1},
+    {"key":"field_dpi_accordion_first_item_open","label":"Open First Item Initially","name":"first_item_open","type":"true_false","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"ui":1,"default_value":0}
+  ],
+  "location": [[{"param":"block","operator":"==","value":"dpi/accordion"}]],
+  "menu_order":0,"position":"normal","style":"default","label_placement":"top","instruction_placement":"label","hide_on_screen":"","active":true,"description":"Content and display controls for the DPI Accordion / FAQ block.","show_in_rest":0
+}
