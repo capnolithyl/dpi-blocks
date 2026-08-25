@@ -1,0 +1,53 @@
+.dpi-interior-hero {
+	position: relative;
+	display: grid;
+	min-height: var(--dpi-interior-hero-min-height, 20rem);
+	overflow: hidden;
+	isolation: isolate;
+}
+
+.dpi-interior-hero__media,
+.dpi-interior-hero__overlay {
+	position: absolute;
+	inset: 0;
+}
+
+.dpi-interior-hero__media {
+	z-index: -2;
+}
+
+.dpi-interior-hero__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.dpi-interior-hero__overlay {
+	z-index: -1;
+	background: var(--dpi-interior-hero-overlay-color, currentColor);
+	opacity: var(--dpi-interior-hero-overlay-opacity, 0.55);
+}
+
+.dpi-interior-hero__content {
+	display: grid;
+	width: min(100%, var(--dpi-interior-hero-content-width, 64rem));
+	margin: auto;
+	padding: var(--dpi-interior-hero-padding, clamp(2rem, 7vw, 6rem));
+	gap: 1rem;
+}
+
+.dpi-interior-hero--align-center .dpi-interior-hero__content {
+	text-align: center;
+	justify-items: center;
+}
+
+.dpi-interior-hero__breadcrumbs ol {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 0.75rem;
+}
+
+.dpi-interior-hero__breadcrumbs li + li::before {
+	margin-inline-end: 0.75rem;
+	content: "/";
+}
