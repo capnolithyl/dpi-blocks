@@ -1,0 +1,17 @@
+{
+  "key":"group_dpi_five_pillars",
+  "title":"DPI Pillars Block",
+  "fields":[
+    {"key":"field_dpi_five_pillars_eyebrow","label":"Eyebrow","name":"eyebrow","type":"text","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"placeholder":"Our Mission"},
+    {"key":"field_dpi_five_pillars_heading","label":"Heading","name":"heading","type":"text","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"placeholder":"Who We Are"},
+    {"key":"field_dpi_five_pillars_counter_label","label":"Counter Label","name":"counter_label","type":"text","instructions":"Shown next to the automatically calculated pillar count. Leave blank to hide the label.","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"placeholder":"Pillars of the Archdiocese"},
+    {"key":"field_dpi_five_pillars_pillars","label":"Pillars","name":"pillars","type":"repeater","instructions":"","required":1,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"layout":"block","pagination":0,"min":2,"max":8,"collapsed":"field_dpi_five_pillars_name","button_label":"Add Pillar","rows_per_page":20,"sub_fields":[
+      {"key":"field_dpi_five_pillars_name","label":"Name","name":"name","type":"text","instructions":"","required":1,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""}},
+      {"key":"field_dpi_five_pillars_description","label":"Description","name":"description","type":"textarea","instructions":"","required":1,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"rows":4,"new_lines":""},
+      {"key":"field_dpi_five_pillars_link","label":"Link","name":"link","type":"link","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"return_format":"array"},
+      {"key":"field_dpi_five_pillars_images","label":"Images","name":"images","type":"gallery","instructions":"Choose up to three images for the collage.","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"return_format":"id","library":"all","min":1,"max":3,"min_width":"","min_height":"","min_size":"","max_width":"","max_height":"","max_size":"","mime_types":"","insert":"append","preview_size":"medium"}
+    ]}
+  ],
+  "location":[[{"param":"block","operator":"==","value":"dpi/five-pillars"}]],
+  "menu_order":0,"position":"normal","style":"default","label_placement":"top","instruction_placement":"label","hide_on_screen":"","active":true,"description":"Content and display controls for the DPI Pillars block.","show_in_rest":0
+}
