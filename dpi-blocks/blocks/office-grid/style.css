@@ -1,0 +1,32 @@
+.dpi-office-grid__header,
+.dpi-office-grid__content {
+	display: grid;
+	gap: 0.75rem;
+}
+
+.dpi-office-grid__header {
+	margin-block-end: var(--dpi-section-gap);
+}
+
+.dpi-office-grid__items {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+	gap: var(--dpi-card-gap);
+}
+
+.dpi-office-grid__item {
+	display: flex;
+	min-width: 0;
+	flex-direction: column;
+}
+
+.dpi-office-grid__media img {
+	width: 100%;
+	aspect-ratio: var(--dpi-media-ratio);
+	object-fit: cover;
+}
+
+.dpi-office-grid__content {
+	padding-block: 1rem;
+	flex: 1;
+}
