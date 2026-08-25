@@ -1,0 +1,15 @@
+{
+  "$schema":"https://schemas.wp.org/trunk/block.json",
+  "apiVersion":3,
+  "name":"dpi/interior-hero",
+  "version":"1.0.0",
+  "title":"Interior Hero",
+  "category":"dpi-blocks",
+  "icon":"cover-image",
+  "description":"Interior page hero with optional eyebrow, page title, intro copy, background image, and breadcrumbs.",
+  "keywords":["hero","page title","interior","banner"],
+  "textdomain":"dpi-blocks",
+  "acf":{"mode":"preview","renderCallback":"dpi_blocks_render_acf_block","blockVersion":3},
+  "supports":{"anchor":true,"align":["wide","full"],"color":{"background":true,"text":true,"link":true,"gradients":true},"spacing":{"margin":true,"padding":true},"html":false},
+  "style":"file:./style.css"
+}
