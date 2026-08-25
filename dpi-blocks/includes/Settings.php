@@ -28,13 +28,19 @@ final class Settings {
 
 	/** Supported blocks. */
 	private const BLOCKS = array(
+		'accordion'         => 'Accordion / FAQ',
+		'anchor-navigation' => 'Anchor Navigation',
 		'community-slider'  => 'Community Slider',
+		'feature-banner'     => 'Feature / CTA Banner',
 		'featured-links'    => 'Featured Links',
+		'five-pillars'      => 'Pillars',
 		'hero'              => 'Hero',
 		'image-buttons'     => 'Image Buttons',
 		'image-buttons-alt' => 'Image Buttons Alt',
+		'interior-hero'     => 'Interior Hero',
 		'mass-times'        => 'Mass Times',
 		'mission'           => 'Mission',
+		'office-grid'       => 'Office Grid',
 		'social-media'      => 'Social Media',
 		'staff-card'        => 'Staff Card',
 		'stats'             => 'Stats',
