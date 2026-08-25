@@ -1,0 +1,16 @@
+{
+  "key":"group_dpi_feature_banner",
+  "title":"DPI Feature / CTA Banner Block",
+  "fields":[
+    {"key":"field_dpi_feature_banner_eyebrow","label":"Eyebrow","name":"eyebrow","type":"text","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"placeholder":"The New Evangelization"},
+    {"key":"field_dpi_feature_banner_headline","label":"Headline","name":"headline","type":"text","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""}},
+    {"key":"field_dpi_feature_banner_headline_element","label":"Headline Type","name":"headline_element","type":"button_group","instructions":"Use Quote when the prominent text is a quotation rather than a section heading.","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"choices":{"heading":"Heading","quote":"Quote"},"default_value":"heading","return_format":"value","allow_null":0,"layout":"horizontal"},
+    {"key":"field_dpi_feature_banner_content","label":"Supporting Copy","name":"content","type":"textarea","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"rows":4,"new_lines":""},
+    {"key":"field_dpi_feature_banner_cta","label":"Call to Action","name":"cta","type":"link","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"return_format":"array"},
+    {"key":"field_dpi_feature_banner_image","label":"Image","name":"image","type":"image","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"return_format":"id","preview_size":"medium","library":"all"},
+    {"key":"field_dpi_feature_banner_image_layout","label":"Image Layout","name":"image_layout","type":"button_group","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"choices":{"background":"Background","left":"Left","right":"Right"},"default_value":"background","return_format":"value","allow_null":0,"layout":"horizontal"},
+    {"key":"field_dpi_feature_banner_visual_variant","label":"Visual Variant","name":"visual_variant","type":"button_group","instructions":"Provides a stable styling hook for the active theme.","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"choices":{"dark":"Dark","light":"Light"},"default_value":"dark","return_format":"value","allow_null":0,"layout":"horizontal"}
+  ],
+  "location":[[{"param":"block","operator":"==","value":"dpi/feature-banner"}]],
+  "menu_order":0,"position":"normal","style":"default","label_placement":"top","instruction_placement":"label","hide_on_screen":"","active":true,"description":"Content and display controls for the DPI Feature / CTA Banner block.","show_in_rest":0
+}
