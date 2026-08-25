@@ -16,13 +16,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Blocks {
 	/** @var list<string> */
 	private const CANONICAL_BLOCKS = array(
+		'dpi/accordion',
+		'dpi/anchor-navigation',
 		'dpi/community-slider',
+		'dpi/feature-banner',
 		'dpi/featured-links',
+		'dpi/five-pillars',
 		'dpi/hero',
 		'dpi/image-buttons',
 		'dpi/image-buttons-alt',
+		'dpi/interior-hero',
 		'dpi/mass-times',
 		'dpi/mission',
+		'dpi/office-grid',
 		'dpi/social-media',
 		'dpi/staff-card',
 		'dpi/stats',
