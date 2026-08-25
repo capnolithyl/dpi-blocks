@@ -1,0 +1,64 @@
+.dpi-feature-banner {
+	position: relative;
+	display: grid;
+	overflow: hidden;
+	isolation: isolate;
+}
+
+.dpi-feature-banner__content {
+	display: grid;
+	min-width: 0;
+	padding: var(--dpi-feature-banner-padding, clamp(2rem, 6vw, 5rem));
+	gap: 1rem;
+	align-content: center;
+}
+
+.dpi-feature-banner__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.dpi-feature-banner--background .dpi-feature-banner__media,
+.dpi-feature-banner--background .dpi-feature-banner__overlay {
+	position: absolute;
+	inset: 0;
+}
+
+.dpi-feature-banner--background .dpi-feature-banner__media {
+	z-index: -2;
+}
+
+.dpi-feature-banner--background .dpi-feature-banner__overlay {
+	z-index: -1;
+	background: var(--dpi-feature-banner-overlay, linear-gradient(90deg, currentColor 0%, transparent 80%));
+}
+
+.dpi-feature-banner--background .dpi-feature-banner__content {
+	width: min(100%, var(--dpi-feature-banner-content-width, 42rem));
+}
+
+.dpi-feature-banner--left,
+.dpi-feature-banner--right {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dpi-feature-banner--right .dpi-feature-banner__media {
+	order: 2;
+}
+
+.dpi-feature-banner__quote,
+.dpi-feature-banner__quote p {
+	margin: 0;
+}
+
+@media (max-width: 47.99rem) {
+	.dpi-feature-banner--left,
+	.dpi-feature-banner--right {
+		grid-template-columns: 1fr;
+	}
+
+	.dpi-feature-banner--right .dpi-feature-banner__media {
+		order: initial;
+	}
+}
