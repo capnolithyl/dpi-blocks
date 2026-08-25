@@ -1,0 +1,331 @@
+.dpi-directory {
+	--dpi-surface: var(--wp--preset--color--base, Canvas);
+	--dpi-text: var(--wp--preset--color--contrast, CanvasText);
+	--dpi-accent: var(--wp--preset--color--accent, currentColor);
+	box-sizing: border-box;
+	background: var(--dpi-surface);
+	color: var(--dpi-text);
+}
+
+.dpi-directory *,
+.dpi-directory *::before,
+.dpi-directory *::after {
+	box-sizing: border-box;
+}
+
+.dpi-directory__header,
+.dpi-directory-single__header {
+	position: relative;
+	isolation: isolate;
+	display: flex;
+	min-height: clamp(12rem, 28vw, 24rem);
+	align-items: flex-end;
+	overflow: hidden;
+	background: var(--dpi-text);
+	color: var(--dpi-surface);
+}
+
+.dpi-directory__header--image::after,
+.dpi-directory-single__header--image::after {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background: linear-gradient(to top, rgb(0 0 0 / 70%), transparent 70%);
+	content: "";
+}
+
+.dpi-directory__header-image,
+.dpi-directory-single__header-image {
+	position: absolute;
+	inset: 0;
+	z-index: -2;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.dpi-directory__header-inner,
+.dpi-directory-single__header-inner,
+.dpi-directory__body,
+.dpi-directory-single__body {
+	width: min(calc(100% - 2rem), var(--wp--style--global--wide-size, 80rem));
+	margin-inline: auto;
+}
+
+.dpi-directory__header-inner,
+.dpi-directory-single__header-inner {
+	padding-block: clamp(2rem, 6vw, 4rem);
+}
+
+.dpi-directory__title,
+.dpi-directory-single__title {
+	margin: 0;
+	color: inherit;
+	font-size: clamp(2rem, 6vw, 4rem);
+	line-height: 1.1;
+}
+
+.dpi-directory__description {
+	max-width: 48rem;
+	margin-top: 1rem;
+}
+
+.dpi-directory__body {
+	padding-block: clamp(2.5rem, 7vw, 6rem);
+}
+
+.dpi-directory-nav {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 0.5rem;
+	margin-bottom: clamp(2.5rem, 7vw, 5rem);
+}
+
+.dpi-directory-nav__track {
+	display: flex;
+	gap: 0.5rem;
+	overflow-x: auto;
+	padding: 0.25rem;
+	scroll-behavior: smooth;
+	scroll-snap-type: x proximity;
+	scrollbar-width: thin;
+}
+
+.dpi-directory-nav__track.slick-initialized {
+	display: block;
+	overflow: hidden;
+}
+
+.dpi-directory-nav__track .slick-track {
+	display: flex;
+	align-items: stretch;
+}
+
+.dpi-directory-nav__track .slick-slide {
+	height: auto;
+	margin-inline: 0.25rem;
+}
+
+.dpi-directory-nav__link {
+	display: block;
+	flex: 0 0 auto;
+	padding: 0.65rem 1rem;
+	border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+	border-radius: 999px;
+	color: inherit;
+	font-weight: 700;
+	text-decoration: none;
+	scroll-snap-align: start;
+}
+
+.dpi-directory-nav__link:hover,
+.dpi-directory-nav__link:focus-visible,
+.dpi-directory-nav__link[aria-current="location"] {
+	border-color: currentColor;
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+}
+
+.dpi-directory-nav__arrow,
+.dpi-staff-dialog__close {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.75rem;
+	min-height: 2.75rem;
+	border: 1px solid currentColor;
+	border-radius: 999px;
+	background: var(--dpi-surface);
+	color: var(--dpi-text);
+	cursor: pointer;
+}
+
+.dpi-directory-nav__arrow:disabled {
+	opacity: 0.35;
+	cursor: default;
+}
+
+.dpi-directory__sections {
+	display: grid;
+	gap: clamp(3rem, 8vw, 6rem);
+}
+
+.dpi-directory-section {
+	scroll-margin-top: 2rem;
+}
+
+.dpi-directory-section__title {
+	margin: 0 0 1.25rem;
+	font-size: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.dpi-directory-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+	gap: clamp(1rem, 3vw, 2rem);
+}
+
+.dpi-directory-card {
+	display: flex;
+	min-width: 0;
+	flex-direction: column;
+	overflow: hidden;
+	border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+	border-radius: 0.75rem;
+	background: var(--dpi-surface);
+	box-shadow: 0 0.35rem 1rem rgb(0 0 0 / 8%);
+}
+
+.dpi-directory-card__media {
+	display: block;
+	aspect-ratio: 4 / 3;
+	overflow: hidden;
+	background: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.dpi-directory-card__image {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 250ms ease;
+}
+
+.dpi-directory-card__media:hover .dpi-directory-card__image {
+	transform: scale(1.025);
+}
+
+.dpi-directory-card__content {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: 1.25rem;
+}
+
+.dpi-directory-card__title {
+	margin: 0;
+	font-size: 1.35rem;
+}
+
+.dpi-directory-card__title a,
+.dpi-directory-card__more,
+.dpi-directory-single a,
+.dpi-staff-dialog a {
+	color: inherit;
+	text-underline-offset: 0.2em;
+}
+
+.dpi-directory-card__position {
+	margin: 0.4rem 0 0;
+	font-weight: 600;
+}
+
+.dpi-directory-card__excerpt {
+	margin-top: 0.75rem;
+}
+
+.dpi-directory-card__excerpt > :first-child,
+.dpi-directory-single__prose > :first-child,
+.dpi-staff-dialog__bio > :first-child {
+	margin-top: 0;
+}
+
+.dpi-directory-card__contact,
+.dpi-directory-single__contact {
+	margin: 1rem 0;
+	padding: 0;
+	list-style: none;
+	overflow-wrap: anywhere;
+}
+
+.dpi-directory-card__more {
+	margin-top: auto;
+	font-weight: 700;
+}
+
+.dpi-staff-dialog {
+	width: min(calc(100% - 2rem), 64rem);
+	max-height: calc(100dvh - 2rem);
+	margin: auto;
+	padding: 0;
+	border: 0;
+	border-radius: 1rem;
+	background: var(--wp--preset--color--base, Canvas);
+	color: var(--wp--preset--color--contrast, CanvasText);
+	box-shadow: 0 1rem 3rem rgb(0 0 0 / 30%);
+}
+
+.dpi-staff-dialog:not([open]) {
+	display: none;
+}
+
+.dpi-staff-dialog::backdrop {
+	background: rgb(0 0 0 / 65%);
+}
+
+.dpi-staff-dialog__inner {
+	position: relative;
+	display: grid;
+	gap: clamp(1.5rem, 4vw, 3rem);
+	padding: clamp(1.5rem, 5vw, 3rem);
+}
+
+.dpi-staff-dialog__close {
+	position: absolute;
+	top: 0.5rem;
+	right: 0.5rem;
+	font-size: 1.75rem;
+	line-height: 1;
+}
+
+.dpi-staff-dialog__image {
+	display: block;
+	width: 100%;
+	max-height: 30rem;
+	border-radius: 0.5rem;
+	object-fit: cover;
+}
+
+.dpi-directory-single__subtitle {
+	margin: 0.75rem 0 0;
+	font-size: 1.25rem;
+}
+
+.dpi-directory-single__body {
+	display: grid;
+	gap: clamp(1.5rem, 5vw, 3rem);
+	padding-block: clamp(2.5rem, 7vw, 6rem);
+}
+
+.dpi-directory-single__image {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: 0.75rem;
+}
+
+html.dpi-staff-dialog-open {
+	overflow: hidden;
+}
+
+@media (min-width: 48rem) {
+	.dpi-staff-dialog__inner {
+		grid-template-columns: minmax(14rem, 0.8fr) minmax(0, 1.2fr);
+	}
+
+	.dpi-directory-single__body:has(.dpi-directory-single__media) {
+		grid-template-columns: minmax(14rem, 0.75fr) minmax(0, 1.25fr);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.dpi-directory-nav__track {
+		scroll-behavior: auto;
+	}
+
+	.dpi-directory-card__image {
+		transition: none;
+	}
+}

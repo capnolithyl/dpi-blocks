@@ -1,0 +1,36 @@
+{
+  "key": "group_dpi_ministry_archive",
+  "title": "DPI Ministry Archive Settings",
+  "fields": [
+    {
+      "key": "field_6a6a3b51ed747",
+      "label": "Featured Image",
+      "name": "featured_image",
+      "type": "image",
+      "instructions": "Optional image displayed on the ministry archive.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": { "width": "", "class": "", "id": "" },
+      "return_format": "array",
+      "preview_size": "medium",
+      "library": "all",
+      "min_width": "",
+      "min_height": "",
+      "min_size": "",
+      "max_width": "",
+      "max_height": "",
+      "max_size": "",
+      "mime_types": ""
+    }
+  ],
+  "location": [[{ "param": "options_page", "operator": "==", "value": "dpi-ministry-settings" }]],
+  "menu_order": 0,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": "",
+  "active": true,
+  "description": "Archive presentation settings used when the DPI Ministry module is enabled.",
+  "show_in_rest": 0
+}

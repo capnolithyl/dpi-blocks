@@ -1,0 +1,60 @@
+{
+  "key": "group_dpi_staff_details",
+  "title": "DPI Staff Details",
+  "fields": [
+    {
+      "key": "field_saop_staff_position",
+      "label": "Position",
+      "name": "staff_position",
+      "type": "text",
+      "instructions": "",
+      "required": 1,
+      "conditional_logic": 0,
+      "wrapper": { "width": "33", "class": "", "id": "" },
+      "default_value": "",
+      "maxlength": "",
+      "placeholder": "",
+      "prepend": "",
+      "append": ""
+    },
+    {
+      "key": "field_saop_staff_email",
+      "label": "Email Address",
+      "name": "staff_email",
+      "type": "email",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": { "width": "33", "class": "", "id": "" },
+      "default_value": "",
+      "placeholder": "",
+      "prepend": "",
+      "append": ""
+    },
+    {
+      "key": "field_saop_staff_phone",
+      "label": "Phone Number",
+      "name": "staff_phone",
+      "type": "text",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": { "width": "34", "class": "", "id": "" },
+      "default_value": "",
+      "maxlength": "",
+      "placeholder": "",
+      "prepend": "",
+      "append": ""
+    }
+  ],
+  "location": [[{ "param": "post_type", "operator": "==", "value": "staff" }]],
+  "menu_order": 0,
+  "position": "acf_after_title",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": "",
+  "active": true,
+  "description": "Contact details for the DPI Staff post type.",
+  "show_in_rest": 0
+}

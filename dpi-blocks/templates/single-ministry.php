@@ -1,0 +1,60 @@
+<?php
+/** Plugin fallback for individual Ministries. */
+
+use DPI\Blocks\TemplateLoader;
+
+defined( 'ABSPATH' ) || exit;
+
+get_header();
+?>
+<main id="primary" class="dpi-directory dpi-directory--single">
+	<?php while ( have_posts() ) : ?>
+		<?php
+		the_post();
+		$dpi_ministry_header  = function_exists( 'get_field' ) ? TemplateLoader::image_id( get_field( 'header_image', get_the_ID() ) ) : 0;
+		$dpi_ministry_archive = get_post_type_archive_link( 'ministry' );
+		?>
+		<article <?php post_class( 'dpi-directory-single' ); ?>>
+			<header class="dpi-directory-single__header <?php echo $dpi_ministry_header ? 'dpi-directory-single__header--image' : ''; ?>">
+				<?php if ( $dpi_ministry_header ) : ?>
+					<?php
+					echo wp_get_attachment_image(
+						$dpi_ministry_header,
+						'full',
+						false,
+						array(
+							'class'         => 'dpi-directory-single__header-image',
+							'alt'           => '',
+							'loading'       => 'eager',
+							'fetchpriority' => 'high',
+						)
+					); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Core markup.
+					?>
+				<?php endif; ?>
+				<div class="dpi-directory-single__header-inner"><?php the_title( '<h1 class="dpi-directory-single__title">', '</h1>' ); ?></div>
+			</header>
+			<div class="dpi-directory-single__body">
+				<?php if ( ! $dpi_ministry_header && has_post_thumbnail() ) : ?>
+					<div class="dpi-directory-single__media"><?php the_post_thumbnail( 'large', array( 'class' => 'dpi-directory-single__image' ) ); ?></div>
+				<?php endif; ?>
+				<div class="dpi-directory-single__content">
+					<div class="dpi-directory-single__prose"><?php the_content(); ?></div>
+					<?php
+					wp_link_pages(
+						array(
+							'before' => '<nav class="dpi-directory-single__pages" aria-label="' . esc_attr__( 'Ministry pages', 'dpi-blocks' ) . '">',
+							'after'  => '</nav>',
+						)
+					);
+					?>
+					<?php
+					if ( $dpi_ministry_archive ) :
+						?>
+						<p><a href="<?php echo esc_url( $dpi_ministry_archive ); ?>"><?php esc_html_e( 'Back to Ministries', 'dpi-blocks' ); ?></a></p><?php endif; ?>
+				</div>
+			</div>
+		</article>
+	<?php endwhile; ?>
+</main>
+<?php
+get_footer();

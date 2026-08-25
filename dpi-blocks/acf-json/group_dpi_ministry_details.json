@@ -1,0 +1,36 @@
+{
+  "key": "group_dpi_ministry_details",
+  "title": "DPI Ministry Details",
+  "fields": [
+    {
+      "key": "field_6a6a3b8b5161b",
+      "label": "Header Image",
+      "name": "header_image",
+      "type": "image",
+      "instructions": "Optional image displayed in the ministry single-page header.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": { "width": "", "class": "", "id": "" },
+      "return_format": "array",
+      "preview_size": "medium",
+      "library": "all",
+      "min_width": "",
+      "min_height": "",
+      "min_size": "",
+      "max_width": "",
+      "max_height": "",
+      "max_size": "",
+      "mime_types": ""
+    }
+  ],
+  "location": [[{ "param": "post_type", "operator": "==", "value": "ministry" }]],
+  "menu_order": 0,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": "",
+  "active": true,
+  "description": "Presentation fields for the DPI Ministry post type.",
+  "show_in_rest": 0
+}

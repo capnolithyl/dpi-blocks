@@ -1,0 +1,19 @@
+# Operating-system and editor files
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*~
+
+# Generated release archives
+/dpi-blocks.zip
+
+# One-off ACF exports; canonical field groups live in dpi-blocks/acf-json/
+/acf-export-*.json
+/acfe-export-*.json

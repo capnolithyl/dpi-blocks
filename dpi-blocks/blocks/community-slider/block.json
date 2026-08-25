@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dpi/community-slider",
+	"version": "1.1.0",
+	"title": "Community Slider",
+	"category": "dpi-blocks",
+	"icon": "images-alt2",
+	"description": "Displays posts from selected categories as an accessible carousel or grid.",
+	"keywords": ["posts", "categories", "carousel"],
+	"textdomain": "dpi-blocks",
+	"acf": {
+		"mode": "preview",
+		"renderCallback": "dpi_blocks_render_acf_block",
+		"blockVersion": 3
+	},
+	"supports": {
+		"anchor": true,
+		"align": ["wide", "full"],
+		"color": {"background": true, "text": true, "link": true, "gradients": true},
+		"spacing": {"margin": true, "padding": true, "blockGap": true},
+		"typography": {"fontSize": true, "lineHeight": true},
+		"dimensions": {"minHeight": true},
+		"html": false
+	}
+}

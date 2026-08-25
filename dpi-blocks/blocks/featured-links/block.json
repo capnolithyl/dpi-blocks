@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dpi/featured-links",
+	"version": "1.1.0",
+	"title": "Featured Links",
+	"category": "dpi-blocks",
+	"icon": "admin-links",
+	"description": "Highlights a small collection of links alongside supporting content and media.",
+	"keywords": ["links", "featured", "navigation"],
+	"textdomain": "dpi-blocks",
+	"acf": {"mode": "preview", "renderCallback": "dpi_blocks_render_acf_block", "blockVersion": 3},
+	"supports": {
+		"anchor": true,
+		"align": ["wide", "full"],
+		"color": {"background": true, "text": true, "link": true, "gradients": true},
+		"spacing": {"margin": true, "padding": true, "blockGap": true},
+		"typography": {"fontSize": true, "lineHeight": true},
+		"dimensions": {"minHeight": true},
+		"html": false
+	}
+}

@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dpi/image-buttons-alt",
+	"version": "1.1.0",
+	"title": "Image Buttons: Section",
+	"category": "dpi-blocks",
+	"icon": "grid-view",
+	"description": "A heading and introduction followed by linked image cards.",
+	"keywords": ["images", "cards", "links", "section"],
+	"textdomain": "dpi-blocks",
+	"acf": {"mode": "preview", "renderCallback": "dpi_blocks_render_acf_block", "blockVersion": 3},
+	"supports": {
+		"anchor": true,
+		"align": ["wide", "full"],
+		"color": {"background": true, "text": true, "link": true, "gradients": true},
+		"spacing": {"margin": true, "padding": true, "blockGap": true},
+		"typography": {"fontSize": true, "lineHeight": true},
+		"dimensions": {"minHeight": true},
+		"html": false
+	}
+}

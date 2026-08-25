@@ -1,0 +1,241 @@
+.dpi-top-bar {
+	position: relative;
+	z-index: 20;
+	width: 100%;
+	background: var(--wp--preset--color--contrast, CanvasText);
+	color: var(--wp--preset--color--base, Canvas);
+}
+
+.dpi-top-bar__inner {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: clamp(0.75rem, 2vw, 1.5rem);
+	width: min(100% - 2rem, var(--wp--style--global--wide-size, 90rem));
+	min-height: 2.75rem;
+	margin-inline: auto;
+}
+
+.dpi-top-bar__navigation {
+	min-width: 0;
+}
+
+.dpi-top-bar__menu {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 0.5rem 1.25rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dpi-top-bar__menu a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.dpi-top-bar__menu a:hover,
+.dpi-top-bar__menu a:focus-visible {
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+}
+
+.dpi-search-trigger,
+.dpi-search__close {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.75rem;
+	min-height: 2.75rem;
+	padding: 0.5rem;
+	border: 0;
+	border-radius: 999px;
+	background: transparent;
+	color: currentColor;
+	cursor: pointer;
+}
+
+.dpi-search-trigger:hover {
+	background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.dpi-search-trigger:focus-visible,
+.dpi-search__close:focus-visible,
+.dpi-search__input:focus-visible,
+.dpi-search__submit:focus-visible {
+	outline: 2px solid var(--wp--preset--color--accent, currentColor);
+	outline-offset: 2px;
+}
+
+.dpi-search-trigger__icon {
+	display: block;
+	fill: currentColor;
+}
+
+.dpi-search {
+	box-sizing: border-box;
+	color: var(--wp--preset--color--contrast, CanvasText);
+}
+
+.dpi-search--dialog {
+	width: min(calc(100% - 2rem), 48rem);
+	max-height: calc(100dvh - 2rem);
+	margin: auto;
+	padding: 0;
+	border: 0;
+	border-radius: 1rem;
+	background: var(--wp--preset--color--base, Canvas);
+	box-shadow: 0 1rem 3rem rgb(0 0 0 / 25%);
+}
+
+.dpi-search--dialog::backdrop {
+	background: rgb(0 0 0 / 65%);
+}
+
+.dpi-search--dialog:not([open]):not([data-dpi-search-open]) {
+	display: none;
+}
+
+.dpi-search--dialog[data-dpi-search-open] {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	display: grid;
+	width: 100%;
+	height: 100%;
+	max-height: none;
+	padding: 1rem;
+	place-items: center;
+	background: color-mix(in srgb, CanvasText 65%, transparent);
+	border-radius: 0;
+}
+
+.dpi-search--dialog[data-dpi-search-open] .dpi-search__panel {
+	width: min(100%, 48rem);
+	max-height: calc(100dvh - 2rem);
+	overflow-y: auto;
+	background: var(--wp--preset--color--base, Canvas);
+	border-radius: 1rem;
+}
+
+.dpi-search--popover {
+	position: fixed;
+	top: var(--dpi-search-top, max(1rem, env(safe-area-inset-top)));
+	right: auto;
+	left: var(--dpi-search-left, max(1rem, env(safe-area-inset-left)));
+	width: min(calc(100% - 2rem), 28rem);
+	max-height: calc(100dvh - var(--dpi-search-top, 1rem) - 0.5rem);
+	overflow-y: auto;
+	margin: 0;
+	padding: 0;
+	border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+	border-radius: 0.75rem;
+	background: var(--wp--preset--color--base, Canvas);
+	box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 20%);
+	display: none;
+}
+
+.dpi-search--popover:popover-open {
+	display: block;
+}
+
+.dpi-search--popover[data-dpi-search-open] {
+	display: block;
+}
+
+.dpi-search__panel {
+	position: relative;
+	padding: clamp(1.5rem, 5vw, 3rem);
+}
+
+.dpi-search--popover .dpi-search__panel {
+	padding: 1.25rem;
+}
+
+.dpi-search__close {
+	position: absolute;
+	top: 0.5rem;
+	right: 0.5rem;
+	font-size: 1.75rem;
+	line-height: 1;
+}
+
+.dpi-search__title {
+	margin: 0 3rem 1.25rem 0;
+	font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.dpi-search__form {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+}
+
+.dpi-search__input {
+	box-sizing: border-box;
+	flex: 1 1 16rem;
+	min-height: 3rem;
+	padding: 0.65rem 0.8rem;
+	border: 1px solid currentColor;
+	border-radius: 0.35rem;
+	background: var(--wp--preset--color--base, Canvas);
+	color: var(--wp--preset--color--contrast, CanvasText);
+	font: inherit;
+}
+
+.dpi-search__submit {
+	min-height: 3rem;
+	padding: 0.65rem 1.25rem;
+	border: 1px solid transparent;
+	border-radius: 0.35rem;
+	background: var(--wp--preset--color--contrast, CanvasText);
+	color: var(--wp--preset--color--base, Canvas);
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+html.dpi-search-open {
+	overflow: hidden;
+}
+
+.dpi-search .screen-reader-text {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	clip-path: inset(50%);
+	border: 0;
+	white-space: nowrap;
+}
+
+@media (max-width: 47.99rem) {
+	.dpi-top-bar__inner {
+		align-items: flex-start;
+		padding-block: 0.4rem;
+	}
+
+	.dpi-top-bar__menu {
+		gap: 0.25rem 0.85rem;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.dpi-search--dialog[open],
+	.dpi-search--popover:popover-open,
+	.dpi-search--popover[data-dpi-search-open] {
+		animation: dpi-search-enter 150ms ease-out;
+	}
+}
+
+@keyframes dpi-search-enter {
+	from {
+		opacity: 0;
+		transform: translateY(-0.5rem);
+	}
+}
