@@ -1,0 +1,14 @@
+{
+  "key":"group_dpi_interior_hero",
+  "title":"DPI Interior Hero Block",
+  "fields":[
+    {"key":"field_dpi_interior_hero_eyebrow","label":"Eyebrow","name":"eyebrow","type":"text","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"placeholder":"Institute for"},
+    {"key":"field_dpi_interior_hero_heading","label":"Heading","name":"heading","type":"text","instructions":"Leave blank to use the current page or post title.","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""}},
+    {"key":"field_dpi_interior_hero_intro","label":"Intro","name":"intro","type":"textarea","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"rows":3,"new_lines":""},
+    {"key":"field_dpi_interior_hero_background_image","label":"Background Image","name":"background_image","type":"image","instructions":"Leave blank to use the current page featured image when available.","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"return_format":"id","preview_size":"medium","library":"all"},
+    {"key":"field_dpi_interior_hero_show_breadcrumbs","label":"Show Breadcrumbs","name":"show_breadcrumbs","type":"true_false","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"ui":1,"default_value":0},
+    {"key":"field_dpi_interior_hero_content_alignment","label":"Content Alignment","name":"content_alignment","type":"button_group","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"choices":{"left":"Left","center":"Center"},"default_value":"center","return_format":"value","allow_null":0,"layout":"horizontal"}
+  ],
+  "location":[[{"param":"block","operator":"==","value":"dpi/interior-hero"}]],
+  "menu_order":0,"position":"normal","style":"default","label_placement":"top","instruction_placement":"label","hide_on_screen":"","active":true,"description":"Content and display controls for the DPI Interior Hero block.","show_in_rest":0
+}
