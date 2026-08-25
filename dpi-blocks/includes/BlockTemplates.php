@@ -17,13 +17,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class BlockTemplates {
 	/** @var list<string> */
 	private const BLOCK_SLUGS = array(
+		'accordion',
+		'anchor-navigation',
 		'community-slider',
+		'feature-banner',
 		'featured-links',
+		'five-pillars',
 		'hero',
 		'image-buttons',
 		'image-buttons-alt',
+		'interior-hero',
 		'mass-times',
 		'mission',
+		'office-grid',
 		'social-media',
 		'staff-card',
 		'stats',
