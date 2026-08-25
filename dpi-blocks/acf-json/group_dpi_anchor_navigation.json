@@ -1,0 +1,14 @@
+{
+  "key":"group_dpi_anchor_navigation",
+  "title":"DPI Anchor Navigation Block",
+  "fields":[
+    {"key":"field_dpi_anchor_navigation_aria_label","label":"Accessible Label","name":"aria_label","type":"text","instructions":"Used by assistive technology to identify this navigation.","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"default_value":"On this page"},
+    {"key":"field_dpi_anchor_navigation_links","label":"Links","name":"links","type":"repeater","instructions":"","required":1,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"layout":"table","pagination":0,"min":1,"max":20,"collapsed":"field_dpi_anchor_navigation_label","button_label":"Add Anchor Link","rows_per_page":20,"sub_fields":[
+      {"key":"field_dpi_anchor_navigation_label","label":"Label","name":"label","type":"text","instructions":"","required":1,"conditional_logic":0,"wrapper":{"width":"50","class":"","id":""}},
+      {"key":"field_dpi_anchor_navigation_target","label":"Target ID","name":"target","type":"text","instructions":"Enter the target block or section anchor without the #.","required":1,"conditional_logic":0,"wrapper":{"width":"50","class":"","id":""},"prepend":"#"}
+    ]},
+    {"key":"field_dpi_anchor_navigation_sticky","label":"Sticky Navigation","name":"sticky","type":"true_false","instructions":"Keeps the navigation visible while the visitor moves through the page. The theme can control the sticky offset with --dpi-anchor-navigation-offset.","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"ui":1,"default_value":1}
+  ],
+  "location":[[{"param":"block","operator":"==","value":"dpi/anchor-navigation"}]],
+  "menu_order":0,"position":"normal","style":"default","label_placement":"top","instruction_placement":"label","hide_on_screen":"","active":true,"description":"Content and display controls for the DPI Anchor Navigation block.","show_in_rest":0
+}
