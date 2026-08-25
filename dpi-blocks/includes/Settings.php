@@ -71,6 +71,10 @@ final class Settings {
 			'ministry_single_slug'   => 'ministry',
 			'ministry_archive_slug'  => 'ministries',
 			'ministry_taxonomy_slug' => 'ministry-group',
+			'office_enabled'         => false,
+			'office_single_slug'     => 'office',
+			'office_archive_slug'    => 'offices',
+			'office_taxonomy_slug'   => 'office-group',
 			'social_profiles'        => array(
 				'facebook'  => '',
 				'instagram' => '',
@@ -150,7 +154,7 @@ final class Settings {
 			$sanitized['blocks'][ $slug ] = isset( $block_input[ $slug ] ) && '1' === (string) $block_input[ $slug ];
 		}
 
-		foreach ( array( 'top_bar_enabled', 'search_enabled', 'staff_enabled', 'ministry_enabled' ) as $key ) {
+		foreach ( array( 'top_bar_enabled', 'search_enabled', 'staff_enabled', 'ministry_enabled', 'office_enabled' ) as $key ) {
 			$sanitized[ $key ] = isset( $input[ $key ] ) && '1' === (string) $input[ $key ];
 		}
 
@@ -161,7 +165,7 @@ final class Settings {
 		$sanitized['top_bar_menu_location'] = $this->menu_location( $input['top_bar_menu_location'] ?? '', 'dpi-top-bar' );
 		$sanitized['search_menu_location']  = $this->menu_location( $input['search_menu_location'] ?? '', '' );
 
-		foreach ( array( 'staff_single_slug', 'staff_archive_slug', 'staff_taxonomy_slug', 'ministry_single_slug', 'ministry_archive_slug', 'ministry_taxonomy_slug' ) as $key ) {
+		foreach ( array( 'staff_single_slug', 'staff_archive_slug', 'staff_taxonomy_slug', 'ministry_single_slug', 'ministry_archive_slug', 'ministry_taxonomy_slug', 'office_single_slug', 'office_archive_slug', 'office_taxonomy_slug' ) as $key ) {
 			$value             = sanitize_title( (string) ( $input[ $key ] ?? '' ) );
 			$sanitized[ $key ] = '' !== $value ? $value : $defaults[ $key ];
 		}
@@ -182,6 +186,10 @@ final class Settings {
 			'ministry_single_slug',
 			'ministry_archive_slug',
 			'ministry_taxonomy_slug',
+			'office_enabled',
+			'office_single_slug',
+			'office_archive_slug',
+			'office_taxonomy_slug',
 		);
 		foreach ( $rewrite_keys as $key ) {
 			if ( $old[ $key ] !== $sanitized[ $key ] ) {
@@ -328,6 +336,11 @@ final class Settings {
 			$this->text_row( 'ministry_single_slug', __( 'Ministry single slug', 'dpi-blocks' ), $settings['ministry_single_slug'] );
 			$this->text_row( 'ministry_archive_slug', __( 'Ministry archive slug', 'dpi-blocks' ), $settings['ministry_archive_slug'] );
 			$this->text_row( 'ministry_taxonomy_slug', __( 'Ministry group slug', 'dpi-blocks' ), $settings['ministry_taxonomy_slug'] );
+			echo '</tbody></table><h2>' . esc_html__( 'Offices', 'dpi-blocks' ) . '</h2><table class="form-table" role="presentation"><tbody>';
+			$this->checkbox_row( 'office_enabled', __( 'Enable Office content type', 'dpi-blocks' ), $settings['office_enabled'] );
+			$this->text_row( 'office_single_slug', __( 'Office single slug', 'dpi-blocks' ), $settings['office_single_slug'] );
+			$this->text_row( 'office_archive_slug', __( 'Office archive slug', 'dpi-blocks' ), $settings['office_archive_slug'] );
+			$this->text_row( 'office_taxonomy_slug', __( 'Office group slug', 'dpi-blocks' ), $settings['office_taxonomy_slug'] );
 			echo '</tbody></table>';
 			return;
 		}
@@ -351,7 +364,7 @@ final class Settings {
 		$tab_keys = array(
 			'blocks'      => array( 'blocks' ),
 			'header'      => array( 'top_bar_enabled', 'top_bar_placement', 'top_bar_menu_location', 'search_enabled', 'search_location', 'search_menu_location', 'search_template' ),
-			'directories' => array( 'staff_enabled', 'staff_single_slug', 'staff_archive_slug', 'staff_taxonomy_slug', 'staff_mode', 'ministry_enabled', 'ministry_single_slug', 'ministry_archive_slug', 'ministry_taxonomy_slug' ),
+			'directories' => array( 'staff_enabled', 'staff_single_slug', 'staff_archive_slug', 'staff_taxonomy_slug', 'staff_mode', 'ministry_enabled', 'ministry_single_slug', 'ministry_archive_slug', 'ministry_taxonomy_slug', 'office_enabled', 'office_single_slug', 'office_archive_slug', 'office_taxonomy_slug' ),
 			'social'      => array( 'social_profiles', 'social_feed_shortcode' ),
 		);
 		foreach ( $tab_keys as $tab => $keys ) {
@@ -433,47 +446,159 @@ final class Settings {
 	 * @param array<string, mixed> $old      Previously stored settings.
 	 */
 	private function validate_route_slugs( array &$settings, array $old ): void {
-		$staff_routes    = array( 'staff_single_slug', 'staff_archive_slug' );
-		$ministry_routes = array( 'ministry_single_slug', 'ministry_archive_slug' );
-		$conflicts       = array();
-
-		foreach ( $staff_routes as $route_key ) {
-			if ( $settings[ $route_key ] === $settings['staff_taxonomy_slug'] ) {
-				$conflicts[] = array( $route_key, 'staff_taxonomy_slug' );
-			}
-		}
-		foreach ( $ministry_routes as $route_key ) {
-			if ( $settings[ $route_key ] === $settings['ministry_taxonomy_slug'] ) {
-				$conflicts[] = array( $route_key, 'ministry_taxonomy_slug' );
-			}
-		}
-
-		$staff_keys    = array_merge( $staff_routes, array( 'staff_taxonomy_slug' ) );
-		$ministry_keys = array_merge( $ministry_routes, array( 'ministry_taxonomy_slug' ) );
-		foreach ( $staff_keys as $staff_key ) {
-			foreach ( $ministry_keys as $ministry_key ) {
-				if ( $settings[ $staff_key ] === $settings[ $ministry_key ] ) {
-					$conflicts[] = array( $staff_key, $ministry_key );
-				}
-			}
-		}
+		$modules   = array(
+			'staff'    => array(
+				'enabled'  => 'staff_enabled',
+				'label'    => __( 'Staff', 'dpi-blocks' ),
+				'routes'   => array( 'staff_single_slug', 'staff_archive_slug' ),
+				'taxonomy' => 'staff_taxonomy_slug',
+			),
+			'ministry' => array(
+				'enabled'  => 'ministry_enabled',
+				'label'    => __( 'Ministries', 'dpi-blocks' ),
+				'routes'   => array( 'ministry_single_slug', 'ministry_archive_slug' ),
+				'taxonomy' => 'ministry_taxonomy_slug',
+			),
+			'office'   => array(
+				'enabled'  => 'office_enabled',
+				'label'    => __( 'Offices', 'dpi-blocks' ),
+				'routes'   => array( 'office_single_slug', 'office_archive_slug' ),
+				'taxonomy' => 'office_taxonomy_slug',
+			),
+		);
+		$conflicts = $this->route_conflicts( $settings, $modules );
 
 		if ( ! $conflicts ) {
 			return;
 		}
 
-		foreach ( $conflicts as $keys ) {
-			foreach ( $keys as $key ) {
+		$conflicting_keys = array();
+		foreach ( $conflicts as $conflict ) {
+			foreach ( $conflict['keys'] as $key ) {
+				$conflicting_keys[ $key ] = true;
+			}
+		}
+
+		// Prefer the last known route values when a submitted slug caused the
+		// conflict. This preserves an already-valid enabled module configuration.
+		foreach ( array_keys( $conflicting_keys ) as $key ) {
+			if ( array_key_exists( $key, $old ) && $settings[ $key ] !== $old[ $key ] ) {
 				$settings[ $key ] = $old[ $key ];
 			}
 		}
 
+		$disabled  = array();
+		$conflicts = $this->route_conflicts( $settings, $modules );
+		while ( $conflicts ) {
+			$module = $this->module_to_disable( $conflicts[0], $settings, $old, $modules );
+			if ( null === $module ) {
+				break;
+			}
+
+			$settings[ $modules[ $module ]['enabled'] ] = false;
+			$disabled[ $module ]                        = $modules[ $module ]['label'];
+			$conflicts                                  = $this->route_conflicts( $settings, $modules );
+		}
+
+		$message = $disabled
+			? sprintf(
+				/* translators: %s: comma-separated content-type module labels. */
+				__( 'Route slugs must be unique between enabled content types, and taxonomy slugs cannot match their content routes. Conflicting values were not saved; these modules were disabled to preserve valid routes: %s.', 'dpi-blocks' ),
+				implode( ', ', $disabled )
+			)
+			: __( 'Route slugs must be unique between enabled content types, and taxonomy slugs cannot match their content routes. Conflicting values were not saved.', 'dpi-blocks' );
+
 		add_settings_error(
 			self::OPTION_NAME,
 			'dpi_blocks_route_collision',
-			__( 'Route slugs must be unique between Staff and Ministries, and taxonomy slugs cannot match their content routes. Conflicting values were not saved.', 'dpi-blocks' ),
+			$message,
 			'error'
 		);
+	}
+
+	/**
+	 * Find route collisions among enabled content-type modules.
+	 *
+	 * Matching single and archive slugs within one module are intentionally valid.
+	 *
+	 * @param array<string, mixed> $settings Sanitized settings.
+	 * @param array<string, array<string, mixed>> $modules Module route definitions.
+	 * @return list<array{modules: list<string>, keys: list<string>}>
+	 */
+	private function route_conflicts( array $settings, array $modules ): array {
+		$conflicts = array();
+		$enabled   = array();
+
+		foreach ( $modules as $name => $module ) {
+			if ( empty( $settings[ $module['enabled'] ] ) ) {
+				continue;
+			}
+
+			$enabled[ $name ] = $module;
+			foreach ( $module['routes'] as $route_key ) {
+				if ( $settings[ $route_key ] === $settings[ $module['taxonomy'] ] ) {
+					$conflicts[] = array(
+						'modules' => array( $name ),
+						'keys'    => array( $route_key, $module['taxonomy'] ),
+					);
+				}
+			}
+		}
+
+		$names = array_keys( $enabled );
+		$count = count( $names );
+		for ( $left_index = 0; $left_index < $count; $left_index++ ) {
+			$left_name = $names[ $left_index ];
+			$left      = $enabled[ $left_name ];
+			$left_keys = array_merge( $left['routes'], array( $left['taxonomy'] ) );
+
+			for ( $right_index = $left_index + 1; $right_index < $count; $right_index++ ) {
+				$right_name = $names[ $right_index ];
+				$right      = $enabled[ $right_name ];
+				$right_keys = array_merge( $right['routes'], array( $right['taxonomy'] ) );
+
+				foreach ( $left_keys as $left_key ) {
+					foreach ( $right_keys as $right_key ) {
+						if ( $settings[ $left_key ] === $settings[ $right_key ] ) {
+							$conflicts[] = array(
+								'modules' => array( $left_name, $right_name ),
+								'keys'    => array( $left_key, $right_key ),
+							);
+						}
+					}
+				}
+			}
+		}
+
+		return $conflicts;
+	}
+
+	/**
+	 * Select the safest module to disable for an unresolved collision.
+	 *
+	 * Newly enabled modules lose to already-active modules. Otherwise the later
+	 * module in the stable Staff, Ministry, Office order is disabled.
+	 *
+	 * @param array{modules: list<string>, keys: list<string>} $conflict Route conflict.
+	 * @param array<string, mixed> $settings Sanitized settings.
+	 * @param array<string, mixed> $old Previously stored settings.
+	 * @param array<string, array<string, mixed>> $modules Module route definitions.
+	 */
+	private function module_to_disable( array $conflict, array $settings, array $old, array $modules ): ?string {
+		foreach ( array_reverse( $conflict['modules'] ) as $name ) {
+			$enabled_key = $modules[ $name ]['enabled'];
+			if ( ! empty( $settings[ $enabled_key ] ) && empty( $old[ $enabled_key ] ) ) {
+				return $name;
+			}
+		}
+
+		foreach ( array_reverse( array_keys( $modules ) ) as $name ) {
+			if ( in_array( $name, $conflict['modules'], true ) && ! empty( $settings[ $modules[ $name ]['enabled'] ] ) ) {
+				return $name;
+			}
+		}
+
+		return null;
 	}
 
 	/** Build a correctly nested HTML input name from a bracket path. */

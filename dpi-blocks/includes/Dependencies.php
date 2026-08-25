@@ -97,6 +97,10 @@ final class Dependencies {
 				unregister_post_type( 'ministry' );
 				unregister_taxonomy( 'ministry_group' );
 			}
+			if ( ContentTypes::owns( 'office' ) ) {
+				unregister_post_type( 'office' );
+				unregister_taxonomy( 'office_group' );
+			}
 		}
 
 		flush_rewrite_rules();

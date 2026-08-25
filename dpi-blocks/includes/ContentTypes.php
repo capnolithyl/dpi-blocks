@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/** Register plugin-owned staff and ministry directories. */
+/** Register plugin-owned Staff, Ministry, and Office directories. */
 final class ContentTypes {
 	/** @var array<string, bool> */
 	private static array $owned = array();
@@ -37,6 +37,10 @@ final class ContentTypes {
 
 		if ( Settings::get( 'ministry_enabled', false ) ) {
 			$this->register_ministry();
+		}
+
+		if ( Settings::get( 'office_enabled', false ) ) {
+			$this->register_office();
 		}
 	}
 
@@ -169,6 +173,60 @@ final class ContentTypes {
 		);
 
 		self::$owned['ministry'] = post_type_exists( 'ministry' ) && taxonomy_exists( 'ministry_group' );
+	}
+
+	/** Register Offices and Office Groups. */
+	private function register_office(): void {
+		if ( self::owns( 'office' ) ) {
+			return;
+		}
+
+		if ( $this->has_conflict( 'office', 'office_group', 'office' ) ) {
+			return;
+		}
+
+		register_post_type(
+			'office',
+			array(
+				'labels'             => $this->post_type_labels( __( 'Offices', 'dpi-blocks' ), __( 'Office', 'dpi-blocks' ) ),
+				'public'             => true,
+				'publicly_queryable' => true,
+				'show_ui'            => true,
+				'show_in_menu'       => true,
+				'show_in_nav_menus'  => true,
+				'show_in_rest'       => true,
+				'menu_icon'          => 'dashicons-building',
+				'menu_position'      => 22,
+				'has_archive'        => Settings::get( 'office_archive_slug', 'offices' ),
+				'rewrite'            => array(
+					'slug'       => Settings::get( 'office_single_slug', 'office' ),
+					'with_front' => false,
+				),
+				'supports'           => array( 'title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'page-attributes', 'custom-fields' ),
+				'taxonomies'         => array( 'office_group' ),
+			)
+		);
+
+		register_taxonomy(
+			'office_group',
+			array( 'office' ),
+			array(
+				'labels'             => $this->taxonomy_labels( __( 'Office Groups', 'dpi-blocks' ), __( 'Office Group', 'dpi-blocks' ) ),
+				'public'             => true,
+				'publicly_queryable' => true,
+				'hierarchical'       => true,
+				'show_ui'            => true,
+				'show_admin_column'  => true,
+				'show_in_nav_menus'  => true,
+				'show_in_rest'       => true,
+				'rewrite'            => array(
+					'slug'       => Settings::get( 'office_taxonomy_slug', 'office-group' ),
+					'with_front' => false,
+				),
+			)
+		);
+
+		self::$owned['office'] = post_type_exists( 'office' ) && taxonomy_exists( 'office_group' );
 	}
 
 	/**

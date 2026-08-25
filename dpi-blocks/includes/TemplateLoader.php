@@ -63,7 +63,8 @@ final class TemplateLoader {
 
 		$is_staff    = ContentTypes::owns( 'staff' ) && ( $query->is_post_type_archive( 'staff' ) || $query->is_tax( 'staff_group' ) );
 		$is_ministry = ContentTypes::owns( 'ministry' ) && ( $query->is_post_type_archive( 'ministry' ) || $query->is_tax( 'ministry_group' ) );
-		if ( ! $is_staff && ! $is_ministry ) {
+		$is_office   = ContentTypes::owns( 'office' ) && ( $query->is_post_type_archive( 'office' ) || $query->is_tax( 'office_group' ) );
+		if ( ! $is_staff && ! $is_ministry && ! $is_office ) {
 			return;
 		}
 
@@ -123,6 +124,9 @@ final class TemplateLoader {
 			$needs_group_navigation = count( $context['sections'] ) > 1;
 		} elseif ( ContentTypes::owns( 'ministry' ) && is_post_type_archive( 'ministry' ) ) {
 			$context                = self::directory_context( 'ministry', 'ministry_group' );
+			$needs_group_navigation = count( $context['sections'] ) > 1;
+		} elseif ( ContentTypes::owns( 'office' ) && is_post_type_archive( 'office' ) ) {
+			$context                = self::directory_context( 'office', 'office_group' );
 			$needs_group_navigation = count( $context['sections'] ) > 1;
 		}
 
@@ -219,8 +223,8 @@ final class TemplateLoader {
 
 			if ( $ungrouped ) {
 				$sections[] = array(
-					'id'    => self::section_id( $taxonomy, 'other' ),
-					'label' => 'staff' === $post_type ? __( 'Other Staff', 'dpi-blocks' ) : __( 'Other Ministries', 'dpi-blocks' ),
+					'id'    => self::unique_ungrouped_section_id( $taxonomy, $sections ),
+					'label' => self::ungrouped_label( $post_type ),
 					'posts' => $ungrouped,
 				);
 			}
@@ -243,6 +247,7 @@ final class TemplateLoader {
 			'sections'    => $sections,
 			'all_posts'   => array_values( $all_posts ),
 			'modal'       => 'staff' === $post_type && 'modal' === Settings::get( 'staff_mode', 'single' ),
+			'group_label' => self::group_navigation_label( $post_type ),
 		);
 	}
 
@@ -298,6 +303,27 @@ final class TemplateLoader {
 				'plugin_template'  => 'single-ministry.php',
 			);
 		}
+		if ( is_post_type_archive( 'office' ) ) {
+			return array(
+				'post_type'        => 'office',
+				'theme_candidates' => array( 'dpi-blocks/archive-office.php', 'archive-office.php' ),
+				'plugin_template'  => 'archive-office.php',
+			);
+		}
+		if ( is_tax( 'office_group' ) ) {
+			return array(
+				'post_type'        => 'office',
+				'theme_candidates' => array( 'dpi-blocks/taxonomy-office_group.php', 'taxonomy-office_group.php' ),
+				'plugin_template'  => 'taxonomy-office_group.php',
+			);
+		}
+		if ( is_singular( 'office' ) ) {
+			return array(
+				'post_type'        => 'office',
+				'theme_candidates' => array( 'dpi-blocks/single-office.php', 'single-office.php' ),
+				'plugin_template'  => 'single-office.php',
+			);
+		}
 
 		return null;
 	}
@@ -305,7 +331,49 @@ final class TemplateLoader {
 	/** Whether the current request belongs to a type owned by this plugin. */
 	private function is_directory_request(): bool {
 		return ( ContentTypes::owns( 'staff' ) && ( is_post_type_archive( 'staff' ) || is_tax( 'staff_group' ) || is_singular( 'staff' ) ) )
-			|| ( ContentTypes::owns( 'ministry' ) && ( is_post_type_archive( 'ministry' ) || is_tax( 'ministry_group' ) || is_singular( 'ministry' ) ) );
+			|| ( ContentTypes::owns( 'ministry' ) && ( is_post_type_archive( 'ministry' ) || is_tax( 'ministry_group' ) || is_singular( 'ministry' ) ) )
+			|| ( ContentTypes::owns( 'office' ) && ( is_post_type_archive( 'office' ) || is_tax( 'office_group' ) || is_singular( 'office' ) ) );
+	}
+
+	/** Accessible group-navigation label for a directory type. */
+	private static function group_navigation_label( string $post_type ): string {
+		switch ( $post_type ) {
+			case 'staff':
+				return __( 'Staff groups', 'dpi-blocks' );
+			case 'office':
+				return __( 'Office groups', 'dpi-blocks' );
+			case 'ministry':
+			default:
+				return __( 'Ministry groups', 'dpi-blocks' );
+		}
+	}
+
+	/** Label for directory entries not assigned to a group. */
+	private static function ungrouped_label( string $post_type ): string {
+		switch ( $post_type ) {
+			case 'staff':
+				return __( 'Other Staff', 'dpi-blocks' );
+			case 'office':
+				return __( 'Other Offices', 'dpi-blocks' );
+			case 'ministry':
+			default:
+				return __( 'Other Ministries', 'dpi-blocks' );
+		}
+	}
+
+	/** Return an ungrouped anchor that cannot collide with a real term slug. */
+	private static function unique_ungrouped_section_id( string $taxonomy, array $sections ): string {
+		$base     = self::section_id( $taxonomy, 'other' );
+		$used     = array_fill_keys( array_column( $sections, 'id' ), true );
+		$id       = $base;
+		$sequence = 0;
+
+		while ( isset( $used[ $id ] ) ) {
+			++$sequence;
+			$id = $base . '-ungrouped' . ( 1 < $sequence ? '-' . $sequence : '' );
+		}
+
+		return $id;
 	}
 
 	/** Stable section ID. */

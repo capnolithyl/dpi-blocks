@@ -37,7 +37,7 @@ if ( 'ministry' === $dpi_directory['post_type'] && function_exists( 'get_field' 
 
 	<div class="dpi-directory__body">
 		<?php if ( count( $dpi_directory['sections'] ) > 1 ) : ?>
-			<nav class="dpi-directory-nav" aria-label="<?php echo esc_attr( 'staff' === $dpi_directory['post_type'] ? __( 'Staff groups', 'dpi-blocks' ) : __( 'Ministry groups', 'dpi-blocks' ) ); ?>" data-dpi-group-nav>
+			<nav class="dpi-directory-nav" aria-label="<?php echo esc_attr( $dpi_directory['group_label'] ); ?>" data-dpi-group-nav>
 				<button class="dpi-directory-nav__arrow" type="button" aria-label="<?php esc_attr_e( 'Previous groups', 'dpi-blocks' ); ?>" data-dpi-group-prev hidden><?php echo \DPI\Blocks\IconRegistry::render( 'solid:chevron-left' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Plugin-owned SVG registry. ?></button>
 				<div class="dpi-directory-nav__track" data-dpi-group-slider>
 					<?php foreach ( $dpi_directory['sections'] as $dpi_section_index => $dpi_section ) : ?>

@@ -1,5 +1,5 @@
 <?php
-/** Shared Staff/Ministry archive card. */
+/** Shared Staff/Ministry/Office archive card. */
 
 defined( 'ABSPATH' ) || exit;
 
