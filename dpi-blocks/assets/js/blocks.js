@@ -261,6 +261,38 @@
 			}
 		);
 
+		findAll(
+			scope || document,
+			'.dpi-hero iframe[data-dpi-youtube-player]'
+		).forEach((iframe) => {
+			const control = () => {
+				const shouldPlay =
+					!reducedMotion.matches &&
+					iframe.getAttribute('data-dpi-youtube-autoplay') === '1';
+				const command = reducedMotion.matches
+					? 'pauseVideo'
+					: shouldPlay
+						? 'playVideo'
+						: '';
+
+				if (!command || !iframe.contentWindow) {
+					return;
+				}
+
+				iframe.contentWindow.postMessage(
+					JSON.stringify({ event: 'command', func: command, args: [] }),
+					'https://www.youtube-nocookie.com'
+				);
+			};
+
+			if (iframe.dataset.dpiMotionBound !== 'true') {
+				iframe.dataset.dpiMotionBound = 'true';
+				iframe.addEventListener('load', control);
+			}
+
+			control();
+		});
+
 		findAll(scope || document, '[data-dpi-slick]').forEach((host) => {
 			const track = getTrack(host);
 

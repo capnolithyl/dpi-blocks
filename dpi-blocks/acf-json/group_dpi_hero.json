@@ -34,6 +34,24 @@
       "append": "%"
     },
     {
+      "key": "field_dpi_hero_video_source",
+      "label": "Video Source",
+      "name": "video_source",
+      "type": "button_group",
+      "instructions": "Choose a YouTube video or a video uploaded to the WordPress Media Library.",
+      "required": 1,
+      "conditional_logic": [[{ "field": "field_69dfd6d0051f3", "operator": "==", "value": "1" }]],
+      "wrapper": { "width": "", "class": "", "id": "" },
+      "choices": {
+        "youtube": "YouTube",
+        "media": "Media Library"
+      },
+      "default_value": "media",
+      "return_format": "value",
+      "allow_null": 0,
+      "layout": "horizontal"
+    },
+    {
       "key": "field_69dfe2f8051fc",
       "label": "Slides",
       "name": "slides",
@@ -180,13 +198,31 @@
       ]
     },
     {
+      "key": "field_dpi_hero_youtube_url",
+      "label": "YouTube Video URL",
+      "name": "youtube_url",
+      "type": "url",
+      "instructions": "Paste a YouTube watch, share, Shorts, live, or embed URL.",
+      "required": 1,
+      "conditional_logic": [[
+        { "field": "field_69dfd6d0051f3", "operator": "==", "value": "1" },
+        { "field": "field_dpi_hero_video_source", "operator": "==", "value": "youtube" }
+      ]],
+      "wrapper": { "width": "50", "class": "", "id": "" },
+      "default_value": "",
+      "placeholder": "https://www.youtube.com/watch?v=..."
+    },
+    {
       "key": "field_69dfd769051f5",
-      "label": "Video",
+      "label": "Media Library Video",
       "name": "video_file",
       "type": "file",
-      "instructions": "Upload a locally hosted video file.",
+      "instructions": "Choose or upload a locally hosted video file.",
       "required": 1,
-      "conditional_logic": [[{ "field": "field_69dfd6d0051f3", "operator": "==", "value": "1" }]],
+      "conditional_logic": [[
+        { "field": "field_69dfd6d0051f3", "operator": "==", "value": "1" },
+        { "field": "field_dpi_hero_video_source", "operator": "==", "value": "media" }
+      ]],
       "wrapper": { "width": "50", "class": "", "id": "" },
       "return_format": "array",
       "library": "all",
@@ -199,9 +235,12 @@
       "label": "Poster Image",
       "name": "video_poster",
       "type": "image",
-      "instructions": "",
+      "instructions": "Poster image shown while the Media Library video loads.",
       "required": 1,
-      "conditional_logic": [[{ "field": "field_69dfd6d0051f3", "operator": "==", "value": "1" }]],
+      "conditional_logic": [[
+        { "field": "field_69dfd6d0051f3", "operator": "==", "value": "1" },
+        { "field": "field_dpi_hero_video_source", "operator": "==", "value": "media" }
+      ]],
       "wrapper": { "width": "50", "class": "", "id": "" },
       "return_format": "array",
       "preview_size": "medium",
