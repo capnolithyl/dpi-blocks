@@ -194,6 +194,8 @@ Each immediate child directory needs a valid `block.json` and its own renderer. 
 - Shortcodes: `[dpi_top_bar]` and `[dpi_search_trigger]`
 - Filters: `dpi_blocks/block_category`, `dpi_blocks/font_awesome_icons`, `dpi_blocks/social_feed_adapters`, and `dpi_blocks/template_candidates`
 
+When search is inserted into a classic menu, Settings → DPI Blocks → Top Bar & Search can append one or more theme classes to the generated `<li>`. The stable `menu-item dpi-menu-search` classes are always retained.
+
 Social-feed adapter callbacks receive the configured shortcode. Return `null` when unsupported, or an array containing a stable `name` and the feed's `track_selector`. This lets the initializer enhance known feed markup while leaving unknown shortcode output untouched.
 
 Directory templates belong in `<theme>/dpi-blocks/`; conventional WordPress post-type and taxonomy template names also take precedence. Office overrides use `archive-office.php`, `taxonomy-office_group.php`, and `single-office.php`. For directory requests, WordPress checks each `dpi-blocks/` candidate before its conventional filename and checks the child theme before the parent theme for each candidate; the plugin template remains the final fallback. Font Awesome values use `style:icon-name`, for example `solid:church` or `brands:instagram`. Extending `dpi_blocks/font_awesome_icons` requires a corresponding symbol in a supported local sprite.

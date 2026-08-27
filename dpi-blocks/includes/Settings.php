@@ -31,7 +31,7 @@ final class Settings {
 		'accordion'         => 'Accordion / FAQ',
 		'anchor-navigation' => 'Anchor Navigation',
 		'community-slider'  => 'Community Slider',
-		'feature-banner'     => 'Feature / CTA Banner',
+		'feature-banner'    => 'Feature / CTA Banner',
 		'featured-links'    => 'Featured Links',
 		'five-pillars'      => 'Pillars',
 		'hero'              => 'Hero',
@@ -67,6 +67,7 @@ final class Settings {
 			'search_enabled'         => false,
 			'search_location'        => 'top-bar',
 			'search_menu_location'   => '',
+			'search_menu_item_class' => '',
 			'search_template'        => 'dialog',
 			'staff_enabled'          => false,
 			'staff_single_slug'      => 'staff',
@@ -164,12 +165,13 @@ final class Settings {
 			$sanitized[ $key ] = isset( $input[ $key ] ) && '1' === (string) $input[ $key ];
 		}
 
-		$sanitized['top_bar_placement']     = $this->choice( $input, 'top_bar_placement', array( 'automatic', 'manual' ), $defaults['top_bar_placement'] );
-		$sanitized['search_location']       = $this->choice( $input, 'search_location', array( 'top-bar', 'main-menu' ), $defaults['search_location'] );
-		$sanitized['search_template']       = $this->choice( $input, 'search_template', array( 'dialog', 'popover' ), $defaults['search_template'] );
-		$sanitized['staff_mode']            = $this->choice( $input, 'staff_mode', array( 'single', 'modal' ), $defaults['staff_mode'] );
-		$sanitized['top_bar_menu_location'] = $this->menu_location( $input['top_bar_menu_location'] ?? '', 'dpi-top-bar' );
-		$sanitized['search_menu_location']  = $this->menu_location( $input['search_menu_location'] ?? '', '' );
+		$sanitized['top_bar_placement']      = $this->choice( $input, 'top_bar_placement', array( 'automatic', 'manual' ), $defaults['top_bar_placement'] );
+		$sanitized['search_location']        = $this->choice( $input, 'search_location', array( 'top-bar', 'main-menu' ), $defaults['search_location'] );
+		$sanitized['search_template']        = $this->choice( $input, 'search_template', array( 'dialog', 'popover' ), $defaults['search_template'] );
+		$sanitized['staff_mode']             = $this->choice( $input, 'staff_mode', array( 'single', 'modal' ), $defaults['staff_mode'] );
+		$sanitized['top_bar_menu_location']  = $this->menu_location( $input['top_bar_menu_location'] ?? '', 'dpi-top-bar' );
+		$sanitized['search_menu_location']   = $this->menu_location( $input['search_menu_location'] ?? '', '' );
+		$sanitized['search_menu_item_class'] = $this->css_classes( (string) ( $input['search_menu_item_class'] ?? '' ) );
 
 		foreach ( array( 'staff_single_slug', 'staff_archive_slug', 'staff_taxonomy_slug', 'ministry_single_slug', 'ministry_archive_slug', 'ministry_taxonomy_slug', 'office_single_slug', 'office_archive_slug', 'office_taxonomy_slug' ) as $key ) {
 			$value             = sanitize_title( (string) ( $input[ $key ] ?? '' ) );
@@ -309,6 +311,7 @@ final class Settings {
 				)
 			);
 			$this->select_row( 'search_menu_location', __( 'Main menu location', 'dpi-blocks' ), $settings['search_menu_location'], $this->menu_choices( false ) );
+			$this->text_row( 'search_menu_item_class', __( 'Search menu item CSS classes', 'dpi-blocks' ), $settings['search_menu_item_class'], 'site-header__search' );
 			$this->select_row(
 				'search_template',
 				__( 'Search presentation', 'dpi-blocks' ),
@@ -369,7 +372,7 @@ final class Settings {
 	private function render_preserved_fields( string $active_tab, array $settings ): void {
 		$tab_keys = array(
 			'blocks'      => array( 'blocks' ),
-			'header'      => array( 'top_bar_enabled', 'top_bar_placement', 'top_bar_menu_location', 'search_enabled', 'search_location', 'search_menu_location', 'search_template' ),
+			'header'      => array( 'top_bar_enabled', 'top_bar_placement', 'top_bar_menu_location', 'search_enabled', 'search_location', 'search_menu_location', 'search_menu_item_class', 'search_template' ),
 			'directories' => array( 'staff_enabled', 'staff_single_slug', 'staff_archive_slug', 'staff_taxonomy_slug', 'staff_mode', 'ministry_enabled', 'ministry_single_slug', 'ministry_archive_slug', 'ministry_taxonomy_slug', 'office_enabled', 'office_single_slug', 'office_archive_slug', 'office_taxonomy_slug' ),
 			'social'      => array( 'social_profiles', 'social_feed_shortcode' ),
 		);
@@ -442,6 +445,14 @@ final class Settings {
 		$value     = sanitize_key( (string) $value );
 		$locations = array_keys( get_registered_nav_menus() );
 		return in_array( $value, $locations, true ) ? $value : $fallback;
+	}
+
+	/** Sanitize a space-separated list of CSS classes. */
+	private function css_classes( string $classes ): string {
+		$segments = preg_split( '/\s+/', trim( $classes ) );
+		$segments = is_array( $segments ) ? $segments : array();
+
+		return implode( ' ', array_filter( array_map( 'sanitize_html_class', $segments ) ) );
 	}
 
 	/**

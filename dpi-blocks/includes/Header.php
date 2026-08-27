@@ -146,7 +146,10 @@ final class Header {
 			return $items;
 		}
 
-		return $items . '<li class="menu-item dpi-menu-search">' . $this->search_trigger_markup( array( 'class' => 'dpi-menu-search__button' ) ) . '</li>';
+		$custom_class = $this->sanitize_classes( (string) Settings::get( 'search_menu_item_class', '' ) );
+		$item_classes = trim( 'menu-item dpi-menu-search ' . $custom_class );
+
+		return $items . '<li class="' . esc_attr( $item_classes ) . '">' . $this->search_trigger_markup( array( 'class' => 'dpi-menu-search__button' ) ) . '</li>';
 	}
 
 	/** Render the one global search surface. */
