@@ -136,15 +136,22 @@ $wrapper_attributes = get_block_wrapper_attributes( array( 'class' => 'dpi-block
 				}
 				?>
 				<article class="dpi-office-grid__item">
+					<?php
+					$office_link = array(
+						'url'    => get_permalink( $office_id ),
+						'title'  => get_the_title( $office_id ),
+						'target' => '',
+					);
+					?>
 					<?php if ( $show_image && has_post_thumbnail( $office_id ) ) : ?>
-						<a class="dpi-office-grid__media" href="<?php the_permalink(); ?>" tabindex="-1" aria-hidden="true">
+						<?php echo dpi_blocks_link_open( $office_link, 'dpi-office-grid__media', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 							<?php echo get_the_post_thumbnail( $office_id, 'medium_large', array( 'alt' => '' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-						</a>
+						<?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					<?php endif; ?>
 					<div class="dpi-office-grid__content">
-						<h3 class="dpi-office-grid__title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+						<h3 class="dpi-office-grid__title"><?php echo dpi_blocks_link_open( $office_link, 'dpi-office-grid__title-link', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php the_title(); ?><?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></h3>
 						<?php if ( $show_excerpt && $excerpt ) : ?><p class="dpi-office-grid__excerpt"><?php echo esc_html( $excerpt ); ?></p><?php endif; ?>
-						<a class="dpi-office-grid__link" href="<?php the_permalink(); ?>"><?php echo esc_html( $link_label ); ?></a>
+						<?php echo dpi_blocks_link_open( $office_link, 'dpi-office-grid__link', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php echo esc_html( $link_label ); ?><?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					</div>
 				</article>
 			<?php endwhile; ?>
