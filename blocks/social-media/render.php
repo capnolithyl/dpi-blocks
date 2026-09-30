@@ -132,17 +132,20 @@ if ( $heading_id ) :
 	<?php if ( $items ) : ?>
 		<ul class="dpi-social-media__profiles" aria-label="<?php esc_attr_e( 'Social media profiles', 'dpi-blocks' ); ?>">
 			<?php foreach ( $items as $item ) : ?>
-				<li><a href="<?php echo esc_url( $item['url'] ); ?>" target="<?php echo esc_attr( $item['target'] ); ?>"
 				<?php
-				if ( '_blank' === $item['target'] ) :
-					?>
-					rel="noopener noreferrer"<?php endif; ?>>
+				$profile_link = array(
+					'url'    => $item['url'],
+					'title'  => $item['label'],
+					'target' => $item['target'],
+				);
+				?>
+				<li><?php echo dpi_blocks_link_open( $profile_link, 'dpi-social-media__profile-link', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					<?php
 					if ( $item['icon'] && function_exists( 'dpi_blocks_render_icon' ) ) :
 						?>
 						<span aria-hidden="true"><?php echo dpi_blocks_render_icon( $item['icon'], array( 'aria-hidden' => 'true' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the plugin-owned icon renderer. ?></span><?php endif; ?>
 					<span class="dpi-social-media__profile-label"><?php echo esc_html( $item['label'] ); ?></span>
-				</a></li>
+				<?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></li>
 			<?php endforeach; ?>
 		</ul>
 	<?php endif; ?>
