@@ -55,6 +55,20 @@
 	white-space: nowrap;
 }
 
+/*
+ * Gutenberg treats anchors inside rendered block previews as interactive.
+ * Plugin-owned links render as .dpi-editor-link spans in preview mode. This
+ * pointer-events fallback covers anchors coming from rich text or shortcodes
+ * that the plugin does not own or rewrite.
+ */
+.editor-styles-wrapper .dpi-block a {
+	pointer-events: none;
+}
+
+.dpi-editor-link {
+	cursor: default;
+}
+
 /* Shared carousel and tab affordances. */
 .dpi-tabs__list {
 	display: flex;
@@ -174,7 +188,7 @@
 	object-fit: cover;
 }
 
-.dpi-featured-links__item > a {
+.dpi-featured-links__link {
 	display: grid;
 	grid-template-columns: auto minmax(0, 1fr);
 	gap: 0.5rem 1rem;
@@ -492,7 +506,7 @@
 	margin-block: var(--dpi-section-gap);
 }
 
-.dpi-social-media__profiles a {
+.dpi-social-media__profile-link {
 	display: inline-flex;
 	gap: 0.5rem;
 	align-items: center;
