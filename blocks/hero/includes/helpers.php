@@ -92,6 +92,16 @@ $dpi_render_links = static function ( $rows, $class_name = '' ) use ( $dpi_is_pr
 
 		$target = ! empty( $link['target'] ) ? (string) $link['target'] : '_self';
 		$rel    = '_blank' === $target ? 'noopener noreferrer' : '';
+
+		if ( $dpi_is_preview ) {
+			printf(
+				'<span class="%1$s dpi-editor-link">%2$s</span>',
+				esc_attr( $class_name ),
+				esc_html( $link['title'] )
+			);
+			continue;
+		}
+
 		printf(
 			'<a class="%1$s" href="%2$s" target="%3$s"%4$s>%5$s</a>',
 			esc_attr( $class_name ),
