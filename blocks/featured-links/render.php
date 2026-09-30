@@ -86,11 +86,7 @@ if ( $heading_id ) :
 						$rel           = '_blank' === $target ? 'noopener noreferrer' : '';
 						?>
 						<li class="dpi-featured-links__item">
-							<a href="<?php echo esc_url( $featured_link['url'] ); ?>" target="<?php echo esc_attr( $target ); ?>"
-							<?php
-							if ( $rel ) :
-								?>
-								rel="<?php echo esc_attr( $rel ); ?>"<?php endif; ?>>
+							<?php echo dpi_blocks_link_open( $featured_link, 'dpi-featured-links__link', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 								<?php if ( $item['icon'] && function_exists( 'dpi_blocks_render_icon' ) ) : ?>
 									<span class="dpi-featured-links__icon" aria-hidden="true"><?php echo dpi_blocks_render_icon( $item['icon'], array( 'aria-hidden' => 'true' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the plugin-owned icon renderer. ?></span>
 								<?php endif; ?>
@@ -98,7 +94,7 @@ if ( $heading_id ) :
 								<?php if ( $item['excerpt'] ) : ?>
 									<span class="dpi-featured-links__excerpt"><?php echo wp_kses_post( $item['excerpt'] ); ?></span>
 								<?php endif; ?>
-							</a>
+							<?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						</li>
 					<?php endforeach; ?>
 				</ul>
