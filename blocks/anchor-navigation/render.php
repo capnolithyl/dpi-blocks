@@ -46,7 +46,12 @@ $wrapper_attributes = get_block_wrapper_attributes( array( 'class' => $classes )
 	<ul class="dpi-anchor-navigation__list">
 		<?php foreach ( $items as $item ) : ?>
 			<li class="dpi-anchor-navigation__item">
-				<a class="dpi-anchor-navigation__link" href="#<?php echo esc_attr( $item['target'] ); ?>" data-dpi-anchor-link><?php echo esc_html( $item['label'] ); ?></a>
+				<?php
+				$anchor_link = array( 'url' => '#' . $item['target'], 'title' => $item['label'], 'target' => '' );
+				echo dpi_blocks_link_open( $anchor_link, 'dpi-anchor-navigation__link', ! empty( $is_preview ), array( 'data-dpi-anchor-link' => 'true' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo esc_html( $item['label'] );
+				echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				?>
 			</li>
 		<?php endforeach; ?>
 	</ul>
