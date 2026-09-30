@@ -111,7 +111,12 @@ $wrapper_attributes = get_block_wrapper_attributes(
 						?>
 						<li>
 							<?php if ( $url ) : ?>
-								<a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $label ); ?></a>
+								<?php
+								$breadcrumb_link = array( 'url' => $url, 'title' => $label, 'target' => '' );
+								echo dpi_blocks_link_open( $breadcrumb_link, 'dpi-interior-hero__breadcrumb-link', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								echo esc_html( $label );
+								echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								?>
 							<?php else : ?>
 								<span aria-current="page"><?php echo esc_html( $label ); ?></span>
 							<?php endif; ?>
