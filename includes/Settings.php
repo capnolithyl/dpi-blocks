@@ -313,7 +313,12 @@ final class Settings {
 			echo '</p>';
 			echo '<table class="form-table" role="presentation" data-dpi-block-list><tbody>';
 			foreach ( self::BLOCKS as $slug => $label ) {
-				$this->checkbox_row( 'blocks[' . $slug . ']', $label, ! empty( $settings['blocks'][ $slug ] ) );
+				$this->checkbox_row(
+					'blocks[' . $slug . ']',
+					$label,
+					! empty( $settings['blocks'][ $slug ] ),
+					$this->block_description( $slug )
+				);
 			}
 			echo '</tbody></table>';
 			return;
@@ -429,9 +434,51 @@ final class Settings {
 		printf( '<input type="hidden" name="%1$s" value="%2$s">', esc_attr( $this->input_name( $key ) ), esc_attr( true === $value ? '1' : (string) $value ) );
 	}
 
-	/** Checkbox row. */
-	private function checkbox_row( string $key, string $label, bool $checked ): void {
-		printf( '<tr><th scope="row">%1$s</th><td><label><input type="checkbox" name="%2$s" value="1" %3$s> %4$s</label></td></tr>', esc_html( $label ), esc_attr( $this->input_name( $key ) ), checked( $checked, true, false ), esc_html__( 'Enabled', 'dpi-blocks' ) );
+	/**
+	 * Checkbox row.
+	 *
+	 * @param string $key         Setting key.
+	 * @param string $label       Row label.
+	 * @param bool   $checked     Whether the checkbox is enabled.
+	 * @param string $description Optional explanatory copy.
+	 */
+	private function checkbox_row( string $key, string $label, bool $checked, string $description = '' ): void {
+		echo '<tr><th scope="row">' . esc_html( $label ) . '</th><td>';
+		printf(
+			'<label><input type="checkbox" name="%1$s" value="1" %2$s> %3$s</label>',
+			esc_attr( $this->input_name( $key ) ),
+			checked( $checked, true, false ),
+			esc_html__( 'Enabled', 'dpi-blocks' )
+		);
+
+		if ( '' !== $description ) {
+			echo '<p class="description">' . esc_html( $description ) . '</p>';
+		}
+
+		echo '</td></tr>';
+	}
+
+
+	/**
+	 * Read a block's human-facing description from its block metadata.
+	 */
+	private function block_description( string $slug ): string {
+		$slug = sanitize_key( $slug );
+		if ( '' === $slug ) {
+			return '';
+		}
+
+		$file = DPI_BLOCKS_DIR . 'blocks/' . $slug . '/block.json';
+		if ( ! is_readable( $file ) ) {
+			return '';
+		}
+
+		$metadata = wp_json_file_decode( $file, array( 'associative' => true ) );
+		if ( ! is_array( $metadata ) || empty( $metadata['description'] ) || ! is_string( $metadata['description'] ) ) {
+			return '';
+		}
+
+		return sanitize_text_field( $metadata['description'] );
 	}
 
 	/** Text row. */
