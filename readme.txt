@@ -5,7 +5,7 @@ Requires at least: 6.9
 Tested up to: 6.9
 Requires PHP: 8.0
 Requires Plugins: advanced-custom-fields-pro
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,10 @@ Advanced Custom Fields Pro 6.6 or newer is required. ACF Extended and the ACF Fo
 Themes can override one block renderer at `dpi-blocks/blocks/<slug>/render.php` while the plugin remains the fallback. They can call `dpi_blocks_render_top_bar()` and `dpi_blocks_render_search_trigger()`, or use the `dpi_blocks/top_bar` and `dpi_blocks/search_trigger` actions. Directory templates may also be overridden inside a theme's `dpi-blocks` directory. See `docs/EXTENDING.md` for the complete template, field, metadata, asset, CSS, and JavaScript extension contract.
 
 == Changelog ==
+
+= 1.6.1 =
+* Render plugin-owned links as inert span elements in ACF block previews so Gutenberg clicks do not navigate or open link previews, while preserving the same component classes and styling.
+* Disable pointer interaction for links produced by rich text or third-party shortcode output inside editor previews as a fallback.
 
 = 1.6.0 =
 * Added an optional Hover Reveal interaction to Image Buttons, with per-card supporting copy and action labels accessible by mouse hover and keyboard focus.
