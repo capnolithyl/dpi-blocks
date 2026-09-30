@@ -76,14 +76,10 @@ if ( $heading_id ) :
 				$rel        = '_blank' === $target ? 'noopener noreferrer' : '';
 				?>
 				<li>
-					<a class="dpi-image-buttons-alt__card" href="<?php echo esc_url( $image_link['url'] ); ?>" target="<?php echo esc_attr( $target ); ?>"
-					<?php
-					if ( $rel ) :
-						?>
-						rel="<?php echo esc_attr( $rel ); ?>"<?php endif; ?>>
+					<?php echo dpi_blocks_link_open( $image_link, 'dpi-image-buttons-alt__card', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						<figure><?php echo wp_get_attachment_image( $item['image_id'], 'large', false, array( 'alt' => '' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></figure>
 						<span><?php echo esc_html( $image_link['title'] ); ?></span>
-					</a>
+					<?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</li>
 			<?php endforeach; ?>
 		</ul>
