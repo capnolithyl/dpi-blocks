@@ -73,28 +73,43 @@ $wrapper_attributes = get_block_wrapper_attributes(
 				<?php
 				if ( $email ) :
 					?>
-					<a href="<?php echo esc_url( 'mailto:' . $email ); ?>">
 					<?php
+					$email_link = array( 'url' => 'mailto:' . $email, 'title' => $email, 'target' => '' );
+					echo dpi_blocks_link_open( $email_link, 'dpi-staff-card__contact-link', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					if ( function_exists( 'dpi_blocks_render_icon' ) ) :
 						?>
-					<span aria-hidden="true"><?php echo dpi_blocks_render_icon( 'solid:envelope', array( 'aria-hidden' => 'true' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the plugin-owned icon renderer. ?></span><?php endif; ?><span><?php echo esc_html( $email ); ?></span></a><?php endif; ?>
+					<span aria-hidden="true"><?php echo dpi_blocks_render_icon( 'solid:envelope', array( 'aria-hidden' => 'true' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the plugin-owned icon renderer. ?></span><?php endif; ?><span><?php echo esc_html( $email ); ?></span><?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php endif; ?>
 				<?php
 				if ( $phone && $phone_uri ) :
 					?>
-					<a href="<?php echo esc_url( $phone_uri ); ?>">
 					<?php
+					$phone_link = array( 'url' => $phone_uri, 'title' => $phone, 'target' => '' );
+					echo dpi_blocks_link_open( $phone_link, 'dpi-staff-card__contact-link', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					if ( function_exists( 'dpi_blocks_render_icon' ) ) :
 						?>
-					<span aria-hidden="true"><?php echo dpi_blocks_render_icon( 'solid:phone', array( 'aria-hidden' => 'true' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the plugin-owned icon renderer. ?></span><?php endif; ?><span><?php echo esc_html( $phone ); ?></span></a><?php endif; ?>
+					<span aria-hidden="true"><?php echo dpi_blocks_render_icon( 'solid:phone', array( 'aria-hidden' => 'true' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the plugin-owned icon renderer. ?></span><?php endif; ?><span><?php echo esc_html( $phone ); ?></span><?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php endif; ?>
 			</address>
 		<?php endif; ?>
 
 		<?php if ( $url || ( 'modal' === $interaction_mode && $bio ) ) : ?>
-			<a class="dpi-staff-card__bio-link" href="<?php echo esc_url( $url ? $url : '#' . $dialog_id ); ?>"
 			<?php
-			if ( 'modal' === $interaction_mode && $bio ) :
-				?>
-				aria-controls="<?php echo esc_attr( $dialog_id ); ?>" aria-haspopup="dialog" data-dpi-dialog-open<?php endif; ?>><?php esc_html_e( 'View biography', 'dpi-blocks' ); ?></a>
+			$bio_link = array(
+				'url'    => $url ? $url : '#' . $dialog_id,
+				'title'  => __( 'View biography', 'dpi-blocks' ),
+				'target' => '',
+			);
+			$bio_attrs = array();
+			if ( 'modal' === $interaction_mode && $bio && empty( $is_preview ) ) {
+				$bio_attrs = array(
+					'aria-controls'       => $dialog_id,
+					'aria-haspopup'        => 'dialog',
+					'data-dpi-dialog-open' => 'true',
+				);
+			}
+			echo dpi_blocks_link_open( $bio_link, 'dpi-staff-card__bio-link', ! empty( $is_preview ), $bio_attrs ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			esc_html_e( 'View biography', 'dpi-blocks' );
+			echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			?>
 		<?php endif; ?>
 	</div>
 
