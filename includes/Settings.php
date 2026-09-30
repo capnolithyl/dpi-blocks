@@ -36,7 +36,7 @@ final class Settings {
 		'five-pillars'      => 'Pillars',
 		'hero'              => 'Hero',
 		'image-buttons'     => 'Image Buttons',
-		'image-buttons-alt' => 'Image Buttons Alt',
+		'image-buttons-alt' => 'Image Buttons: Section',
 		'interior-hero'     => 'Interior Hero',
 		'mass-times'        => 'Mass Times',
 		'mission'           => 'Mission',
@@ -44,6 +44,54 @@ final class Settings {
 		'social-media'      => 'Social Media',
 		'staff-card'        => 'Staff Card',
 		'stats'             => 'Stats',
+	);
+
+	/**
+	 * Groups used only to make the settings screen easier to scan.
+	 *
+	 * The block registry remains flat; these categories do not affect Gutenberg.
+	 */
+	private const BLOCK_GROUPS = array(
+		'page-structure' => array(
+			'label'       => 'Page Structure & Navigation',
+			'description' => 'Blocks that establish page identity or help visitors move around a long page.',
+			'blocks'      => array( 'hero', 'interior-hero', 'anchor-navigation' ),
+		),
+		'links-cta' => array(
+			'label'       => 'Links & Calls to Action',
+			'description' => 'Visual navigation and promotional sections that point visitors toward the next step.',
+			'blocks'      => array( 'image-buttons', 'image-buttons-alt', 'featured-links', 'feature-banner' ),
+		),
+		'storytelling' => array(
+			'label'       => 'Content & Storytelling',
+			'description' => 'Reusable sections for explanatory, mission-focused, or supporting content.',
+			'blocks'      => array( 'mission', 'five-pillars', 'stats', 'accordion' ),
+		),
+		'dynamic' => array(
+			'label'       => 'Dynamic & Directory Content',
+			'description' => 'Blocks that pull from posts, schedules, social sources, or plugin-managed content types.',
+			'blocks'      => array( 'community-slider', 'mass-times', 'social-media', 'staff-card', 'office-grid' ),
+		),
+	);
+
+	/** Task-focused explanations shown on the settings screen. */
+	private const BLOCK_HELP = array(
+		'accordion'         => 'Use for FAQs or longer supporting content that should stay compact until a visitor opens it.',
+		'anchor-navigation' => 'Creates jump links to anchored sections on the same page. Best for long pages with several named sections.',
+		'community-slider'  => 'Pulls posts from a selected category and displays them as a carousel or grid. Useful for news, events, or updates.',
+		'feature-banner'    => 'Prominent image-and-copy feature with eyebrow, headline, supporting text, and CTA. Good for promotions or highlighted messages.',
+		'featured-links'    => 'Combines an introductory content area with up to four icon links. Useful for a themed set of important destinations.',
+		'five-pillars'      => 'Interactive showcase for 2–8 values, priorities, or pillars, each with descriptive copy, optional links, and image collages.',
+		'hero'              => 'Large landing-page banner using image slides or video, optional CTAs, and overlay or split layouts.',
+		'image-buttons'     => 'Up to three compact image-based navigation cards. Choose overlay text or captioned cards for quick-link rows.',
+		'image-buttons-alt' => 'A titled section with introductory copy and up to four linked images. Use when image links need more context than the compact version.',
+		'interior-hero'     => 'Simpler inner-page banner with optional eyebrow, title, intro, background image, and breadcrumbs.',
+		'mass-times'        => 'Displays grouped liturgy schedules with optional image and related links. Intended for full page content, not the global Mass Schedule dialog.',
+		'mission'           => 'Image-and-copy storytelling section with heading, subheading, optional body copy, CTAs, and left/right/stacked layouts.',
+		'office-grid'       => 'Displays Office records automatically or from a manual selection. Requires the optional Office content type to be enabled.',
+		'social-media'      => 'Shows social profile links and an optional shortcode-powered feed using global settings or block-specific overrides.',
+		'staff-card'        => 'Displays one Staff Member with optional position and contact details. Requires the Staff content type and a selected person.',
+		'stats'             => 'Shows 1–6 short value-and-label statistics as a row or a set of cards.',
 	);
 
 	/** Register hooks. */
@@ -155,6 +203,13 @@ final class Settings {
 		if ( 'settings_page_' . self::PAGE_SLUG !== $hook_suffix ) {
 			return;
 		}
+
+		wp_enqueue_style(
+			'dpi-blocks-settings',
+			DPI_BLOCKS_URL . 'assets/css/settings.css',
+			array(),
+			DPI_BLOCKS_VERSION
+		);
 
 		$tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'blocks'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only presentation state.
 		if ( 'blocks' !== $tab ) {
@@ -305,22 +360,28 @@ final class Settings {
 	private function render_tab( string $tab, array $settings ): void {
 		$this->render_preserved_fields( $tab, $settings );
 		if ( 'blocks' === $tab ) {
-			echo '<h2>' . esc_html__( 'Available blocks', 'dpi-blocks' ) . '</h2>';
-			echo '<p>' . esc_html__( 'Disabled blocks are hidden from the inserter but remain registered so existing content keeps rendering.', 'dpi-blocks' ) . '</p>';
-			echo '<p>';
-			echo '<button type="button" class="button button-secondary" data-dpi-block-toggle="select">' . esc_html__( 'Select all', 'dpi-blocks' ) . '</button> ';
+			echo '<div class="dpi-blocks-settings-header">';
+			echo '<div><h2>' . esc_html__( 'Available blocks', 'dpi-blocks' ) . '</h2>';
+			echo '<p>' . esc_html__( 'Choose the reusable building blocks this site needs. Disabled blocks disappear from the inserter but remain registered so existing content keeps rendering.', 'dpi-blocks' ) . '</p></div>';
+			echo '<div class="dpi-blocks-settings-actions">';
+			echo '<button type="button" class="button button-secondary" data-dpi-block-toggle="select">' . esc_html__( 'Select all', 'dpi-blocks' ) . '</button>';
 			echo '<button type="button" class="button button-secondary" data-dpi-block-toggle="deselect">' . esc_html__( 'Deselect all', 'dpi-blocks' ) . '</button>';
-			echo '</p>';
-			echo '<table class="form-table" role="presentation" data-dpi-block-list><tbody>';
-			foreach ( self::BLOCKS as $slug => $label ) {
-				$this->checkbox_row(
-					'blocks[' . $slug . ']',
-					$label,
-					! empty( $settings['blocks'][ $slug ] ),
-					$this->block_description( $slug )
-				);
+			echo '</div></div>';
+
+			echo '<div class="dpi-blocks-groups" data-dpi-block-list>';
+			foreach ( self::BLOCK_GROUPS as $group ) {
+				echo '<section class="dpi-blocks-group">';
+				echo '<header class="dpi-blocks-group__header"><h3>' . esc_html( $group['label'] ) . '</h3><p>' . esc_html( $group['description'] ) . '</p></header>';
+				echo '<div class="dpi-blocks-group__grid">';
+				foreach ( $group['blocks'] as $slug ) {
+					if ( ! isset( self::BLOCKS[ $slug ] ) ) {
+						continue;
+					}
+					$this->block_toggle_card( $slug, self::BLOCKS[ $slug ], ! empty( $settings['blocks'][ $slug ] ) );
+				}
+				echo '</div></section>';
 			}
-			echo '</tbody></table>';
+			echo '</div>';
 			return;
 		}
 
@@ -459,9 +520,17 @@ final class Settings {
 	}
 
 
-	/**
-	 * Read a block's human-facing description from its block metadata.
-	 */
+	/** Render one friendly block enable/disable card. */
+	private function block_toggle_card( string $slug, string $label, bool $checked ): void {
+		$description = self::BLOCK_HELP[ $slug ] ?? $this->block_description( $slug );
+
+		echo '<label class="dpi-blocks-card">';
+		echo '<span class="dpi-blocks-card__toggle"><input type="checkbox" name="' . esc_attr( $this->input_name( 'blocks[' . $slug . ']' ) ) . '" value="1" ' . checked( $checked, true, false ) . '><span>' . esc_html__( 'Enabled', 'dpi-blocks' ) . '</span></span>';
+		echo '<span class="dpi-blocks-card__content"><strong>' . esc_html( $label ) . '</strong><span>' . esc_html( $description ) . '</span></span>';
+		echo '</label>';
+	}
+
+	/** Read the block metadata description as a fallback. */
 	private function block_description( string $slug ): string {
 		$slug = sanitize_key( $slug );
 		if ( '' === $slug ) {
