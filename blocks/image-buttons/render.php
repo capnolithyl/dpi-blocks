@@ -9,11 +9,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$rows   = function_exists( 'get_field' ) ? get_field( 'buttons' ) : array();
-$layout = function_exists( 'get_field' ) ? (string) get_field( 'layout' ) : 'overlay';
-$layout = in_array( $layout, array( 'overlay', 'captioned' ), true ) ? $layout : 'overlay';
-$rows   = is_array( $rows ) ? $rows : array();
-$items  = array();
+$rows        = function_exists( 'get_field' ) ? get_field( 'buttons' ) : array();
+$layout      = function_exists( 'get_field' ) ? (string) get_field( 'layout' ) : 'overlay';
+$interaction = function_exists( 'get_field' ) ? (string) get_field( 'interaction' ) : 'static';
+$layout      = in_array( $layout, array( 'overlay', 'captioned' ), true ) ? $layout : 'overlay';
+$interaction = in_array( $interaction, array( 'static', 'reveal' ), true ) ? $interaction : 'static';
+$interaction = 'overlay' === $layout ? $interaction : 'static';
+$rows        = is_array( $rows ) ? $rows : array();
+$items       = array();
 
 foreach ( $rows as $row ) {
 	if ( ! is_array( $row ) ) {
@@ -29,10 +32,12 @@ foreach ( $rows as $row ) {
 	}
 
 	$items[] = array(
-		'link'       => $button_link,
-		'image_id'   => $image_id,
-		'heading'    => trim( (string) ( $row['heading'] ?? '' ) ),
-		'subheading' => trim( (string) ( $row['subheading'] ?? '' ) ),
+		'link'         => $button_link,
+		'image_id'     => $image_id,
+		'heading'      => trim( (string) ( $row['heading'] ?? '' ) ),
+		'subheading'   => trim( (string) ( $row['subheading'] ?? '' ) ),
+		'description'  => trim( (string) ( $row['description'] ?? '' ) ),
+		'action_label' => trim( (string) ( $row['action_label'] ?? '' ) ),
 	);
 }
 
@@ -50,7 +55,7 @@ if ( ! $items ) {
 
 $wrapper_attributes = get_block_wrapper_attributes(
 	array(
-		'class' => 'dpi-block dpi-image-buttons dpi-image-buttons--' . $layout,
+		'class' => 'dpi-block dpi-image-buttons dpi-image-buttons--' . $layout . ' dpi-image-buttons--interaction-' . $interaction,
 	)
 );
 ?>
@@ -86,6 +91,20 @@ $wrapper_attributes = get_block_wrapper_attributes(
 						?>
 						<p><?php echo esc_html( $item['subheading'] ); ?></p><?php endif; ?>
 				</div>
+
+				<?php if ( 'reveal' === $interaction && ( $item['heading'] || $item['description'] || $item['action_label'] ) ) : ?>
+					<div class="dpi-image-buttons__reveal">
+						<?php if ( $item['heading'] ) : ?>
+							<span class="dpi-image-buttons__reveal-heading" aria-hidden="true"><?php echo esc_html( $item['heading'] ); ?></span>
+						<?php endif; ?>
+						<?php if ( $item['description'] ) : ?>
+							<p class="dpi-image-buttons__description"><?php echo esc_html( $item['description'] ); ?></p>
+						<?php endif; ?>
+						<?php if ( $item['action_label'] ) : ?>
+							<span class="dpi-image-buttons__action" aria-hidden="true"><?php echo esc_html( $item['action_label'] ); ?></span>
+						<?php endif; ?>
+					</div>
+				<?php endif; ?>
 
 				<?php
 				if ( $has_link ) :
