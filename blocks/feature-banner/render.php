@@ -73,7 +73,7 @@ $wrapper_attributes = get_block_wrapper_attributes(
 			$target = ! empty( $cta['target'] ) ? (string) $cta['target'] : '_self';
 			$rel    = '_blank' === $target ? 'noopener noreferrer' : '';
 			?>
-			<a class="dpi-feature-banner__cta" href="<?php echo esc_url( $cta['url'] ); ?>" target="<?php echo esc_attr( $target ); ?>"<?php echo $rel ? ' rel="' . esc_attr( $rel ) . '"' : ''; ?>><?php echo esc_html( $cta['title'] ); ?></a>
+			<?php echo dpi_blocks_link_open( $cta, 'dpi-feature-banner__cta', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php echo esc_html( $cta['title'] ); ?><?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		<?php endif; ?>
 	</div>
 </section>
