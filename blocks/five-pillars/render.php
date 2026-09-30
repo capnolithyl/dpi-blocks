@@ -108,7 +108,7 @@ $wrapper_attributes = get_block_wrapper_attributes( array( 'class' => 'dpi-block
 									$target = ! empty( $link['target'] ) ? (string) $link['target'] : '_self';
 									$rel    = '_blank' === $target ? 'noopener noreferrer' : '';
 									?>
-									<a class="dpi-five-pillars__link" href="<?php echo esc_url( $link['url'] ); ?>" target="<?php echo esc_attr( $target ); ?>"<?php echo $rel ? ' rel="' . esc_attr( $rel ) . '"' : ''; ?>><?php echo esc_html( $link['title'] ); ?></a>
+									<?php echo dpi_blocks_link_open( $link, 'dpi-five-pillars__link', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php echo esc_html( $link['title'] ); ?><?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 								<?php endif; ?>
 							</div>
 						</div>
