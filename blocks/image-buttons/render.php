@@ -63,19 +63,21 @@ $wrapper_attributes = get_block_wrapper_attributes(
 	<ul class="dpi-image-buttons__list">
 		<?php foreach ( $items as $item ) : ?>
 			<?php
-			$has_link = ! empty( $item['link']['url'] );
-			$target   = ! empty( $item['link']['target'] ) ? (string) $item['link']['target'] : '_self';
-			$rel      = '_blank' === $target ? 'noopener noreferrer' : '';
+			$has_link       = ! empty( $item['link']['url'] );
+			$has_reveal     = 'reveal' === $interaction && $has_link && ( $item['heading'] || $item['description'] || $item['action_label'] );
+			$card_class     = 'dpi-image-buttons__card' . ( $has_reveal ? ' dpi-image-buttons__card--reveal' : '' );
+			$target         = ! empty( $item['link']['target'] ) ? (string) $item['link']['target'] : '_self';
+			$rel            = '_blank' === $target ? 'noopener noreferrer' : '';
 			?>
 			<li class="dpi-image-buttons__item">
 				<?php if ( $has_link ) : ?>
-					<a class="dpi-image-buttons__card" href="<?php echo esc_url( $item['link']['url'] ); ?>" target="<?php echo esc_attr( $target ); ?>"
+					<a class="<?php echo esc_attr( $card_class ); ?>" href="<?php echo esc_url( $item['link']['url'] ); ?>" target="<?php echo esc_attr( $target ); ?>"
 					<?php
 					if ( $rel ) :
 						?>
 						rel="<?php echo esc_attr( $rel ); ?>"<?php endif; ?>>
 				<?php else : ?>
-					<div class="dpi-image-buttons__card">
+					<div class="<?php echo esc_attr( $card_class ); ?>">
 				<?php endif; ?>
 
 				<?php if ( $item['image_id'] ) : ?>
@@ -92,7 +94,7 @@ $wrapper_attributes = get_block_wrapper_attributes(
 						<p><?php echo esc_html( $item['subheading'] ); ?></p><?php endif; ?>
 				</div>
 
-				<?php if ( 'reveal' === $interaction && ( $item['heading'] || $item['description'] || $item['action_label'] ) ) : ?>
+				<?php if ( $has_reveal ) : ?>
 					<div class="dpi-image-buttons__reveal">
 						<?php if ( $item['heading'] ) : ?>
 							<span class="dpi-image-buttons__reveal-heading" aria-hidden="true"><?php echo esc_html( $item['heading'] ); ?></span>
@@ -100,7 +102,7 @@ $wrapper_attributes = get_block_wrapper_attributes(
 						<?php if ( $item['description'] ) : ?>
 							<p class="dpi-image-buttons__description"><?php echo esc_html( $item['description'] ); ?></p>
 						<?php endif; ?>
-						<?php if ( $item['action_label'] ) : ?>
+						<?php if ( $has_link && $item['action_label'] ) : ?>
 							<span class="dpi-image-buttons__action" aria-hidden="true"><?php echo esc_html( $item['action_label'] ); ?></span>
 						<?php endif; ?>
 					</div>
