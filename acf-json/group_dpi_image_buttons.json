@@ -10,7 +10,11 @@
       "instructions": "",
       "required": 1,
       "conditional_logic": 0,
-      "wrapper": { "width": "", "class": "", "id": "" },
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
       "layout": "block",
       "pagination": 0,
       "min": 1,
@@ -27,7 +31,11 @@
           "instructions": "",
           "required": 0,
           "conditional_logic": 0,
-          "wrapper": { "width": "50", "class": "", "id": "" },
+          "wrapper": {
+            "width": "50",
+            "class": "",
+            "id": ""
+          },
           "return_format": "array"
         },
         {
@@ -38,7 +46,11 @@
           "instructions": "",
           "required": 1,
           "conditional_logic": 0,
-          "wrapper": { "width": "50", "class": "", "id": "" },
+          "wrapper": {
+            "width": "50",
+            "class": "",
+            "id": ""
+          },
           "return_format": "array",
           "preview_size": "medium",
           "library": "all",
@@ -52,7 +64,11 @@
           "instructions": "",
           "required": 1,
           "conditional_logic": 0,
-          "wrapper": { "width": "50", "class": "", "id": "" },
+          "wrapper": {
+            "width": "50",
+            "class": "",
+            "id": ""
+          },
           "default_value": "",
           "maxlength": "",
           "placeholder": "",
@@ -67,10 +83,52 @@
           "instructions": "",
           "required": 1,
           "conditional_logic": 0,
-          "wrapper": { "width": "50", "class": "", "id": "" },
+          "wrapper": {
+            "width": "50",
+            "class": "",
+            "id": ""
+          },
           "default_value": "",
           "maxlength": "",
           "placeholder": "",
+          "prepend": "",
+          "append": ""
+        },
+        {
+          "key": "field_dpi_image_buttons_description",
+          "label": "Hover Description",
+          "name": "description",
+          "type": "textarea",
+          "instructions": "Optional supporting copy shown when the Hover Reveal interaction is enabled.",
+          "required": 0,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "70",
+            "class": "",
+            "id": ""
+          },
+          "default_value": "",
+          "maxlength": 180,
+          "rows": 3,
+          "placeholder": "",
+          "new_lines": ""
+        },
+        {
+          "key": "field_dpi_image_buttons_action_label",
+          "label": "Hover Action Label",
+          "name": "action_label",
+          "type": "text",
+          "instructions": "Visual action label for the hover state. The entire card remains the link.",
+          "required": 0,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "30",
+            "class": "",
+            "id": ""
+          },
+          "default_value": "Learn More",
+          "maxlength": 40,
+          "placeholder": "Learn More",
           "prepend": "",
           "append": ""
         }
@@ -84,7 +142,11 @@
       "instructions": "",
       "required": 0,
       "conditional_logic": 0,
-      "wrapper": { "width": "", "class": "", "id": "" },
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
       "placement": "top",
       "endpoint": 0
     },
@@ -96,15 +158,60 @@
       "instructions": "",
       "required": 1,
       "conditional_logic": 0,
-      "wrapper": { "width": "", "class": "", "id": "" },
-      "choices": { "overlay": "Overlay", "captioned": "Captioned" },
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "choices": {
+        "overlay": "Overlay",
+        "captioned": "Captioned"
+      },
       "default_value": "overlay",
+      "return_format": "value",
+      "allow_null": 0,
+      "layout": "horizontal"
+    },
+    {
+      "key": "field_dpi_image_buttons_interaction",
+      "label": "Interaction",
+      "name": "interaction",
+      "type": "button_group",
+      "instructions": "Static keeps the normal card visible. Hover Reveal swaps to a detail panel on mouse hover or keyboard focus.",
+      "required": 1,
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_image_buttons_layout",
+            "operator": "==",
+            "value": "overlay"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "choices": {
+        "static": "Static",
+        "reveal": "Hover Reveal"
+      },
+      "default_value": "static",
       "return_format": "value",
       "allow_null": 0,
       "layout": "horizontal"
     }
   ],
-  "location": [[{ "param": "block", "operator": "==", "value": "dpi/image-buttons" }]],
+  "location": [
+    [
+      {
+        "param": "block",
+        "operator": "==",
+        "value": "dpi/image-buttons"
+      }
+    ]
+  ],
   "menu_order": 0,
   "position": "normal",
   "style": "default",
