@@ -71,11 +71,7 @@ $wrapper_attributes = get_block_wrapper_attributes(
 			?>
 			<li class="dpi-image-buttons__item">
 				<?php if ( $has_link ) : ?>
-					<a class="<?php echo esc_attr( $card_class ); ?>" href="<?php echo esc_url( $item['link']['url'] ); ?>" target="<?php echo esc_attr( $target ); ?>"
-					<?php
-					if ( $rel ) :
-						?>
-						rel="<?php echo esc_attr( $rel ); ?>"<?php endif; ?>>
+					<?php echo dpi_blocks_link_open( $item['link'], $card_class, ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<?php else : ?>
 					<div class="<?php echo esc_attr( $card_class ); ?>">
 				<?php endif; ?>
@@ -110,11 +106,9 @@ $wrapper_attributes = get_block_wrapper_attributes(
 
 				<?php
 				if ( $has_link ) :
+					echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				else :
 					?>
-					</a>
-					<?php
-else :
-	?>
 					</div><?php endif; ?>
 			</li>
 		<?php endforeach; ?>
