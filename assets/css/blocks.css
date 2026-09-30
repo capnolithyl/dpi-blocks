@@ -326,15 +326,15 @@
 	display: none;
 }
 
-.dpi-image-buttons--interaction-reveal .dpi-image-buttons__card {
+.dpi-image-buttons__card--reveal {
 	overflow: hidden;
 }
 
-.dpi-image-buttons--interaction-reveal .dpi-image-buttons__caption {
+.dpi-image-buttons__card--reveal .dpi-image-buttons__caption {
 	transition: opacity 180ms ease;
 }
 
-.dpi-image-buttons--interaction-reveal .dpi-image-buttons__reveal {
+.dpi-image-buttons__card--reveal .dpi-image-buttons__reveal {
 	position: absolute;
 	inset: 0;
 	z-index: 2;
@@ -354,16 +354,16 @@
 		visibility 180ms ease;
 }
 
-.dpi-image-buttons--interaction-reveal .dpi-image-buttons__reveal-heading {
+.dpi-image-buttons__card--reveal .dpi-image-buttons__reveal-heading {
 	font: inherit;
 	font-weight: 700;
 }
 
-.dpi-image-buttons--interaction-reveal .dpi-image-buttons__description {
+.dpi-image-buttons__card--reveal .dpi-image-buttons__description {
 	margin: 0;
 }
 
-.dpi-image-buttons--interaction-reveal .dpi-image-buttons__action {
+.dpi-image-buttons__card--reveal .dpi-image-buttons__action {
 	display: inline-flex;
 	width: fit-content;
 	padding: 0.35em 0.85em;
@@ -374,21 +374,21 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-	.dpi-image-buttons--interaction-reveal .dpi-image-buttons__card:hover .dpi-image-buttons__caption {
+	.dpi-image-buttons__card--reveal:hover .dpi-image-buttons__caption {
 		opacity: 0;
 	}
 
-	.dpi-image-buttons--interaction-reveal .dpi-image-buttons__card:hover .dpi-image-buttons__reveal {
+	.dpi-image-buttons__card--reveal:hover .dpi-image-buttons__reveal {
 		opacity: 1;
 		visibility: visible;
 	}
 }
 
-.dpi-image-buttons--interaction-reveal .dpi-image-buttons__card:focus-visible .dpi-image-buttons__caption {
+.dpi-image-buttons__card--reveal:focus-visible .dpi-image-buttons__caption {
 	opacity: 0;
 }
 
-.dpi-image-buttons--interaction-reveal .dpi-image-buttons__card:focus-visible .dpi-image-buttons__reveal {
+.dpi-image-buttons__card--reveal:focus-visible .dpi-image-buttons__reveal {
 	opacity: 1;
 	visibility: visible;
 }
