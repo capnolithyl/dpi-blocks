@@ -68,7 +68,7 @@ if ( $heading_id ) :
 						<?php
 						if ( is_array( $action_link ) && function_exists( 'dpi_blocks_render_link' ) ) :
 							?>
-							<?php echo wp_kses_post( dpi_blocks_render_link( $action_link, 'dpi-button' ) ); ?><?php endif; ?>
+							<?php echo wp_kses_post( dpi_blocks_render_link( $action_link, 'dpi-button', ! empty( $is_preview ) ) ); ?><?php endif; ?>
 					<?php endforeach; ?>
 				</div>
 			<?php endif; ?>
