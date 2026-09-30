@@ -68,6 +68,73 @@ if ( ! function_exists( 'dpi_blocks_render_icon' ) ) {
 	}
 }
 
+if ( ! function_exists( 'dpi_blocks_link_open' ) ) {
+	/**
+	 * Return an opening tag for a link-like element.
+	 *
+	 * In ACF block previews, real anchors are replaced with inert spans so
+	 * Gutenberg cannot open the link when an editor clicks the preview.
+	 *
+	 * @param mixed               $link       ACF link array or URL.
+	 * @param string              $class_name CSS class list.
+	 * @param bool                $is_preview Whether this is an editor preview.
+	 * @param array<string,string> $attrs      Additional safe attributes.
+	 */
+	function dpi_blocks_link_open( mixed $link, string $class_name = '', bool $is_preview = false, array $attrs = array() ): string {
+		if ( is_string( $link ) ) {
+			$link = array(
+				'url'    => $link,
+				'title'  => '',
+				'target' => '',
+			);
+		}
+
+		if ( ! is_array( $link ) || empty( $link['url'] ) ) {
+			return '';
+		}
+
+		$url = esc_url( (string) $link['url'] );
+		if ( '' === $url ) {
+			return '';
+		}
+
+		$classes = trim( $class_name . ( $is_preview ? ' dpi-editor-link' : '' ) );
+		$output  = '<' . ( $is_preview ? 'span' : 'a' );
+
+		if ( '' !== $classes ) {
+			$output .= ' class="' . esc_attr( $classes ) . '"';
+		}
+
+		if ( $is_preview ) {
+			$output .= ' data-dpi-editor-link data-dpi-href="' . esc_attr( $url ) . '"';
+		} else {
+			$target = isset( $link['target'] ) && '_blank' === $link['target'] ? '_blank' : '';
+			$output .= ' href="' . $url . '"';
+
+			if ( $target ) {
+				$output .= ' target="_blank" rel="noopener noreferrer"';
+			}
+		}
+
+		foreach ( $attrs as $name => $value ) {
+			$name = sanitize_key( (string) $name );
+			if ( '' === $name || '' === (string) $value ) {
+				continue;
+			}
+			$output .= ' ' . esc_attr( $name ) . '="' . esc_attr( (string) $value ) . '"';
+		}
+
+		return $output . '>';
+	}
+}
+
+if ( ! function_exists( 'dpi_blocks_link_close' ) ) {
+	/** Return the matching closing tag for dpi_blocks_link_open(). */
+	function dpi_blocks_link_close( bool $is_preview = false ): string {
+		return $is_preview ? '</span>' : '</a>';
+	}
+}
+
 if ( ! function_exists( 'dpi_blocks_render_link' ) ) {
 	/**
 	 * Render an ACF link value as an escaped anchor.
@@ -75,7 +142,7 @@ if ( ! function_exists( 'dpi_blocks_render_link' ) ) {
 	 * @param mixed  $link  ACF link array or URL.
 	 * @param string $class_name CSS class list.
 	 */
-	function dpi_blocks_render_link( mixed $link, string $class_name = '' ): string {
+	function dpi_blocks_render_link( mixed $link, string $class_name = '', bool $is_preview = false ): string {
 		if ( is_string( $link ) ) {
 			$link = array(
 				'url'    => $link,
@@ -96,6 +163,10 @@ if ( ! function_exists( 'dpi_blocks_render_link' ) ) {
 		$title  = isset( $link['title'] ) ? (string) $link['title'] : $url;
 		$target = isset( $link['target'] ) && '_blank' === $link['target'] ? '_blank' : '';
 		$rel    = '_blank' === $target ? ' rel="noopener noreferrer"' : '';
+
+		if ( function_exists( 'dpi_blocks_link_open' ) && function_exists( 'dpi_blocks_link_close' ) ) {
+			return dpi_blocks_link_open( $link, $class_name, $is_preview ) . esc_html( $title ) . dpi_blocks_link_close( $is_preview );
+		}
 
 		return sprintf(
 			'<a class="%1$s" href="%2$s"%3$s%4$s>%5$s</a>',
