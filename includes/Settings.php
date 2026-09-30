@@ -50,6 +50,7 @@ final class Settings {
 	public function register(): void {
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
 		add_action( 'init', array( $this, 'maybe_flush_rewrite_rules' ), 1000 );
 	}
 
@@ -141,6 +142,31 @@ final class Settings {
 				'sanitize_callback' => array( $this, 'sanitize' ),
 				'default'           => self::defaults(),
 			)
+		);
+	}
+
+
+	/**
+	 * Load admin-only behavior for the Blocks settings tab.
+	 *
+	 * @param string $hook_suffix Current admin page hook.
+	 */
+	public function enqueue_admin_assets( string $hook_suffix ): void {
+		if ( 'settings_page_' . self::PAGE_SLUG !== $hook_suffix ) {
+			return;
+		}
+
+		$tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'blocks'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only presentation state.
+		if ( 'blocks' !== $tab ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'dpi-blocks-settings',
+			DPI_BLOCKS_URL . 'assets/js/settings.js',
+			array(),
+			DPI_BLOCKS_VERSION,
+			true
 		);
 	}
 
@@ -279,7 +305,13 @@ final class Settings {
 	private function render_tab( string $tab, array $settings ): void {
 		$this->render_preserved_fields( $tab, $settings );
 		if ( 'blocks' === $tab ) {
-			echo '<h2>' . esc_html__( 'Available blocks', 'dpi-blocks' ) . '</h2><p>' . esc_html__( 'Disabled blocks are hidden from the inserter but remain registered so existing content keeps rendering.', 'dpi-blocks' ) . '</p><table class="form-table" role="presentation"><tbody>';
+			echo '<h2>' . esc_html__( 'Available blocks', 'dpi-blocks' ) . '</h2>';
+			echo '<p>' . esc_html__( 'Disabled blocks are hidden from the inserter but remain registered so existing content keeps rendering.', 'dpi-blocks' ) . '</p>';
+			echo '<p>';
+			echo '<button type="button" class="button button-secondary" data-dpi-block-toggle="select">' . esc_html__( 'Select all', 'dpi-blocks' ) . '</button> ';
+			echo '<button type="button" class="button button-secondary" data-dpi-block-toggle="deselect">' . esc_html__( 'Deselect all', 'dpi-blocks' ) . '</button>';
+			echo '</p>';
+			echo '<table class="form-table" role="presentation" data-dpi-block-list><tbody>';
 			foreach ( self::BLOCKS as $slug => $label ) {
 				$this->checkbox_row( 'blocks[' . $slug . ']', $label, ! empty( $settings['blocks'][ $slug ] ) );
 			}
