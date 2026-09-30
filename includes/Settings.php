@@ -83,7 +83,7 @@ final class Settings {
 		'featured-links'    => 'Combines an introductory content area with up to four icon links. Useful for a themed set of important destinations.',
 		'five-pillars'      => 'Interactive showcase for 2–8 values, priorities, or pillars, each with descriptive copy, optional links, and image collages.',
 		'hero'              => 'Large landing-page banner using image slides or video, optional CTAs, and overlay or split layouts.',
-		'image-buttons'     => 'Up to three compact image-based navigation cards. Choose overlay text or captioned cards for quick-link rows.',
+		'image-buttons'     => 'Up to three compact image-based navigation cards. Choose overlay or captioned layouts, with an optional hover/focus detail reveal for linked cards.',
 		'image-buttons-alt' => 'A titled section with introductory copy and up to four linked images. Use when image links need more context than the compact version.',
 		'interior-hero'     => 'Simpler inner-page banner with optional eyebrow, title, intro, background image, and breadcrumbs.',
 		'mass-times'        => 'Displays grouped liturgy schedules with optional image and related links. Intended for full page content, not the global Mass Schedule dialog.',
