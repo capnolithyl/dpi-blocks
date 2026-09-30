@@ -71,7 +71,9 @@ $dpi_get_youtube_id = static function ( $url ): string {
 	return preg_match( '/^[A-Za-z0-9_-]{6,20}$/', $id ) ? $id : '';
 };
 
-$dpi_render_links = static function ( $rows, $class_name = '' ) {
+$dpi_is_preview = ! empty( $is_preview );
+
+$dpi_render_links = static function ( $rows, $class_name = '' ) use ( $dpi_is_preview ) {
 	if ( ! is_array( $rows ) ) {
 		return;
 	}
@@ -84,7 +86,7 @@ $dpi_render_links = static function ( $rows, $class_name = '' ) {
 		}
 
 		if ( function_exists( 'dpi_blocks_render_link' ) ) {
-			echo wp_kses_post( dpi_blocks_render_link( $link, $class_name ) );
+			echo wp_kses_post( dpi_blocks_render_link( $link, $class_name, $dpi_is_preview ) );
 			continue;
 		}
 
