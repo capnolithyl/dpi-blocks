@@ -201,6 +201,36 @@
       "return_format": "value",
       "allow_null": 0,
       "layout": "horizontal"
+    },
+    {
+      "key": "field_dpi_image_buttons_reveal_color",
+      "label": "Reveal Overlay Color",
+      "name": "reveal_color",
+      "type": "color_picker",
+      "instructions": "Optional overlay color for the Hover Reveal state. Leave blank to let the active theme provide its default.",
+      "required": 0,
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_image_buttons_layout",
+            "operator": "==",
+            "value": "overlay"
+          },
+          {
+            "field": "field_dpi_image_buttons_interaction",
+            "operator": "==",
+            "value": "reveal"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "enable_opacity": 0,
+      "return_format": "string"
     }
   ],
   "location": [
