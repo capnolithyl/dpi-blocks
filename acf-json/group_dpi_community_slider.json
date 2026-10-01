@@ -45,7 +45,7 @@
       "label": "Post Categories",
       "name": "categories",
       "type": "taxonomy",
-      "instructions": "Select one or more post categories.",
+      "instructions": "Select one or more post categories. Posts matching any selected category are combined into one result set.",
       "required": 1,
       "conditional_logic": 0,
       "wrapper": {
@@ -80,10 +80,10 @@
     },
     {
       "key": "field_dpi_community_posts_per_page",
-      "label": "Posts Per Category",
+      "label": "Posts to Show",
       "name": "posts_per_page",
       "type": "number",
-      "instructions": "",
+      "instructions": "Maximum number of posts shown across all selected categories.",
       "required": 1,
       "conditional_logic": 0,
       "wrapper": {
