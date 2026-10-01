@@ -10,7 +10,11 @@
       "instructions": "",
       "required": 1,
       "conditional_logic": 0,
-      "wrapper": { "width": "", "class": "", "id": "" },
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
       "default_value": "",
       "maxlength": "",
       "placeholder": "",
@@ -22,10 +26,14 @@
       "label": "Text",
       "name": "text",
       "type": "textarea",
-      "instructions": "",
-      "required": 1,
+      "instructions": "Optional introductory copy shown below the section heading.",
+      "required": 0,
       "conditional_logic": 0,
-      "wrapper": { "width": "", "class": "", "id": "" },
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
       "default_value": "",
       "maxlength": "",
       "rows": 4,
@@ -40,7 +48,11 @@
       "instructions": "Select one or more post categories.",
       "required": 1,
       "conditional_logic": 0,
-      "wrapper": { "width": "", "class": "", "id": "" },
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
       "taxonomy": "category",
       "field_type": "checkbox",
       "allow_null": 0,
@@ -58,7 +70,11 @@
       "instructions": "",
       "required": 0,
       "conditional_logic": 0,
-      "wrapper": { "width": "", "class": "", "id": "" },
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
       "placement": "top",
       "endpoint": 0
     },
@@ -70,7 +86,11 @@
       "instructions": "",
       "required": 1,
       "conditional_logic": 0,
-      "wrapper": { "width": "33", "class": "", "id": "" },
+      "wrapper": {
+        "width": "33",
+        "class": "",
+        "id": ""
+      },
       "default_value": 5,
       "min": 1,
       "max": 20,
@@ -87,7 +107,11 @@
       "instructions": "",
       "required": 1,
       "conditional_logic": 0,
-      "wrapper": { "width": "33", "class": "", "id": "" },
+      "wrapper": {
+        "width": "33",
+        "class": "",
+        "id": ""
+      },
       "choices": {
         "date": "Date",
         "title": "Title",
@@ -110,8 +134,15 @@
       "instructions": "",
       "required": 1,
       "conditional_logic": 0,
-      "wrapper": { "width": "34", "class": "", "id": "" },
-      "choices": { "DESC": "Descending", "ASC": "Ascending" },
+      "wrapper": {
+        "width": "34",
+        "class": "",
+        "id": ""
+      },
+      "choices": {
+        "DESC": "Descending",
+        "ASC": "Ascending"
+      },
       "default_value": "DESC",
       "return_format": "value",
       "multiple": 0,
@@ -128,7 +159,11 @@
       "instructions": "",
       "required": 0,
       "conditional_logic": 0,
-      "wrapper": { "width": "", "class": "", "id": "" },
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
       "placement": "top",
       "endpoint": 0
     },
@@ -140,8 +175,15 @@
       "instructions": "",
       "required": 1,
       "conditional_logic": 0,
-      "wrapper": { "width": "", "class": "", "id": "" },
-      "choices": { "carousel": "Carousel", "grid": "Grid" },
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "choices": {
+        "carousel": "Carousel",
+        "grid": "Grid"
+      },
       "default_value": "carousel",
       "return_format": "value",
       "allow_null": 0,
@@ -154,8 +196,20 @@
       "type": "number",
       "instructions": "",
       "required": 1,
-      "conditional_logic": [[{ "field": "field_dpi_community_layout", "operator": "==", "value": "carousel" }]],
-      "wrapper": { "width": "33", "class": "", "id": "" },
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_community_layout",
+            "operator": "==",
+            "value": "carousel"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "33",
+        "class": "",
+        "id": ""
+      },
       "default_value": 3,
       "min": 1,
       "max": 6,
@@ -168,8 +222,20 @@
       "type": "number",
       "instructions": "",
       "required": 1,
-      "conditional_logic": [[{ "field": "field_dpi_community_layout", "operator": "==", "value": "carousel" }]],
-      "wrapper": { "width": "33", "class": "", "id": "" },
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_community_layout",
+            "operator": "==",
+            "value": "carousel"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "33",
+        "class": "",
+        "id": ""
+      },
       "default_value": 2,
       "min": 1,
       "max": 6,
@@ -182,8 +248,20 @@
       "type": "number",
       "instructions": "",
       "required": 1,
-      "conditional_logic": [[{ "field": "field_dpi_community_layout", "operator": "==", "value": "carousel" }]],
-      "wrapper": { "width": "34", "class": "", "id": "" },
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_community_layout",
+            "operator": "==",
+            "value": "carousel"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "34",
+        "class": "",
+        "id": ""
+      },
       "default_value": 1,
       "min": 1,
       "max": 3,
@@ -196,8 +274,20 @@
       "type": "true_false",
       "instructions": "",
       "required": 0,
-      "conditional_logic": [[{ "field": "field_dpi_community_layout", "operator": "==", "value": "carousel" }]],
-      "wrapper": { "width": "25", "class": "", "id": "" },
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_community_layout",
+            "operator": "==",
+            "value": "carousel"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "25",
+        "class": "",
+        "id": ""
+      },
       "message": "",
       "default_value": 1,
       "ui": 1,
@@ -211,8 +301,20 @@
       "type": "true_false",
       "instructions": "",
       "required": 0,
-      "conditional_logic": [[{ "field": "field_dpi_community_layout", "operator": "==", "value": "carousel" }]],
-      "wrapper": { "width": "25", "class": "", "id": "" },
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_community_layout",
+            "operator": "==",
+            "value": "carousel"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "25",
+        "class": "",
+        "id": ""
+      },
       "message": "",
       "default_value": 0,
       "ui": 1,
@@ -226,8 +328,20 @@
       "type": "true_false",
       "instructions": "",
       "required": 0,
-      "conditional_logic": [[{ "field": "field_dpi_community_layout", "operator": "==", "value": "carousel" }]],
-      "wrapper": { "width": "25", "class": "", "id": "" },
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_community_layout",
+            "operator": "==",
+            "value": "carousel"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "25",
+        "class": "",
+        "id": ""
+      },
       "message": "",
       "default_value": 1,
       "ui": 1,
@@ -241,8 +355,20 @@
       "type": "true_false",
       "instructions": "",
       "required": 0,
-      "conditional_logic": [[{ "field": "field_dpi_community_layout", "operator": "==", "value": "carousel" }]],
-      "wrapper": { "width": "25", "class": "", "id": "" },
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_community_layout",
+            "operator": "==",
+            "value": "carousel"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "25",
+        "class": "",
+        "id": ""
+      },
       "message": "",
       "default_value": 0,
       "ui": 1,
@@ -256,8 +382,20 @@
       "type": "number",
       "instructions": "Milliseconds between slides.",
       "required": 1,
-      "conditional_logic": [[{ "field": "field_dpi_community_autoplay", "operator": "==", "value": "1" }]],
-      "wrapper": { "width": "50", "class": "", "id": "" },
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_community_autoplay",
+            "operator": "==",
+            "value": "1"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "50",
+        "class": "",
+        "id": ""
+      },
       "default_value": 5000,
       "min": 1000,
       "max": 30000,
@@ -271,8 +409,20 @@
       "type": "number",
       "instructions": "Animation duration in milliseconds.",
       "required": 1,
-      "conditional_logic": [[{ "field": "field_dpi_community_layout", "operator": "==", "value": "carousel" }]],
-      "wrapper": { "width": "50", "class": "", "id": "" },
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_community_layout",
+            "operator": "==",
+            "value": "carousel"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "50",
+        "class": "",
+        "id": ""
+      },
       "default_value": 500,
       "min": 0,
       "max": 5000,
@@ -280,7 +430,15 @@
       "append": "ms"
     }
   ],
-  "location": [[{ "param": "block", "operator": "==", "value": "dpi/community-slider" }]],
+  "location": [
+    [
+      {
+        "param": "block",
+        "operator": "==",
+        "value": "dpi/community-slider"
+      }
+    ]
+  ],
   "menu_order": 0,
   "position": "normal",
   "style": "default",
