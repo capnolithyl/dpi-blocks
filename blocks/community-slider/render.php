@@ -31,9 +31,13 @@ $category_value = $dpi_get_field( 'categories', array() );
 $layout         = (string) $dpi_get_field( 'layout', 'carousel' );
 $layout         = in_array( $layout, array( 'carousel', 'grid' ), true ) ? $layout : 'carousel';
 $posts_per_page = max( 1, min( 20, absint( $dpi_get_field( 'posts_per_page', 5 ) ) ) );
-$show_date      = $dpi_get_bool( 'show_date', true );
-$cta            = $dpi_get_field( 'cta', array() );
-$cta            = is_array( $cta ) ? $cta : array();
+$show_date       = $dpi_get_bool( 'show_date', true );
+$cta             = $dpi_get_field( 'cta', array() );
+$cta             = is_array( $cta ) ? $cta : array();
+$background_image = $dpi_get_field( 'background_image', array() );
+$background_url   = is_array( $background_image ) && ! empty( $background_image['url'] )
+	? (string) $background_image['url']
+	: '';
 $dpi_order      = strtoupper( (string) $dpi_get_field( 'order', 'DESC' ) );
 $dpi_order      = in_array( $dpi_order, array( 'ASC', 'DESC' ), true ) ? $dpi_order : 'DESC';
 $dpi_orderby    = (string) $dpi_get_field( 'orderby', 'date' );
@@ -93,11 +97,18 @@ $slick       = array(
 	),
 );
 
-$wrapper_attributes = get_block_wrapper_attributes(
-	array(
-		'class' => 'dpi-block dpi-community-slider dpi-community-slider--' . $layout,
-	)
+$wrapper_args = array(
+	'class' => 'dpi-block dpi-community-slider dpi-community-slider--' . $layout,
 );
+
+if ( $background_url ) {
+	$wrapper_args['style'] = sprintf(
+		'--dpi-community-slider-background-image: url("%s");',
+		esc_url( $background_url )
+	);
+}
+
+$wrapper_attributes = get_block_wrapper_attributes( $wrapper_args );
 ?>
 <section <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 <?php
