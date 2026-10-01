@@ -168,6 +168,24 @@
       "endpoint": 0
     },
     {
+      "key": "field_dpi_community_background_image",
+      "label": "Background Image",
+      "name": "background_image",
+      "type": "image",
+      "instructions": "Optional section background image. The active theme controls the crop, overlay, and presentation.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "100",
+        "class": "",
+        "id": ""
+      },
+      "return_format": "array",
+      "preview_size": "medium",
+      "library": "all",
+      "mime_types": ""
+    },
+    {
       "key": "field_dpi_community_show_date",
       "label": "Show Post Date",
       "name": "show_date",
