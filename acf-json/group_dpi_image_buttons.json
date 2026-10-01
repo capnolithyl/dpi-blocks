@@ -206,8 +206,8 @@
       "key": "field_dpi_image_buttons_reveal_color",
       "label": "Reveal Overlay Color",
       "name": "reveal_color",
-      "type": "color_picker",
-      "instructions": "Optional overlay color for the Hover Reveal state. Leave blank to let the active theme provide its default.",
+      "type": "select",
+      "instructions": "Choose from the active theme's color palette. Leave blank to use the theme's default reveal color.",
       "required": 0,
       "conditional_logic": [
         [
@@ -229,8 +229,14 @@
         "id": ""
       },
       "default_value": "",
-      "enable_opacity": 0,
-      "return_format": "string"
+      "return_format": "value",
+      "choices": {},
+      "multiple": 0,
+      "allow_null": 1,
+      "ui": 1,
+      "ajax": 0,
+      "placeholder": "Use theme default",
+      "dpi_theme_color": 1
     }
   ],
   "location": [
