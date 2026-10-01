@@ -29,6 +29,7 @@ final class Fields {
 		add_action( 'init', array( $this, 'register_directory_groups' ), 25 );
 		add_action( 'init', array( $this, 'register_ministry_options_page' ), 25 );
 		add_filter( 'acf/load_field', array( $this, 'populate_icon_choices' ) );
+		add_filter( 'acf/load_field', array( $this, 'populate_theme_color_choices' ) );
 		add_action( 'admin_notices', array( $this, 'render_errors' ) );
 	}
 
@@ -699,6 +700,114 @@ final class Fields {
 		}
 
 		return $field;
+	}
+
+	/**
+	 * Populate a plugin-owned select field from the active theme color palette.
+	 *
+	 * Fields opt in by setting `dpi_theme_color` in their ACF definition.
+	 * Values are stored as WordPress color slugs so renderers can use the
+	 * corresponding --wp--preset--color--{slug} custom property.
+	 */
+	public function populate_theme_color_choices( array $field ): array {
+		if ( 'select' !== ( $field['type'] ?? '' ) || empty( $field['dpi_theme_color'] ) ) {
+			return $field;
+		}
+
+		$choices = array();
+
+		foreach ( $this->theme_color_palette() as $color ) {
+			$slug = isset( $color['slug'] ) ? sanitize_title( (string) $color['slug'] ) : '';
+			if ( '' === $slug ) {
+				continue;
+			}
+
+			$name = isset( $color['name'] ) ? trim( (string) $color['name'] ) : $slug;
+			$hex  = isset( $color['color'] ) ? trim( (string) $color['color'] ) : '';
+
+			$choices[ $slug ] = $hex
+				? sprintf( '%1$s — %2$s', $name, $hex )
+				: $name;
+		}
+
+		$field['choices']     = $choices;
+		$field['ui']          = 1;
+		$field['allow_null']  = 1;
+		$field['placeholder'] = __( 'Use theme default', 'dpi-blocks' );
+
+		return $field;
+	}
+
+	/**
+	 * Return the active theme's merged color palette.
+	 *
+	 * Prefer WordPress' resolved global settings so parent/child theme merging
+	 * is respected. Fall back to the active theme.json file for classic themes
+	 * or WordPress versions where the resolved palette is unavailable.
+	 *
+	 * @return list<array{slug:string,name:string,color:string}>
+	 */
+	private function theme_color_palette(): array {
+		$palette = array();
+
+		if ( function_exists( 'wp_get_global_settings' ) ) {
+			$resolved = wp_get_global_settings( array( 'color', 'palette', 'theme' ) );
+
+			if ( is_array( $resolved ) ) {
+				$palette = $resolved;
+			}
+
+			if ( ! $palette ) {
+				$settings  = wp_get_global_settings();
+				$candidate = $settings['color']['palette']['theme']
+					?? $settings['color']['palette']
+					?? array();
+
+				if ( is_array( $candidate ) ) {
+					$palette = $candidate;
+				}
+			}
+		}
+
+		if ( ! $this->looks_like_color_palette( $palette ) && function_exists( 'get_theme_file_path' ) ) {
+			$file = get_theme_file_path( 'theme.json' );
+
+			if ( is_readable( $file ) ) {
+				$data = wp_json_file_decode( $file, array( 'associative' => true ) );
+
+				if ( is_array( $data ) ) {
+					$candidate = $data['settings']['color']['palette'] ?? array();
+					$palette   = is_array( $candidate ) ? $candidate : array();
+				}
+			}
+		}
+
+		$normalized = array();
+
+		foreach ( $palette as $color ) {
+			if ( ! is_array( $color ) || empty( $color['slug'] ) ) {
+				continue;
+			}
+
+			$normalized[] = array(
+				'slug'  => sanitize_title( (string) $color['slug'] ),
+				'name'  => isset( $color['name'] ) ? sanitize_text_field( (string) $color['name'] ) : sanitize_text_field( (string) $color['slug'] ),
+				'color' => isset( $color['color'] ) ? sanitize_text_field( (string) $color['color'] ) : '',
+			);
+		}
+
+		return $normalized;
+	}
+
+	/** Check whether a value resembles a flat theme.json color palette. */
+	private function looks_like_color_palette( array $palette ): bool {
+		if ( ! $palette ) {
+			return false;
+		}
+
+		$first = reset( $palette );
+
+		return is_array( $first ) && isset( $first['slug'] );
 	}
 
 	/** Report invalid plugin-owned JSON or filtered definitions without exposing paths. */
