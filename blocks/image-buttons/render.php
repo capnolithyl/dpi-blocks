@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $rows        = function_exists( 'get_field' ) ? get_field( 'buttons' ) : array();
 $layout      = function_exists( 'get_field' ) ? (string) get_field( 'layout' ) : 'overlay';
 $interaction = function_exists( 'get_field' ) ? (string) get_field( 'interaction' ) : 'static';
-$reveal_color = function_exists( 'get_field' ) ? sanitize_hex_color( (string) get_field( 'reveal_color' ) ) : '';
+$reveal_color = function_exists( 'get_field' ) ? trim( (string) get_field( 'reveal_color' ) ) : '';
 $layout      = in_array( $layout, array( 'overlay', 'captioned' ), true ) ? $layout : 'overlay';
 $interaction = in_array( $interaction, array( 'static', 'reveal' ), true ) ? $interaction : 'static';
 $interaction = 'overlay' === $layout ? $interaction : 'static';
@@ -59,7 +59,17 @@ $wrapper_args = array(
 );
 
 if ( $reveal_color ) {
-	$wrapper_args['style'] = '--dpi-image-buttons-reveal-color:' . $reveal_color . ';';
+	$legacy_hex = sanitize_hex_color( $reveal_color );
+
+	if ( $legacy_hex ) {
+		$wrapper_args['style'] = '--dpi-image-buttons-reveal-color:' . $legacy_hex . ';';
+	} else {
+		$color_slug = sanitize_title( $reveal_color );
+
+		if ( $color_slug ) {
+			$wrapper_args['style'] = '--dpi-image-buttons-reveal-color:var(--wp--preset--color--' . $color_slug . ');';
+		}
+	}
 }
 
 $wrapper_attributes = get_block_wrapper_attributes( $wrapper_args );
