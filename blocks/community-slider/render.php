@@ -31,6 +31,9 @@ $category_value = $dpi_get_field( 'categories', array() );
 $layout         = (string) $dpi_get_field( 'layout', 'carousel' );
 $layout         = in_array( $layout, array( 'carousel', 'grid' ), true ) ? $layout : 'carousel';
 $posts_per_page = max( 1, min( 20, absint( $dpi_get_field( 'posts_per_page', 5 ) ) ) );
+$show_date      = $dpi_get_bool( 'show_date', true );
+$cta            = $dpi_get_field( 'cta', array() );
+$cta            = is_array( $cta ) ? $cta : array();
 $dpi_order      = strtoupper( (string) $dpi_get_field( 'order', 'DESC' ) );
 $dpi_order      = in_array( $dpi_order, array( 'ASC', 'DESC' ), true ) ? $dpi_order : 'DESC';
 $dpi_orderby    = (string) $dpi_get_field( 'orderby', 'date' );
@@ -175,6 +178,11 @@ if ( $heading ) :
 									<?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 								<?php endif; ?>
 								<h3><?php echo dpi_blocks_link_open( $post_link, 'dpi-community-slider__title-link', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php echo esc_html( get_the_title( $community_post ) ); ?><?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></h3>
+								<?php if ( $show_date ) : ?>
+									<time class="dpi-community-slider__date" datetime="<?php echo esc_attr( get_the_date( 'c', $community_post ) ); ?>">
+										<?php echo esc_html( get_the_date( 'M j', $community_post ) ); ?>
+									</time>
+								<?php endif; ?>
 							</article>
 						<?php endforeach; ?>
 					</div>
@@ -184,4 +192,14 @@ if ( $heading ) :
 			</div>
 		<?php endforeach; ?>
 	</div>
+
+	<?php if ( ! empty( $cta['url'] ) && ! empty( $cta['title'] ) ) : ?>
+		<div class="dpi-community-slider__footer">
+			<?php
+			echo dpi_blocks_link_open( $cta, 'dpi-community-slider__cta dpi-button', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo esc_html( $cta['title'] );
+			echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			?>
+		</div>
+	<?php endif; ?>
 </section>
