@@ -126,82 +126,57 @@ if ( $heading ) :
 		</header>
 	<?php endif; ?>
 
-	<?php if ( count( $categories ) > 1 ) : ?>
-		<div class="dpi-tabs__list" role="tablist" aria-label="<?php esc_attr_e( 'Post categories', 'dpi-blocks' ); ?>" data-dpi-tabs>
-			<?php foreach ( array_values( $categories ) as $index => $category ) : ?>
-				<?php $tab_id = $instance_id . '-tab-' . $category->term_id; ?>
-				<button id="<?php echo esc_attr( $tab_id ); ?>" type="button" role="tab" aria-selected="<?php echo 0 === $index ? 'true' : 'false'; ?>" aria-controls="<?php echo esc_attr( $instance_id . '-panel-' . $category->term_id ); ?>" tabindex="<?php echo 0 === $index ? '0' : '-1'; ?>" data-dpi-tab>
-					<?php echo esc_html( $category->name ); ?>
-				</button>
-			<?php endforeach; ?>
-		</div>
-	<?php endif; ?>
+	<?php
+	$community_posts = get_posts(
+		array(
+			'post_type'           => 'post',
+			'post_status'         => 'publish',
+			'posts_per_page'      => $posts_per_page,
+			'category__in'        => array_keys( $categories ),
+			'ignore_sticky_posts' => true,
+			'orderby'             => $dpi_orderby,
+			'order'               => $dpi_order,
+			'no_found_rows'       => true,
+		)
+	);
+	?>
 
 	<div class="dpi-community-slider__panels">
-		<?php foreach ( array_values( $categories ) as $index => $category ) : ?>
-			<?php
-			$community_posts = get_posts(
-				array(
-					'post_type'           => 'post',
-					'post_status'         => 'publish',
-					'posts_per_page'      => $posts_per_page,
-					'category__in'        => array( $category->term_id ),
-					'ignore_sticky_posts' => true,
-					'orderby'             => $dpi_orderby,
-					'order'               => $dpi_order,
-					'no_found_rows'       => true,
-				)
-			);
-			$panel_id        = $instance_id . '-panel-' . $category->term_id;
-			$tab_id          = $instance_id . '-tab-' . $category->term_id;
-			?>
-			<div
-				id="<?php echo esc_attr( $panel_id ); ?>"
-				class="dpi-community-slider__panel"
-				<?php if ( count( $categories ) > 1 ) : ?>
-					role="tabpanel"
-					aria-labelledby="<?php echo esc_attr( $tab_id ); ?>"
-				<?php endif; ?>
-				<?php if ( 0 !== $index ) : ?>
-					hidden
-				<?php endif; ?>
-				data-dpi-tab-panel
-			>
-				<?php if ( $community_posts ) : ?>
-					<div
-						class="dpi-community-slider__items"
-						<?php if ( 'carousel' === $layout && count( $community_posts ) > 1 ) : ?>
-							data-dpi-slick="<?php echo esc_attr( wp_json_encode( $slick ) ); ?>"
-						<?php endif; ?>
-					>
-						<?php foreach ( $community_posts as $community_post ) : ?>
-							<article class="dpi-community-slider__item">
-								<?php
-								$post_link = array(
-									'url'    => get_permalink( $community_post ),
-									'title'  => get_the_title( $community_post ),
-									'target' => '',
-								);
-								?>
-								<?php if ( has_post_thumbnail( $community_post ) ) : ?>
-									<?php echo dpi_blocks_link_open( $post_link, 'dpi-community-slider__image', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-										<?php echo get_the_post_thumbnail( $community_post, 'large' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-									<?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-								<?php endif; ?>
-								<h3><?php echo dpi_blocks_link_open( $post_link, 'dpi-community-slider__title-link', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php echo esc_html( get_the_title( $community_post ) ); ?><?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></h3>
-								<?php if ( $show_date ) : ?>
-									<time class="dpi-community-slider__date" datetime="<?php echo esc_attr( get_the_date( 'c', $community_post ) ); ?>">
-										<?php echo esc_html( get_the_date( 'M j', $community_post ) ); ?>
-									</time>
-								<?php endif; ?>
-							</article>
-						<?php endforeach; ?>
-					</div>
-				<?php else : ?>
-					<p><?php esc_html_e( 'No posts are available in this category yet.', 'dpi-blocks' ); ?></p>
-				<?php endif; ?>
-			</div>
-		<?php endforeach; ?>
+		<div class="dpi-community-slider__panel">
+			<?php if ( $community_posts ) : ?>
+				<div
+					class="dpi-community-slider__items"
+					<?php if ( 'carousel' === $layout && count( $community_posts ) > 1 ) : ?>
+						data-dpi-slick="<?php echo esc_attr( wp_json_encode( $slick ) ); ?>"
+					<?php endif; ?>
+				>
+					<?php foreach ( $community_posts as $community_post ) : ?>
+						<article class="dpi-community-slider__item">
+							<?php
+							$post_link = array(
+								'url'    => get_permalink( $community_post ),
+								'title'  => get_the_title( $community_post ),
+								'target' => '',
+							);
+							?>
+							<?php if ( has_post_thumbnail( $community_post ) ) : ?>
+								<?php echo dpi_blocks_link_open( $post_link, 'dpi-community-slider__image', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+									<?php echo get_the_post_thumbnail( $community_post, 'large' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+								<?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<?php endif; ?>
+							<h3><?php echo dpi_blocks_link_open( $post_link, 'dpi-community-slider__title-link', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php echo esc_html( get_the_title( $community_post ) ); ?><?php echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></h3>
+							<?php if ( $show_date ) : ?>
+								<time class="dpi-community-slider__date" datetime="<?php echo esc_attr( get_the_date( 'c', $community_post ) ); ?>">
+									<?php echo esc_html( get_the_date( 'M j', $community_post ) ); ?>
+								</time>
+							<?php endif; ?>
+						</article>
+					<?php endforeach; ?>
+				</div>
+			<?php else : ?>
+				<p><?php esc_html_e( 'No posts are available in the selected categories yet.', 'dpi-blocks' ); ?></p>
+			<?php endif; ?>
+		</div>
 	</div>
 
 	<?php if ( ! empty( $cta['url'] ) && ! empty( $cta['title'] ) ) : ?>
