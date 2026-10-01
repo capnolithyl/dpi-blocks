@@ -5,7 +5,7 @@ Requires at least: 6.9
 Tested up to: 6.9
 Requires PHP: 8.0
 Requires Plugins: advanced-custom-fields-pro
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,10 @@ Advanced Custom Fields Pro 6.6 or newer is required. ACF Extended and the ACF Fo
 Themes can override one block renderer at `dpi-blocks/blocks/<slug>/render.php` while the plugin remains the fallback. They can call `dpi_blocks_render_top_bar()` and `dpi_blocks_render_search_trigger()`, or use the `dpi_blocks/top_bar` and `dpi_blocks/search_trigger` actions. Directory templates may also be overridden inside a theme's `dpi-blocks` directory. See `docs/EXTENDING.md` for the complete template, field, metadata, asset, CSS, and JavaScript extension contract.
 
 == Changelog ==
+
+= 1.6.3 =
+* Replaced the Image Buttons reveal color picker with a theme-palette select populated from the active theme.json/global color settings.
+* Theme color selections are stored as WordPress preset slugs and rendered through --wp--preset--color custom properties; legacy hex values remain supported.
 
 = 1.6.2 =
 * Updated Image Buttons Hover Reveal to slide the overlay up from the bottom while moving the existing heading and revealing supporting copy/actions.
