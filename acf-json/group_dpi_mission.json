@@ -10,7 +10,11 @@
       "instructions": "",
       "required": 1,
       "conditional_logic": 0,
-      "wrapper": { "width": "", "class": "", "id": "" },
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
       "return_format": "array",
       "preview_size": "medium",
       "library": "all",
@@ -24,7 +28,11 @@
       "instructions": "",
       "required": 1,
       "conditional_logic": 0,
-      "wrapper": { "width": "50", "class": "", "id": "" },
+      "wrapper": {
+        "width": "50",
+        "class": "",
+        "id": ""
+      },
       "default_value": "",
       "maxlength": "",
       "placeholder": "",
@@ -36,10 +44,14 @@
       "label": "Subheading",
       "name": "subheading",
       "type": "text",
-      "instructions": "",
-      "required": 1,
+      "instructions": "Optional secondary heading. Leave blank when a single heading is enough.",
+      "required": 0,
       "conditional_logic": 0,
-      "wrapper": { "width": "50", "class": "", "id": "" },
+      "wrapper": {
+        "width": "50",
+        "class": "",
+        "id": ""
+      },
       "default_value": "",
       "maxlength": "",
       "placeholder": "",
@@ -54,7 +66,11 @@
       "instructions": "",
       "required": 0,
       "conditional_logic": 0,
-      "wrapper": { "width": "", "class": "", "id": "" },
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
       "default_value": "",
       "maxlength": "",
       "rows": 5,
@@ -69,7 +85,11 @@
       "instructions": "",
       "required": 0,
       "conditional_logic": 0,
-      "wrapper": { "width": "", "class": "", "id": "" },
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
       "layout": "table",
       "pagination": 0,
       "min": 0,
@@ -86,7 +106,11 @@
           "instructions": "",
           "required": 1,
           "conditional_logic": 0,
-          "wrapper": { "width": "", "class": "", "id": "" },
+          "wrapper": {
+            "width": "",
+            "class": "",
+            "id": ""
+          },
           "return_format": "array"
         }
       ]
@@ -99,7 +123,11 @@
       "instructions": "",
       "required": 0,
       "conditional_logic": 0,
-      "wrapper": { "width": "", "class": "", "id": "" },
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
       "placement": "top",
       "endpoint": 0
     },
@@ -111,7 +139,11 @@
       "instructions": "",
       "required": 1,
       "conditional_logic": 0,
-      "wrapper": { "width": "", "class": "", "id": "" },
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
       "choices": {
         "media-left": "Media Left",
         "media-right": "Media Right",
@@ -123,7 +155,15 @@
       "layout": "horizontal"
     }
   ],
-  "location": [[{ "param": "block", "operator": "==", "value": "dpi/mission" }]],
+  "location": [
+    [
+      {
+        "param": "block",
+        "operator": "==",
+        "value": "dpi/mission"
+      }
+    ]
+  ],
   "menu_order": 0,
   "position": "normal",
   "style": "default",
