@@ -3,7 +3,7 @@
  * Plugin Name:       DPI Blocks
  * Plugin URI:        https://www.diocesan.com/
  * Description:       Portable ACF blocks, header utilities, and directory content types for custom WordPress sites.
- * Version:           1.6.4
+ * Version:           1.6.5
  * Requires at least: 6.9
  * Requires PHP:      8.0
  * Requires Plugins:  advanced-custom-fields-pro
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DPI_BLOCKS_VERSION', '1.6.4' );
+define( 'DPI_BLOCKS_VERSION', '1.6.5' );
 define( 'DPI_BLOCKS_FILE', __FILE__ );
 define( 'DPI_BLOCKS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DPI_BLOCKS_URL', plugin_dir_url( __FILE__ ) );
