@@ -168,6 +168,40 @@
       "endpoint": 0
     },
     {
+      "key": "field_dpi_community_show_date",
+      "label": "Show Post Date",
+      "name": "show_date",
+      "type": "true_false",
+      "instructions": "Show each post's publication date on the card.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "50",
+        "class": "",
+        "id": ""
+      },
+      "message": "",
+      "default_value": 1,
+      "ui": 1,
+      "ui_on_text": "",
+      "ui_off_text": ""
+    },
+    {
+      "key": "field_dpi_community_cta",
+      "label": "Section CTA",
+      "name": "cta",
+      "type": "link",
+      "instructions": "Optional link shown below the posts, such as “More News” or “View All”.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "50",
+        "class": "",
+        "id": ""
+      },
+      "return_format": "array"
+    },
+    {
       "key": "field_dpi_community_layout",
       "label": "Layout",
       "name": "layout",
