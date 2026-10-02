@@ -231,7 +231,7 @@
       "label": "Section CTA",
       "name": "cta",
       "type": "link",
-      "instructions": "Optional link shown below the posts, such as “More News” or “View All”.",
+      "instructions": "Optional custom footer link. If left blank, tabbed sliders automatically link each tab to that category archive, and a combined slider with one category links to that category archive. Combined sliders with multiple categories need a custom link if a footer CTA is desired.",
       "required": 0,
       "conditional_logic": 0,
       "wrapper": {
