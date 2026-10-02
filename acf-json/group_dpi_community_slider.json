@@ -45,7 +45,7 @@
       "label": "Post Categories",
       "name": "categories",
       "type": "taxonomy",
-      "instructions": "Select one or more post categories. Posts matching any selected category are combined into one result set.",
+      "instructions": "Select one or more post categories.",
       "required": 1,
       "conditional_logic": 0,
       "wrapper": {
@@ -61,6 +61,28 @@
       "load_terms": 0,
       "return_format": "id",
       "multiple": 0
+    },
+    {
+      "key": "field_dpi_community_category_display",
+      "label": "Category Display",
+      "name": "category_display",
+      "type": "button_group",
+      "instructions": "Choose whether selected categories are combined into one result set or shown as separate tabs.",
+      "required": 1,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "choices": {
+        "combined": "Combined",
+        "tabs": "Tabs"
+      },
+      "default_value": "tabs",
+      "return_format": "value",
+      "allow_null": 0,
+      "layout": "horizontal"
     },
     {
       "key": "field_dpi_community_query_tab",
