@@ -110,6 +110,39 @@ if ( $background_url ) {
 	);
 }
 
+$dpi_category_cta = static function ( WP_Term $category ) {
+	$url = get_category_link( $category->term_id );
+
+	if ( is_wp_error( $url ) || ! $url ) {
+		return array();
+	}
+
+	return array(
+		'url'    => $url,
+		'title'  => sprintf(
+			/* translators: %s: category name. */
+			__( 'More %s', 'dpi-blocks' ),
+			$category->name
+		),
+		'target' => '',
+	);
+};
+
+$dpi_render_footer_cta = static function ( array $link ) use ( $is_preview ) {
+	if ( empty( $link['url'] ) || empty( $link['title'] ) ) {
+		return;
+	}
+	?>
+	<div class="dpi-community-slider__footer">
+		<?php
+		echo dpi_blocks_link_open( $link, 'dpi-community-slider__cta dpi-button', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo esc_html( $link['title'] );
+		echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		?>
+	</div>
+	<?php
+};
+
 $wrapper_attributes = get_block_wrapper_attributes( $wrapper_args );
 ?>
 <section <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
@@ -170,6 +203,15 @@ if ( $heading ) :
 				<?php else : ?>
 					<p><?php esc_html_e( 'No posts are available in the selected categories yet.', 'dpi-blocks' ); ?></p>
 				<?php endif; ?>
+
+				<?php
+				if ( empty( $cta['url'] ) && 1 === count( $categories ) ) {
+					$single_category = reset( $categories );
+					if ( $single_category instanceof WP_Term ) {
+						$dpi_render_footer_cta( $dpi_category_cta( $single_category ) );
+					}
+				}
+				?>
 			</div>
 		<?php else : ?>
 			<?php foreach ( array_values( $categories ) as $index => $category ) : ?>
@@ -213,18 +255,20 @@ if ( $heading ) :
 					<?php else : ?>
 						<p><?php esc_html_e( 'No posts are available in this category yet.', 'dpi-blocks' ); ?></p>
 					<?php endif; ?>
+
+					<?php
+					if ( empty( $cta['url'] ) ) {
+						$dpi_render_footer_cta( $dpi_category_cta( $category ) );
+					}
+					?>
 				</div>
 			<?php endforeach; ?>
 		<?php endif; ?>
 	</div>
 
-	<?php if ( ! empty( $cta['url'] ) && ! empty( $cta['title'] ) ) : ?>
-		<div class="dpi-community-slider__footer">
-			<?php
-			echo dpi_blocks_link_open( $cta, 'dpi-community-slider__cta dpi-button', ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo esc_html( $cta['title'] );
-			echo dpi_blocks_link_close( ! empty( $is_preview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			?>
-		</div>
-	<?php endif; ?>
+	<?php
+	if ( ! empty( $cta['url'] ) && ! empty( $cta['title'] ) ) {
+		$dpi_render_footer_cta( $cta );
+	}
+	?>
 </section>
