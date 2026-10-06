@@ -1,0 +1,11 @@
+{
+  "name": "dpi-blocks-tests",
+  "private": true,
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  }
+}
