@@ -1,16 +1,330 @@
 {
-  "key":"group_dpi_feature_banner",
-  "title":"DPI Feature / CTA Banner Block",
-  "fields":[
-    {"key":"field_dpi_feature_banner_eyebrow","label":"Eyebrow","name":"eyebrow","type":"text","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"placeholder":"The New Evangelization"},
-    {"key":"field_dpi_feature_banner_headline","label":"Headline","name":"headline","type":"text","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""}},
-    {"key":"field_dpi_feature_banner_headline_element","label":"Headline Type","name":"headline_element","type":"button_group","instructions":"Use Quote when the prominent text is a quotation rather than a section heading.","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"choices":{"heading":"Heading","quote":"Quote"},"default_value":"heading","return_format":"value","allow_null":0,"layout":"horizontal"},
-    {"key":"field_dpi_feature_banner_content","label":"Supporting Copy","name":"content","type":"textarea","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"rows":4,"new_lines":""},
-    {"key":"field_dpi_feature_banner_cta","label":"Call to Action","name":"cta","type":"link","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"return_format":"array"},
-    {"key":"field_dpi_feature_banner_image","label":"Image","name":"image","type":"image","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"return_format":"id","preview_size":"medium","library":"all"},
-    {"key":"field_dpi_feature_banner_image_layout","label":"Image Layout","name":"image_layout","type":"button_group","instructions":"","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"choices":{"background":"Background","left":"Left","right":"Right"},"default_value":"background","return_format":"value","allow_null":0,"layout":"horizontal"},
-    {"key":"field_dpi_feature_banner_visual_variant","label":"Visual Variant","name":"visual_variant","type":"button_group","instructions":"Provides a stable styling hook for the active theme.","required":0,"conditional_logic":0,"wrapper":{"width":"","class":"","id":""},"choices":{"dark":"Dark","light":"Light"},"default_value":"dark","return_format":"value","allow_null":0,"layout":"horizontal"}
+  "key": "group_dpi_feature_banner",
+  "title": "DPI Feature / CTA Banner Block",
+  "fields": [
+    {
+      "key": "field_dpi_feature_banner_slides_tab",
+      "label": "Slides",
+      "name": "",
+      "type": "tab",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "placement": "top",
+      "endpoint": 0
+    },
+    {
+      "key": "field_dpi_feature_banner_slides",
+      "label": "Slides",
+      "name": "slides",
+      "type": "repeater",
+      "instructions": "Add one or more feature slides. A single slide renders as a static banner; two or more slides become a Slick carousel.",
+      "required": 1,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "layout": "block",
+      "pagination": 0,
+      "min": 1,
+      "max": 0,
+      "collapsed": "field_dpi_feature_banner_slide_headline",
+      "button_label": "Add Slide",
+      "rows_per_page": 20,
+      "sub_fields": [
+        {
+          "key": "field_dpi_feature_banner_slide_eyebrow",
+          "label": "Eyebrow",
+          "name": "eyebrow",
+          "type": "text",
+          "instructions": "",
+          "required": 0,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "50",
+            "class": "",
+            "id": ""
+          },
+          "placeholder": "The New Evangelization"
+        },
+        {
+          "key": "field_dpi_feature_banner_slide_headline",
+          "label": "Headline",
+          "name": "headline",
+          "type": "text",
+          "instructions": "",
+          "required": 0,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "50",
+            "class": "",
+            "id": ""
+          }
+        },
+        {
+          "key": "field_dpi_feature_banner_slide_headline_element",
+          "label": "Headline Type",
+          "name": "headline_element",
+          "type": "button_group",
+          "instructions": "Use Quote when the prominent text is a quotation rather than a section heading.",
+          "required": 0,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "50",
+            "class": "",
+            "id": ""
+          },
+          "choices": {
+            "heading": "Heading",
+            "quote": "Quote"
+          },
+          "default_value": "heading",
+          "return_format": "value",
+          "allow_null": 0,
+          "layout": "horizontal"
+        },
+        {
+          "key": "field_dpi_feature_banner_slide_visual_variant",
+          "label": "Visual Variant",
+          "name": "visual_variant",
+          "type": "button_group",
+          "instructions": "Provides a stable styling hook for the active theme.",
+          "required": 0,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "50",
+            "class": "",
+            "id": ""
+          },
+          "choices": {
+            "dark": "Dark",
+            "light": "Light"
+          },
+          "default_value": "dark",
+          "return_format": "value",
+          "allow_null": 0,
+          "layout": "horizontal"
+        },
+        {
+          "key": "field_dpi_feature_banner_slide_content",
+          "label": "Supporting Copy",
+          "name": "content",
+          "type": "textarea",
+          "instructions": "",
+          "required": 0,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "",
+            "class": "",
+            "id": ""
+          },
+          "rows": 4,
+          "new_lines": ""
+        },
+        {
+          "key": "field_dpi_feature_banner_slide_buttons",
+          "label": "Buttons",
+          "name": "buttons",
+          "type": "repeater",
+          "instructions": "Optional calls to action for this slide.",
+          "required": 0,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "",
+            "class": "",
+            "id": ""
+          },
+          "layout": "table",
+          "pagination": 0,
+          "min": 0,
+          "max": 2,
+          "collapsed": "field_dpi_feature_banner_slide_button_link",
+          "button_label": "Add Button",
+          "rows_per_page": 20,
+          "sub_fields": [
+            {
+              "key": "field_dpi_feature_banner_slide_button_link",
+              "label": "Link",
+              "name": "link",
+              "type": "link",
+              "instructions": "",
+              "required": 1,
+              "conditional_logic": 0,
+              "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+              },
+              "return_format": "array"
+            }
+          ]
+        },
+        {
+          "key": "field_dpi_feature_banner_slide_image",
+          "label": "Image",
+          "name": "image",
+          "type": "image",
+          "instructions": "",
+          "required": 0,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "50",
+            "class": "",
+            "id": ""
+          },
+          "return_format": "id",
+          "preview_size": "medium",
+          "library": "all"
+        },
+        {
+          "key": "field_dpi_feature_banner_slide_image_layout",
+          "label": "Image Layout",
+          "name": "image_layout",
+          "type": "button_group",
+          "instructions": "",
+          "required": 0,
+          "conditional_logic": 0,
+          "wrapper": {
+            "width": "50",
+            "class": "",
+            "id": ""
+          },
+          "choices": {
+            "background": "Background",
+            "left": "Left",
+            "right": "Right"
+          },
+          "default_value": "background",
+          "return_format": "value",
+          "allow_null": 0,
+          "layout": "horizontal"
+        }
+      ]
+    },
+    {
+      "key": "field_dpi_feature_banner_slider_tab",
+      "label": "Slider",
+      "name": "",
+      "type": "tab",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "placement": "top",
+      "endpoint": 0
+    },
+    {
+      "key": "field_dpi_feature_banner_show_arrows",
+      "label": "Show Arrows",
+      "name": "show_arrows",
+      "type": "true_false",
+      "instructions": "Show previous and next controls when there is more than one slide.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "33",
+        "class": "",
+        "id": ""
+      },
+      "message": "",
+      "default_value": 1,
+      "ui": 1,
+      "ui_on_text": "",
+      "ui_off_text": ""
+    },
+    {
+      "key": "field_dpi_feature_banner_show_dots",
+      "label": "Show Navigation Dots",
+      "name": "show_dots",
+      "type": "true_false",
+      "instructions": "Show slide navigation dots when there is more than one slide.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "33",
+        "class": "",
+        "id": ""
+      },
+      "message": "",
+      "default_value": 1,
+      "ui": 1,
+      "ui_on_text": "",
+      "ui_off_text": ""
+    },
+    {
+      "key": "field_dpi_feature_banner_autoplay",
+      "label": "Autoplay",
+      "name": "autoplay",
+      "type": "true_false",
+      "instructions": "Advance slides automatically.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "34",
+        "class": "",
+        "id": ""
+      },
+      "message": "",
+      "default_value": 0,
+      "ui": 1,
+      "ui_on_text": "",
+      "ui_off_text": ""
+    },
+    {
+      "key": "field_dpi_feature_banner_autoplay_speed",
+      "label": "Autoplay Speed",
+      "name": "autoplay_speed",
+      "type": "number",
+      "instructions": "Milliseconds between automatic slide changes.",
+      "required": 1,
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_feature_banner_autoplay",
+            "operator": "==",
+            "value": "1"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "50",
+        "class": "",
+        "id": ""
+      },
+      "default_value": 6000,
+      "min": 1000,
+      "max": 30000,
+      "step": 100,
+      "append": "ms"
+    }
   ],
-  "location":[[{"param":"block","operator":"==","value":"dpi/feature-banner"}]],
-  "menu_order":0,"position":"normal","style":"default","label_placement":"top","instruction_placement":"label","hide_on_screen":"","active":true,"description":"Content and display controls for the DPI Feature / CTA Banner block.","show_in_rest":0
+  "location": [
+    [
+      {
+        "param": "block",
+        "operator": "==",
+        "value": "dpi/feature-banner"
+      }
+    ]
+  ],
+  "menu_order": 0,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": "",
+  "active": true,
+  "description": "Slide content and carousel controls for the DPI Feature / CTA Banner block.",
+  "show_in_rest": 0
 }
