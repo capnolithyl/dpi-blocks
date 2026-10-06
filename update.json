@@ -1,0 +1,13 @@
+{
+  "name": "DPI Blocks",
+  "version": "1.9.2",
+  "download_url": "https://github.com/capnolithyl/dpi-blocks/releases/download/v1.9.2/dpi-blocks.zip",
+  "homepage": "https://github.com/capnolithyl/dpi-blocks",
+  "requires": "6.9",
+  "tested": "6.9",
+  "requires_php": "8.0",
+  "sections": {
+    "description": "Portable ACF blocks, header utilities, and directory content types for custom WordPress sites.",
+    "changelog": "<h4>1.9.2</h4><ul><li>Switched update discovery from the GitHub API to static public metadata to avoid anonymous API rate limits on shared hosting.</li><li>GitHub Releases remain the download source for installable plugin ZIPs.</li></ul>"
+  }
+}
