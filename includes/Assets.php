@@ -394,6 +394,12 @@ final class Assets {
 		}
 
 		if ( 'dpi/feature-banner' === $name ) {
+			$source = (string) ( $data['content_source'] ?? $data['field_dpi_feature_banner_content_source'] ?? 'manual' );
+
+			if ( 'categories' === $source ) {
+				return true;
+			}
+
 			$slides = $data['slides'] ?? $data['field_dpi_feature_banner_slides'] ?? 0;
 
 			return is_array( $slides ) ? count( $slides ) > 1 : absint( $slides ) > 1;
