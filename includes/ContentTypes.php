@@ -259,13 +259,7 @@ final class ContentTypes {
 			return;
 		}
 
-		$url = add_query_arg(
-			array(
-				'page' => Settings::PAGE_SLUG,
-				'tab'  => 'directories',
-			),
-			admin_url( 'options-general.php' )
-		);
+		$url = Settings::page_url( 'content-types' );
 		foreach ( $this->conflicts as $module => $keys ) {
 			printf(
 				'<div class="notice notice-error"><p>%1$s</p></div>',
