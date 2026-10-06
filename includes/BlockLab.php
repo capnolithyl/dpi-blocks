@@ -220,10 +220,11 @@ final class BlockLab {
 	 */
 	private function render_scenario( string $block_name, array $scenario ): void {
 		$this->active_fields = $scenario['fields'];
+		$scenario_id         = $this->scenario_block_id( $block_name, $scenario['name'] );
 
 		add_filter( 'acf/pre_load_value', array( $this, 'preload_field_value' ), PHP_INT_MAX, 3 );
 
-		$previous_handler = set_error_handler(
+		set_error_handler(
 			static function ( int $severity, string $message, string $file, int $line ): bool {
 				if ( 0 === ( error_reporting() & $severity ) ) {
 					return false;
@@ -250,7 +251,9 @@ final class BlockLab {
 					echo render_block(
 						array(
 							'blockName'    => $block_name,
-							'attrs'        => array(),
+							'attrs'        => array(
+								'id' => $scenario_id,
+							),
 							'innerBlocks'  => array(),
 							'innerHTML'    => '',
 							'innerContent' => array(),
@@ -276,6 +279,11 @@ final class BlockLab {
 		$this->active_fields = array();
 
 		restore_error_handler();
+	}
+
+	/** Return a stable, scenario-specific ACF block identity to prevent cache bleed. */
+	private function scenario_block_id( string $block_name, string $scenario_name ): string {
+		return 'block_dpi_lab_' . substr( hash( 'sha256', $block_name . "\0" . $scenario_name ), 0, 20 );
 	}
 
 	/** Supply generated values to ACF while a lab scenario is rendering. */
@@ -424,8 +432,9 @@ final class BlockLab {
 			for ( $index = 0; $index < $rows; $index++ ) {
 				$row = array();
 				foreach ( (array) ( $field['sub_fields'] ?? array() ) as $sub_field ) {
-					if ( is_array( $sub_field ) && ! empty( $sub_field['name'] ) ) {
-						$row[ $sub_field['name'] ] = $this->sample_value( $sub_field, $alternate || $index > 0 );
+					$sub_field_key = is_array( $sub_field ) ? (string) ( $sub_field['key'] ?? '' ) : '';
+					if ( '' !== $sub_field_key ) {
+						$row[ $sub_field_key ] = $this->sample_value( $sub_field, $alternate || $index > 0 );
 					}
 				}
 				$value[] = $row;
@@ -436,8 +445,9 @@ final class BlockLab {
 		if ( 'group' === $type ) {
 			$value = array();
 			foreach ( (array) ( $field['sub_fields'] ?? array() ) as $sub_field ) {
-				if ( is_array( $sub_field ) && ! empty( $sub_field['name'] ) ) {
-					$value[ $sub_field['name'] ] = $this->sample_value( $sub_field, $alternate );
+				$sub_field_key = is_array( $sub_field ) ? (string) ( $sub_field['key'] ?? '' ) : '';
+				if ( '' !== $sub_field_key ) {
+					$value[ $sub_field_key ] = $this->sample_value( $sub_field, $alternate );
 				}
 			}
 			return $value;
