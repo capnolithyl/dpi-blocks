@@ -63,11 +63,14 @@ jobs:
             exit 1
           fi
 
-      - name: Install production dependencies
-        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+      - name: Install test dependencies
+        run: composer install --no-interaction --prefer-dist
 
       - name: Run PHPUnit
         run: composer test
+
+      - name: Prepare production dependencies
+        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Build installable plugin ZIP
         shell: bash
@@ -107,6 +110,7 @@ jobs:
         run: |
           set -euo pipefail
           TAG="v$VERSION"
+          TARGET_SHA="$(git rev-parse HEAD)"
 
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "::error::Release $TAG already exists."
@@ -114,6 +118,6 @@ jobs:
           fi
 
           gh release create "$TAG" dpi-blocks.zip \
-            --target "${GITHUB_SHA}" \
+            --target "$TARGET_SHA" \
             --title "DPI Blocks $VERSION" \
             --generate-notes
