@@ -275,11 +275,7 @@ final class BlockLab {
 		remove_filter( 'acf/pre_load_value', array( $this, 'preload_field_value' ), PHP_INT_MAX );
 		$this->active_fields = array();
 
-		if ( null !== $previous_handler ) {
-			set_error_handler( $previous_handler );
-		} else {
-			restore_error_handler();
-		}
+		restore_error_handler();
 	}
 
 	/** Supply generated values to ACF while a lab scenario is rendering. */
