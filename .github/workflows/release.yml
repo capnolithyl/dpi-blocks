@@ -1,11 +1,14 @@
 name: Release DPI Blocks
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       version:
-        description: Release version without the v prefix, for example 1.9.0
-        required: true
+        description: Optional version without the v prefix. Must match the plugin files.
+        required: false
         type: string
 
 permissions:
@@ -13,7 +16,7 @@ permissions:
 
 jobs:
   release:
-    name: Build and publish v${{ inputs.version }}
+    name: Build and publish release
     runs-on: ubuntu-latest
 
     steps:
@@ -29,17 +32,14 @@ jobs:
           coverage: none
           tools: composer:v2
 
-      - name: Validate requested version
+      - name: Resolve release version
+        id: release_meta
         shell: bash
         env:
-          VERSION: ${{ inputs.version }}
+          REQUESTED_VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-
-          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "::error::Version must use x.y.z format."
-            exit 1
-          fi
 
           PLUGIN_VERSION="$(php -r '
             $source = file_get_contents("dpi-blocks.php");
@@ -53,26 +53,47 @@ jobs:
             echo $matches[1] ?? "";
           ')"
 
-          if [ "$PLUGIN_VERSION" != "$VERSION" ]; then
-            echo "::error::dpi-blocks.php is version $PLUGIN_VERSION, requested release is $VERSION."
+          if [[ ! "$PLUGIN_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Plugin version must use x.y.z format."
             exit 1
           fi
 
-          if [ "$README_VERSION" != "$VERSION" ]; then
-            echo "::error::readme.txt Stable tag is $README_VERSION, requested release is $VERSION."
+          if [ "$README_VERSION" != "$PLUGIN_VERSION" ]; then
+            echo "::error::readme.txt Stable tag is $README_VERSION but dpi-blocks.php is $PLUGIN_VERSION."
             exit 1
+          fi
+
+          if [ -n "${REQUESTED_VERSION:-}" ] && [ "$REQUESTED_VERSION" != "$PLUGIN_VERSION" ]; then
+            echo "::error::Requested version $REQUESTED_VERSION does not match plugin version $PLUGIN_VERSION."
+            exit 1
+          fi
+
+          TAG="v$PLUGIN_VERSION"
+          echo "version=$PLUGIN_VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; nothing to publish."
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Release $TAG does not exist yet; publishing it."
+            echo "should_release=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Install test dependencies
+        if: steps.release_meta.outputs.should_release == 'true'
         run: composer install --no-interaction --prefer-dist
 
       - name: Run PHPUnit
+        if: steps.release_meta.outputs.should_release == 'true'
         run: composer test
 
       - name: Prepare production dependencies
+        if: steps.release_meta.outputs.should_release == 'true'
         run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Build installable plugin ZIP
+        if: steps.release_meta.outputs.should_release == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -103,19 +124,15 @@ jobs:
           unzip -l dpi-blocks.zip | grep -q 'dpi-blocks/vendor/autoload.php'
 
       - name: Publish GitHub Release
+        if: steps.release_meta.outputs.should_release == 'true'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ inputs.version }}
+          VERSION: ${{ steps.release_meta.outputs.version }}
+          TAG: ${{ steps.release_meta.outputs.tag }}
         run: |
           set -euo pipefail
-          TAG="v$VERSION"
           TARGET_SHA="$(git rev-parse HEAD)"
-
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            echo "::error::Release $TAG already exists."
-            exit 1
-          fi
 
           gh release create "$TAG" dpi-blocks.zip \
             --target "$TARGET_SHA" \

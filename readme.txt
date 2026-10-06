@@ -41,8 +41,8 @@ Maintainer release flow:
 
 1. Update the plugin Version header, `DPI_BLOCKS_VERSION`, readme Stable tag, and changelog in a normal pull request.
 2. Merge the tested release commit to `main`.
-3. Run Actions > Release DPI Blocks and enter the version without a `v` prefix.
-4. The workflow validates version consistency, runs PHPUnit, installs production dependencies, builds `dpi-blocks.zip`, creates the matching GitHub tag/release, and uploads the ZIP asset.
+3. The Release DPI Blocks workflow automatically detects a version that does not have a GitHub Release yet, validates version consistency, runs PHPUnit, installs production dependencies, builds `dpi-blocks.zip`, creates the matching GitHub tag/release, and uploads the ZIP asset.
+4. The workflow can still be dispatched manually if a release needs to be retried; an existing release is skipped safely.
 
 == Theme integration ==
 
