@@ -76,14 +76,89 @@ $dpi_has_content = static function ( array $slide ): bool {
 	);
 };
 
-$raw_slides = $dpi_get_field( 'slides', array() );
-$slides     = array();
+$content_source = (string) $dpi_get_field( 'content_source', 'manual' );
+$content_source = in_array( $content_source, array( 'manual', 'categories' ), true ) ? $content_source : 'manual';
+$slides         = array();
 
-foreach ( (array) $raw_slides as $raw_slide ) {
-	$slide = $dpi_normalize_slide( $raw_slide );
+if ( 'categories' === $content_source ) {
+	$category_value = $dpi_get_field( 'categories', array() );
+	$category_ids   = array_values(
+		array_unique(
+			array_filter(
+				array_map(
+					'absint',
+					is_array( $category_value ) ? $category_value : array( $category_value )
+				)
+			)
+		)
+	);
 
-	if ( $dpi_has_content( $slide ) ) {
-		$slides[] = $slide;
+	$posts_per_page = max( 1, min( 20, absint( $dpi_get_field( 'posts_per_page', 5 ) ) ) );
+	$orderby        = (string) $dpi_get_field( 'orderby', 'date' );
+	$orderby        = in_array( $orderby, array( 'date', 'title', 'menu_order', 'rand' ), true ) ? $orderby : 'date';
+	$order          = strtoupper( (string) $dpi_get_field( 'order', 'DESC' ) );
+	$order          = in_array( $order, array( 'ASC', 'DESC' ), true ) ? $order : 'DESC';
+	$show_excerpt   = $dpi_get_bool( 'post_show_excerpt', true );
+	$button_label   = trim( (string) $dpi_get_field( 'post_button_label', 'Read More' ) );
+	$image_layout   = (string) $dpi_get_field( 'post_image_layout', 'background' );
+	$image_layout   = in_array( $image_layout, array( 'background', 'left', 'right' ), true ) ? $image_layout : 'background';
+	$visual_variant = (string) $dpi_get_field( 'post_visual_variant', 'dark' );
+	$visual_variant = in_array( $visual_variant, array( 'dark', 'light' ), true ) ? $visual_variant : 'dark';
+
+	if ( $category_ids ) {
+		$source_posts = get_posts(
+			array(
+				'post_type'           => 'post',
+				'post_status'         => 'publish',
+				'posts_per_page'      => $posts_per_page,
+				'category__in'        => $category_ids,
+				'ignore_sticky_posts' => true,
+				'orderby'             => $orderby,
+				'order'               => $order,
+				'no_found_rows'       => true,
+			)
+		);
+
+		foreach ( $source_posts as $source_post ) {
+			$buttons = array();
+
+			if ( $button_label ) {
+				$buttons[] = array(
+					'url'    => get_permalink( $source_post ),
+					'title'  => $button_label,
+					'target' => '',
+				);
+			}
+
+			$slide = $dpi_normalize_slide(
+				array(
+					'headline'         => get_the_title( $source_post ),
+					'headline_element' => 'heading',
+					'content'          => $show_excerpt ? get_the_excerpt( $source_post ) : '',
+					'image'            => get_post_thumbnail_id( $source_post ),
+					'image_layout'     => $image_layout,
+					'visual_variant'   => $visual_variant,
+					'buttons'          => array_map(
+						static fn( $link ) => array( 'link' => $link ),
+						$buttons
+					),
+				)
+			);
+
+			if ( $dpi_has_content( $slide ) ) {
+				$slides[] = $slide;
+			}
+		}
+	}
+} else {
+	$raw_slides = $dpi_get_field( 'slides', array() );
+
+	foreach ( (array) $raw_slides as $raw_slide ) {
+		$slide = $dpi_normalize_slide( $raw_slide );
+
+		if ( $dpi_has_content( $slide ) ) {
+			$slides[] = $slide;
+		}
 	}
 }
 
@@ -92,7 +167,7 @@ foreach ( (array) $raw_slides as $raw_slide ) {
  * field model was introduced. Old blocks remain visible until an editor saves
  * them using the new Slides repeater.
  */
-if ( empty( $slides ) && ! empty( $block['data'] ) && is_array( $block['data'] ) ) {
+if ( 'manual' === $content_source && empty( $slides ) && ! empty( $block['data'] ) && is_array( $block['data'] ) ) {
 	$legacy_data = $block['data'];
 	$legacy_cta  = isset( $legacy_data['cta'] ) && is_array( $legacy_data['cta'] )
 		? array( array( 'link' => $legacy_data['cta'] ) )
