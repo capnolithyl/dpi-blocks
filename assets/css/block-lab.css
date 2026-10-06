@@ -1,0 +1,99 @@
+.dpi-block-lab-admin > p {
+	max-width: 70rem;
+}
+
+.dpi-block-lab-table {
+	margin-top: 1.5rem;
+}
+
+.dpi-block-lab-status {
+	display: inline-block;
+	border-radius: 999px;
+	padding: 0.2rem 0.55rem;
+	font-weight: 600;
+}
+
+.dpi-block-lab-status--ok {
+	background: #edfaef;
+	color: #126b24;
+}
+
+.dpi-block-lab-status--warning {
+	background: #fff4d6;
+	color: #765400;
+}
+
+.dpi-block-lab {
+	margin-inline: auto;
+	max-width: 100%;
+}
+
+.dpi-block-lab__intro,
+.dpi-block-lab__block-header,
+.dpi-block-lab__scenario-header,
+.dpi-block-lab__data {
+	box-sizing: border-box;
+	margin-inline: auto;
+	max-width: 90rem;
+	padding-inline: clamp(1rem, 4vw, 3rem);
+}
+
+.dpi-block-lab__intro {
+	padding-block: 3rem 2rem;
+}
+
+.dpi-block-lab__block {
+	border-top: 1px solid currentColor;
+	padding-block: 2rem 4rem;
+}
+
+.dpi-block-lab__block-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1.5rem;
+}
+
+.dpi-block-lab__scenario + .dpi-block-lab__scenario {
+	margin-top: 3rem;
+}
+
+.dpi-block-lab__scenario-header {
+	margin-bottom: 0.75rem;
+}
+
+.dpi-block-lab__scenario-header h3 {
+	margin: 0;
+	font-size: 1rem;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+
+.dpi-block-lab__canvas {
+	min-height: 3rem;
+}
+
+.dpi-block-lab__error {
+	box-sizing: border-box;
+	margin: 1rem auto;
+	max-width: 90rem;
+	border: 2px solid #b32d2e;
+	background: #fcf0f1;
+	color: #8a2424;
+	padding: 1rem;
+}
+
+.dpi-block-lab__data {
+	margin-top: 1rem;
+}
+
+.dpi-block-lab__data pre {
+	overflow: auto;
+	max-height: 24rem;
+	padding: 1rem;
+	background: #111;
+	color: #eee;
+	font-size: 0.8rem;
+}
