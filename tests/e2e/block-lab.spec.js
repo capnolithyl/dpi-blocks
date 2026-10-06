@@ -29,7 +29,16 @@ test.describe('DPI Block Lab', () => {
       page.locator('#wp-submit').click()
     ]);
 
-    await page.goto(`${siteUrl}/wp-admin/tools.php?page=dpi-blocks-lab`, { waitUntil: 'networkidle' });
+    await page.goto(`${siteUrl}/wp-admin/admin.php?page=dpi-blocks`, { waitUntil: 'networkidle' });
+
+    const dpiMenu = page.locator('#toplevel_page_dpi-blocks .wp-submenu');
+    await expect(dpiMenu.getByRole('link', { name: 'Blocks', exact: true })).toHaveAttribute('href', /page=dpi-blocks$/);
+    await expect(dpiMenu.getByRole('link', { name: 'Top Bar & Search', exact: true })).toHaveAttribute('href', /page=dpi-blocks-header$/);
+    await expect(dpiMenu.getByRole('link', { name: 'Custom Post Types', exact: true })).toHaveAttribute('href', /page=dpi-blocks-content-types$/);
+    await expect(dpiMenu.getByRole('link', { name: 'Social', exact: true })).toHaveAttribute('href', /page=dpi-blocks-social$/);
+    await expect(dpiMenu.getByRole('link', { name: 'Lab', exact: true })).toHaveAttribute('href', /page=dpi-blocks-lab$/);
+
+    await page.goto(`${siteUrl}/wp-admin/admin.php?page=dpi-blocks-lab`, { waitUntil: 'networkidle' });
     await expect(page.getByRole('heading', { name: 'DPI Block Lab', level: 1 })).toBeVisible();
 
     const inventoryRows = page.locator('.dpi-block-lab-table tbody tr');
