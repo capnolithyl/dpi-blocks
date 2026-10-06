@@ -19,13 +19,43 @@
       "endpoint": 0
     },
     {
+      "key": "field_dpi_feature_banner_content_source",
+      "label": "Content Source",
+      "name": "content_source",
+      "type": "button_group",
+      "instructions": "Build slides manually or generate them from posts in one or more categories.",
+      "required": 1,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "choices": {
+        "manual": "Manual Slides",
+        "categories": "Post Categories"
+      },
+      "default_value": "manual",
+      "return_format": "value",
+      "allow_null": 0,
+      "layout": "horizontal"
+    },
+    {
       "key": "field_dpi_feature_banner_slides",
       "label": "Slides",
       "name": "slides",
       "type": "repeater",
       "instructions": "Add one or more feature slides. A single slide renders as a static banner; two or more slides become a Slick carousel.",
       "required": 1,
-      "conditional_logic": 0,
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_feature_banner_content_source",
+            "operator": "==",
+            "value": "manual"
+          }
+        ]
+      ],
       "wrapper": {
         "width": "",
         "class": "",
@@ -209,6 +239,248 @@
       ]
     },
     {
+      "key": "field_dpi_feature_banner_categories",
+      "label": "Post Categories",
+      "name": "categories",
+      "type": "taxonomy",
+      "instructions": "Posts matching any selected category are combined into one slider.",
+      "required": 1,
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_feature_banner_content_source",
+            "operator": "==",
+            "value": "categories"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "taxonomy": "category",
+      "field_type": "checkbox",
+      "allow_null": 0,
+      "add_term": 1,
+      "save_terms": 0,
+      "load_terms": 0,
+      "return_format": "id",
+      "multiple": 0
+    },
+    {
+      "key": "field_dpi_feature_banner_posts_per_page",
+      "label": "Posts to Show",
+      "name": "posts_per_page",
+      "type": "number",
+      "instructions": "Maximum number of posts used as slides.",
+      "required": 1,
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_feature_banner_content_source",
+            "operator": "==",
+            "value": "categories"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "33",
+        "class": "",
+        "id": ""
+      },
+      "default_value": 5,
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "placeholder": "",
+      "prepend": "",
+      "append": ""
+    },
+    {
+      "key": "field_dpi_feature_banner_orderby",
+      "label": "Order By",
+      "name": "orderby",
+      "type": "select",
+      "instructions": "",
+      "required": 1,
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_feature_banner_content_source",
+            "operator": "==",
+            "value": "categories"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "33",
+        "class": "",
+        "id": ""
+      },
+      "choices": {
+        "date": "Date",
+        "title": "Title",
+        "menu_order": "Menu Order",
+        "rand": "Random"
+      },
+      "default_value": "date",
+      "return_format": "value",
+      "multiple": 0,
+      "allow_null": 0,
+      "ui": 0,
+      "ajax": 0,
+      "placeholder": ""
+    },
+    {
+      "key": "field_dpi_feature_banner_order",
+      "label": "Order",
+      "name": "order",
+      "type": "select",
+      "instructions": "",
+      "required": 1,
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_feature_banner_content_source",
+            "operator": "==",
+            "value": "categories"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "34",
+        "class": "",
+        "id": ""
+      },
+      "choices": {
+        "DESC": "Descending",
+        "ASC": "Ascending"
+      },
+      "default_value": "DESC",
+      "return_format": "value",
+      "multiple": 0,
+      "allow_null": 0,
+      "ui": 0,
+      "ajax": 0,
+      "placeholder": ""
+    },
+    {
+      "key": "field_dpi_feature_banner_post_show_excerpt",
+      "label": "Show Excerpt",
+      "name": "post_show_excerpt",
+      "type": "true_false",
+      "instructions": "Use the post excerpt as the slide's supporting copy.",
+      "required": 0,
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_feature_banner_content_source",
+            "operator": "==",
+            "value": "categories"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "33",
+        "class": "",
+        "id": ""
+      },
+      "message": "",
+      "default_value": 1,
+      "ui": 1,
+      "ui_on_text": "",
+      "ui_off_text": ""
+    },
+    {
+      "key": "field_dpi_feature_banner_post_button_label",
+      "label": "Post Button Label",
+      "name": "post_button_label",
+      "type": "text",
+      "instructions": "Button linking to each post. Leave blank for no button.",
+      "required": 0,
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_feature_banner_content_source",
+            "operator": "==",
+            "value": "categories"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "33",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "Read More",
+      "maxlength": 40,
+      "placeholder": "Read More",
+      "prepend": "",
+      "append": ""
+    },
+    {
+      "key": "field_dpi_feature_banner_post_image_layout",
+      "label": "Post Image Layout",
+      "name": "post_image_layout",
+      "type": "button_group",
+      "instructions": "Image layout used for all post-generated slides.",
+      "required": 1,
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_feature_banner_content_source",
+            "operator": "==",
+            "value": "categories"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "34",
+        "class": "",
+        "id": ""
+      },
+      "choices": {
+        "background": "Background",
+        "left": "Left",
+        "right": "Right"
+      },
+      "default_value": "background",
+      "return_format": "value",
+      "allow_null": 0,
+      "layout": "horizontal"
+    },
+    {
+      "key": "field_dpi_feature_banner_post_visual_variant",
+      "label": "Post Visual Variant",
+      "name": "post_visual_variant",
+      "type": "button_group",
+      "instructions": "Stable styling hook applied to all post-generated slides.",
+      "required": 1,
+      "conditional_logic": [
+        [
+          {
+            "field": "field_dpi_feature_banner_content_source",
+            "operator": "==",
+            "value": "categories"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "choices": {
+        "dark": "Dark",
+        "light": "Light"
+      },
+      "default_value": "dark",
+      "return_format": "value",
+      "allow_null": 0,
+      "layout": "horizontal"
+    },
+    {
       "key": "field_dpi_feature_banner_slider_tab",
       "label": "Slider",
       "name": "",
@@ -325,6 +597,6 @@
   "instruction_placement": "label",
   "hide_on_screen": "",
   "active": true,
-  "description": "Slide content and carousel controls for the DPI Feature / CTA Banner block.",
+  "description": "Manual or post-sourced slide content and carousel controls for the DPI Feature / CTA Banner block.",
   "show_in_rest": 0
 }
