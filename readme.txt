@@ -5,7 +5,7 @@ Requires at least: 6.9
 Tested up to: 6.9
 Requires PHP: 8.0
 Requires Plugins: advanced-custom-fields-pro
-Stable tag: 1.9.0
+Stable tag: 1.9.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,9 @@ Maintainer release flow:
 Themes can override one block renderer at `dpi-blocks/blocks/<slug>/render.php` while the plugin remains the fallback. They can call `dpi_blocks_render_top_bar()` and `dpi_blocks_render_search_trigger()`, or use the `dpi_blocks/top_bar` and `dpi_blocks/search_trigger` actions. Directory templates may also be overridden inside a theme's `dpi-blocks` directory. See `docs/EXTENDING.md` for the complete template, field, metadata, asset, CSS, and JavaScript extension contract.
 
 == Changelog ==
+
+= 1.9.1 =
+* Maintenance release used to verify GitHub-backed one-click updates through the normal WordPress plugin updater.
 
 = 1.9.0 =
 * Added one-click WordPress plugin updates backed by stable GitHub Releases using Plugin Update Checker 5.7.
