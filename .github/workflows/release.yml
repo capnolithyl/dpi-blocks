@@ -53,6 +53,16 @@ jobs:
             echo $matches[1] ?? "";
           ')"
 
+          METADATA_VERSION="$(php -r '
+            $metadata = json_decode(file_get_contents("update.json"), true);
+            echo $metadata["version"] ?? "";
+          ')"
+
+          METADATA_DOWNLOAD="$(php -r '
+            $metadata = json_decode(file_get_contents("update.json"), true);
+            echo $metadata["download_url"] ?? "";
+          ')"
+
           if [[ ! "$PLUGIN_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "::error::Plugin version must use x.y.z format."
             exit 1
@@ -60,6 +70,17 @@ jobs:
 
           if [ "$README_VERSION" != "$PLUGIN_VERSION" ]; then
             echo "::error::readme.txt Stable tag is $README_VERSION but dpi-blocks.php is $PLUGIN_VERSION."
+            exit 1
+          fi
+
+          if [ "$METADATA_VERSION" != "$PLUGIN_VERSION" ]; then
+            echo "::error::update.json version is $METADATA_VERSION but dpi-blocks.php is $PLUGIN_VERSION."
+            exit 1
+          fi
+
+          EXPECTED_DOWNLOAD="https://github.com/capnolithyl/dpi-blocks/releases/download/v$PLUGIN_VERSION/dpi-blocks.zip"
+          if [ "$METADATA_DOWNLOAD" != "$EXPECTED_DOWNLOAD" ]; then
+            echo "::error::update.json download_url must be $EXPECTED_DOWNLOAD."
             exit 1
           fi
 
