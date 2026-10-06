@@ -20,7 +20,7 @@ final class UpdaterIntegrationTest extends TestCase {
 		);
 
 		$this->assertSame(
-			'5.7.0',
+			'~5.7.0',
 			$composer['require']['yahnis-elsts/plugin-update-checker'] ?? null
 		);
 	}
