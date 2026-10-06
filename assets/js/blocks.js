@@ -417,6 +417,7 @@
 		window.acf.addAction('append', initialize);
 		[
 			'dpi/community-slider',
+			'dpi/feature-banner',
 			'dpi/hero',
 			'dpi/social-media',
 			'dpi/staff-card',
