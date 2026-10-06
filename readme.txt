@@ -5,7 +5,7 @@ Requires at least: 6.9
 Tested up to: 6.9
 Requires PHP: 8.0
 Requires Plugins: advanced-custom-fields-pro
-Stable tag: 1.9.1
+Stable tag: 1.9.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,7 +33,7 @@ Development checks are available through Composer. Run `composer install` once, 
 
 == Updates and releases ==
 
-Release builds use Plugin Update Checker to discover stable releases from the public GitHub repository. WordPress uses its normal Plugins screen and Update now flow, while the updater prefers the purpose-built `dpi-blocks.zip` release asset instead of GitHub's generic source archive.
+Release builds use Plugin Update Checker with the public `update.json` file on raw.githubusercontent.com. This avoids GitHub API rate limits while WordPress still uses its normal Plugins screen and Update now flow. The `download_url` in that metadata points to the purpose-built `dpi-blocks.zip` asset attached to the matching GitHub Release.
 
 The first updater-enabled version must still be installed manually on sites that are running an older build without update-checker support. After that bootstrap install, future stable releases are discoverable through the WordPress updater.
 
@@ -49,6 +49,10 @@ Maintainer release flow:
 Themes can override one block renderer at `dpi-blocks/blocks/<slug>/render.php` while the plugin remains the fallback. They can call `dpi_blocks_render_top_bar()` and `dpi_blocks_render_search_trigger()`, or use the `dpi_blocks/top_bar` and `dpi_blocks/search_trigger` actions. Directory templates may also be overridden inside a theme's `dpi-blocks` directory. See `docs/EXTENDING.md` for the complete template, field, metadata, asset, CSS, and JavaScript extension contract.
 
 == Changelog ==
+
+= 1.9.2 =
+* Switched update discovery from the GitHub API to static public metadata on raw.githubusercontent.com to avoid anonymous GitHub API rate limits on shared hosting.
+* GitHub Releases remain the download source for installable plugin ZIPs.
 
 = 1.9.1 =
 * Maintenance release used to verify GitHub-backed one-click updates through the normal WordPress plugin updater.
