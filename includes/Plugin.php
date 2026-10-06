@@ -23,6 +23,7 @@ final class Plugin {
 	private Header $header;
 	private ContentTypes $content_types;
 	private TemplateLoader $templates;
+	private BlockLab $block_lab;
 
 	/** Return the shared plugin instance. */
 	public static function instance(): self {
@@ -47,12 +48,14 @@ final class Plugin {
 		$this->content_types = new ContentTypes();
 		$this->header        = new Header();
 		$this->templates     = new TemplateLoader();
+		$this->block_lab     = new BlockLab();
 
 		$this->settings->register();
 		$this->assets->register();
 		$this->content_types->register();
 		$this->header->register();
 		$this->templates->register();
+		$this->block_lab->register();
 
 		if ( Dependencies::has_acf_pro() ) {
 			( new Fields() )->register();
