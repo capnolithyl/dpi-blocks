@@ -1,4 +1,19 @@
+/**
+ * Minimal structural styles for the Feature / CTA Banner block.
+ *
+ * Themes are expected to provide the visual design.
+ */
+
 .dpi-feature-banner {
+	position: relative;
+	overflow: hidden;
+}
+
+.dpi-feature-banner__slides {
+	position: relative;
+}
+
+.dpi-feature-banner__slide {
 	position: relative;
 	display: grid;
 	overflow: hidden;
@@ -6,11 +21,17 @@
 }
 
 .dpi-feature-banner__content {
+	position: relative;
+	z-index: 1;
 	display: grid;
 	min-width: 0;
 	padding: var(--dpi-feature-banner-padding, clamp(2rem, 6vw, 5rem));
 	gap: 1rem;
 	align-content: center;
+}
+
+.dpi-feature-banner__media {
+	min-width: 0;
 }
 
 .dpi-feature-banner__media img {
@@ -19,46 +40,76 @@
 	object-fit: cover;
 }
 
-.dpi-feature-banner--background .dpi-feature-banner__media,
-.dpi-feature-banner--background .dpi-feature-banner__overlay {
+.dpi-feature-banner__slide--background .dpi-feature-banner__media,
+.dpi-feature-banner__slide--background .dpi-feature-banner__overlay {
 	position: absolute;
 	inset: 0;
 }
 
-.dpi-feature-banner--background .dpi-feature-banner__media {
+.dpi-feature-banner__slide--background .dpi-feature-banner__media {
 	z-index: -2;
 }
 
-.dpi-feature-banner--background .dpi-feature-banner__overlay {
+.dpi-feature-banner__slide--background .dpi-feature-banner__overlay {
 	z-index: -1;
-	background: var(--dpi-feature-banner-overlay, linear-gradient(90deg, currentColor 0%, transparent 80%));
+	background: var(
+		--dpi-feature-banner-overlay,
+		linear-gradient(90deg, currentColor 0%, transparent 80%)
+	);
 }
 
-.dpi-feature-banner--background .dpi-feature-banner__content {
+.dpi-feature-banner__slide--background .dpi-feature-banner__content {
 	width: min(100%, var(--dpi-feature-banner-content-width, 42rem));
 }
 
-.dpi-feature-banner--left,
-.dpi-feature-banner--right {
+.dpi-feature-banner__slide--left,
+.dpi-feature-banner__slide--right {
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.dpi-feature-banner--right .dpi-feature-banner__media {
+.dpi-feature-banner__slide--right .dpi-feature-banner__media {
 	order: 2;
 }
 
+.dpi-feature-banner__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	align-items: center;
+}
+
 .dpi-feature-banner__quote,
-.dpi-feature-banner__quote p {
-	margin: 0;
+.dpi-feature-banner__quote p,
+.dpi-feature-banner__text > :first-child {
+	margin-top: 0;
+}
+
+.dpi-feature-banner__quote,
+.dpi-feature-banner__quote p,
+.dpi-feature-banner__text > :last-child {
+	margin-bottom: 0;
+}
+
+.dpi-feature-banner--slider .slick-track {
+	display: flex;
+}
+
+.dpi-feature-banner--slider .slick-slide {
+	height: auto;
+}
+
+.dpi-feature-banner--slider .slick-slide > div,
+.dpi-feature-banner--slider .dpi-feature-banner__slide {
+	height: 100%;
 }
 
 @media (max-width: 47.99rem) {
-	.dpi-feature-banner--left,
-	.dpi-feature-banner--right {
+	.dpi-feature-banner__slide--left,
+	.dpi-feature-banner__slide--right {
 		grid-template-columns: 1fr;
 	}
 
-	.dpi-feature-banner--right .dpi-feature-banner__media {
+	.dpi-feature-banner__slide--right .dpi-feature-banner__media {
 		order: initial;
 	}
 }
