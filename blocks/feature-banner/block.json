@@ -2,18 +2,20 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "dpi/feature-banner",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "title": "Feature / CTA Banner",
   "category": "dpi-blocks",
   "icon": "align-wide",
-  "description": "Reusable feature banner with one or more slides, per-slide media/content/buttons, and optional carousel controls.",
+  "description": "Reusable feature banner using manual slides or posts from selected categories, with per-slide media/content/buttons and optional carousel controls.",
   "keywords": [
     "feature",
     "cta",
     "banner",
     "call to action",
     "slider",
-    "carousel"
+    "carousel",
+    "posts",
+    "categories"
   ],
   "textdomain": "dpi-blocks",
   "acf": {
