@@ -1,15 +1,43 @@
 {
-  "$schema":"https://schemas.wp.org/trunk/block.json",
-  "apiVersion":3,
-  "name":"dpi/feature-banner",
-  "version":"1.0.0",
-  "title":"Feature / CTA Banner",
-  "category":"dpi-blocks",
-  "icon":"align-wide",
-  "description":"Reusable feature banner with media, eyebrow, headline, supporting copy, and CTA.",
-  "keywords":["feature","cta","banner","call to action"],
-  "textdomain":"dpi-blocks",
-  "acf":{"mode":"preview","renderCallback":"dpi_blocks_render_acf_block","blockVersion":3},
-  "supports":{"anchor":true,"align":["wide","full"],"color":{"background":true,"text":true,"link":true,"gradients":true},"spacing":{"margin":true,"padding":true},"html":false},
-  "style":"file:./style.css"
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "dpi/feature-banner",
+  "version": "1.1.0",
+  "title": "Feature / CTA Banner",
+  "category": "dpi-blocks",
+  "icon": "align-wide",
+  "description": "Reusable feature banner with one or more slides, per-slide media/content/buttons, and optional carousel controls.",
+  "keywords": [
+    "feature",
+    "cta",
+    "banner",
+    "call to action",
+    "slider",
+    "carousel"
+  ],
+  "textdomain": "dpi-blocks",
+  "acf": {
+    "mode": "preview",
+    "renderCallback": "dpi_blocks_render_acf_block",
+    "blockVersion": 3
+  },
+  "supports": {
+    "anchor": true,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "color": {
+      "background": true,
+      "text": true,
+      "link": true,
+      "gradients": true
+    },
+    "spacing": {
+      "margin": true,
+      "padding": true
+    },
+    "html": false
+  },
+  "style": "file:./style.css"
 }
