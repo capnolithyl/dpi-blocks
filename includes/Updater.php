@@ -1,6 +1,6 @@
 <?php
 /**
- * GitHub-backed WordPress plugin updates.
+ * Metadata-backed WordPress plugin updates.
  *
  * @package DPI_Blocks
  */
@@ -16,34 +16,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Register Plugin Update Checker against the public DPI Blocks GitHub repo.
+ * Register Plugin Update Checker against public static metadata.
  *
- * Release assets are preferred so WordPress always installs the purpose-built
- * dpi-blocks.zip artifact instead of a generic GitHub source archive.
+ * The metadata file is served from raw.githubusercontent.com, which avoids
+ * GitHub API rate limits while release ZIPs continue to come from GitHub
+ * Releases.
  */
 final class Updater {
-	private const REPOSITORY_URL = 'https://github.com/capnolithyl/dpi-blocks/';
-	private const PLUGIN_SLUG    = 'dpi-blocks';
+	private const METADATA_URL = 'https://raw.githubusercontent.com/capnolithyl/dpi-blocks/main/update.json';
+	private const PLUGIN_SLUG  = 'dpi-blocks';
 
 	private ?object $checker = null;
 
-	/** Register the GitHub update source when the bundled dependency is present. */
+	/** Register the update source when the bundled dependency is present. */
 	public function register(): void {
 		if ( ! class_exists( PucFactory::class ) ) {
 			return;
 		}
 
 		$this->checker = PucFactory::buildUpdateChecker(
-			self::REPOSITORY_URL,
+			self::METADATA_URL,
 			DPI_BLOCKS_FILE,
 			self::PLUGIN_SLUG
 		);
-
-		$this->checker->setBranch( 'main' );
-
-		$vcs_api = $this->checker->getVcsApi();
-		if ( is_object( $vcs_api ) && method_exists( $vcs_api, 'enableReleaseAssets' ) ) {
-			$vcs_api->enableReleaseAssets( '/dpi-blocks\.zip(?:$|[?&#])/i' );
-		}
 	}
 }
