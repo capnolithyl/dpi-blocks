@@ -36,11 +36,12 @@ final class BlockLab {
 		add_action( 'template_redirect', array( $this, 'maybe_render_frontend' ), 1 );
 	}
 
-	/** Add Tools > DPI Block Lab. */
+	/** Add DPI Blocks > Lab. */
 	public function add_admin_page(): void {
-		add_management_page(
+		add_submenu_page(
+			Settings::PAGE_SLUG,
 			__( 'DPI Block Lab', 'dpi-blocks' ),
-			__( 'DPI Block Lab', 'dpi-blocks' ),
+			__( 'Lab', 'dpi-blocks' ),
 			'manage_options',
 			self::PAGE_SLUG,
 			array( $this, 'render_admin_page' )
@@ -49,7 +50,10 @@ final class BlockLab {
 
 	/** Load the small amount of chrome used by the admin inventory. */
 	public function enqueue_admin_assets( string $hook_suffix ): void {
-		if ( 'tools_page_' . self::PAGE_SLUG !== $hook_suffix ) {
+		unset( $hook_suffix );
+
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only admin routing state.
+		if ( self::PAGE_SLUG !== $page ) {
 			return;
 		}
 
