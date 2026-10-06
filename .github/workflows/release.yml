@@ -1,0 +1,123 @@
+name: Release DPI Blocks
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version without the v prefix, for example 1.9.0
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish v${{ inputs.version }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          coverage: none
+          tools: composer:v2
+
+      - name: Validate requested version
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Version must use x.y.z format."
+            exit 1
+          fi
+
+          PLUGIN_VERSION="$(php -r '
+            $source = file_get_contents("dpi-blocks.php");
+            preg_match("/^[[:space:]]*\\*[[:space:]]Version:[[:space:]]+([^[:space:]]+)/m", $source, $matches);
+            echo $matches[1] ?? "";
+          ')"
+
+          README_VERSION="$(php -r '
+            $source = file_get_contents("readme.txt");
+            preg_match("/^Stable tag:[[:space:]]+([^[:space:]]+)/m", $source, $matches);
+            echo $matches[1] ?? "";
+          ')"
+
+          if [ "$PLUGIN_VERSION" != "$VERSION" ]; then
+            echo "::error::dpi-blocks.php is version $PLUGIN_VERSION, requested release is $VERSION."
+            exit 1
+          fi
+
+          if [ "$README_VERSION" != "$VERSION" ]; then
+            echo "::error::readme.txt Stable tag is $README_VERSION, requested release is $VERSION."
+            exit 1
+          fi
+
+      - name: Install test dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run PHPUnit
+        run: composer test
+
+      - name: Prepare production dependencies
+        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Build installable plugin ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          rm -rf build dpi-blocks.zip
+          mkdir -p build/dpi-blocks
+
+          rsync -a ./ build/dpi-blocks/ \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='build/' \
+            --exclude='tests/' \
+            --exclude='node_modules/' \
+            --exclude='playwright-report/' \
+            --exclude='test-results/' \
+            --exclude='package.json' \
+            --exclude='package-lock.json' \
+            --exclude='playwright.config.js' \
+            --exclude='phpunit.xml.dist' \
+            --exclude='.phpunit.result.cache'
+
+          (
+            cd build
+            zip -qr ../dpi-blocks.zip dpi-blocks
+          )
+
+          unzip -l dpi-blocks.zip | grep -q 'dpi-blocks/dpi-blocks.php'
+          unzip -l dpi-blocks.zip | grep -q 'dpi-blocks/vendor/autoload.php'
+
+      - name: Publish GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          TAG="v$VERSION"
+          TARGET_SHA="$(git rev-parse HEAD)"
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "::error::Release $TAG already exists."
+            exit 1
+          fi
+
+          gh release create "$TAG" dpi-blocks.zip \
+            --target "$TARGET_SHA" \
+            --title "DPI Blocks $VERSION" \
+            --generate-notes
