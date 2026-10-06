@@ -16,11 +16,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Assets {
 	private const CAROUSEL_BLOCKS    = array(
 		'dpi/community-slider',
+		'dpi/feature-banner',
 		'dpi/hero',
 		'dpi/social-media',
 	);
 	private const INTERACTIVE_BLOCKS = array(
 		'dpi/community-slider',
+		'dpi/feature-banner',
 		'dpi/hero',
 		'dpi/social-media',
 		'dpi/staff-card',
@@ -389,6 +391,12 @@ final class Assets {
 
 		if ( 'dpi/community-slider' === $name ) {
 			return 'grid' !== (string) ( $data['layout'] ?? $data['field_dpi_community_layout'] ?? 'carousel' );
+		}
+
+		if ( 'dpi/feature-banner' === $name ) {
+			$slides = $data['slides'] ?? $data['field_dpi_feature_banner_slides'] ?? 0;
+
+			return is_array( $slides ) ? count( $slides ) > 1 : absint( $slides ) > 1;
 		}
 
 		if ( 'dpi/hero' === $name ) {
