@@ -412,7 +412,7 @@ final class Settings {
 	/**
 	 * Render one settings section while carrying fields from the other sections forward.
 	 *
-	 * @param string               $tab Active tab.
+	 * @param string               $section Active settings section.
 	 * @param array<string, mixed> $settings Settings.
 	 */
 	private function render_section( string $section, array $settings ): void {
