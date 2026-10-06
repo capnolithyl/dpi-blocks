@@ -35,13 +35,30 @@ final class UpdaterIntegrationTest extends TestCase {
 		);
 	}
 
-	public function test_updater_prefers_the_release_zip(): void {
+	public function test_updater_uses_static_public_metadata(): void {
 		$source = (string) file_get_contents( $this->root . '/includes/Updater.php' );
 
-		$this->assertStringContainsString( 'https://github.com/capnolithyl/dpi-blocks/', $source );
-		$this->assertStringContainsString( "setBranch( 'main' )", $source );
-		$this->assertStringContainsString( 'enableReleaseAssets', $source );
-		$this->assertStringContainsString( 'dpi-blocks\\.zip', $source );
+		$this->assertStringContainsString(
+			'https://raw.githubusercontent.com/capnolithyl/dpi-blocks/main/update.json',
+			$source
+		);
+		$this->assertStringNotContainsString( 'getVcsApi', $source );
+		$this->assertStringNotContainsString( 'setBranch', $source );
+	}
+
+	public function test_static_metadata_matches_plugin_version_and_release_asset(): void {
+		$metadata = json_decode(
+			(string) file_get_contents( $this->root . '/update.json' ),
+			true,
+			512,
+			JSON_THROW_ON_ERROR
+		);
+
+		$this->assertSame( '1.9.2', $metadata['version'] ?? null );
+		$this->assertSame(
+			'https://github.com/capnolithyl/dpi-blocks/releases/download/v1.9.2/dpi-blocks.zip',
+			$metadata['download_url'] ?? null
+		);
 	}
 
 	public function test_release_workflow_builds_the_expected_plugin_archive(): void {
@@ -50,5 +67,6 @@ final class UpdaterIntegrationTest extends TestCase {
 		$this->assertStringContainsString( 'dpi-blocks.zip', $source );
 		$this->assertStringContainsString( 'vendor/autoload.php', $source );
 		$this->assertStringContainsString( 'gh release create', $source );
+		$this->assertStringContainsString( 'update.json', $source );
 	}
 }
