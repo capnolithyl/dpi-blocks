@@ -79,7 +79,7 @@ final class Settings {
 		'accordion'         => 'Use for FAQs or longer supporting content that should stay compact until a visitor opens it.',
 		'anchor-navigation' => 'Creates jump links to anchored sections on the same page. Best for long pages with several named sections.',
 		'community-slider'  => 'Pulls posts from a selected category and displays them as a carousel or grid. Useful for news, events, or updates.',
-		'feature-banner'    => 'Prominent image-and-copy feature with eyebrow, headline, supporting text, and CTA. Good for promotions or highlighted messages.',
+		'feature-banner'    => 'Prominent image-and-copy feature that can use manual slides or posts from selected categories, with optional carousel controls and up to two CTAs per manual slide.',
 		'featured-links'    => 'Combines an introductory content area with up to four icon links. Useful for a themed set of important destinations.',
 		'five-pillars'      => 'Interactive showcase for 2–8 values, priorities, or pillars, each with descriptive copy, optional links, and image collages.',
 		'hero'              => 'Large landing-page banner using image slides or video, optional CTAs, and overlay or split layouts.',
