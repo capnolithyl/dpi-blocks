@@ -21,13 +21,13 @@ Advanced Custom Fields Pro 6.6 or newer is required. ACF Extended and the ACF Fo
 
 1. Install and activate Advanced Custom Fields Pro 6.6 or newer.
 2. Upload and activate DPI Blocks.
-3. Configure features under Settings > DPI Blocks.
-4. Use Tools > DPI Block Lab to open the administrator-only visual smoke-test page.
+3. Configure Blocks, Top Bar & Search, Custom Post Types, and Social under the top-level DPI Blocks admin menu.
+4. Use DPI Blocks > Lab to open the administrator-only visual smoke-test page.
 5. If a theme needs the top bar inside its header, call `dpi_blocks_render_top_bar()` at the desired location and turn off automatic placement.
 
 == Block Lab and automated tests ==
 
-Tools > DPI Block Lab inventories every bundled block and opens an administrator-only front-end lab using the active theme. The lab reads bundled ACF JSON, generates baseline and alternate field values, and runs the real block render callbacks. A failure is isolated to its scenario so the rest of the page still renders.
+DPI Blocks > Lab inventories every bundled block and opens an administrator-only front-end lab using the active theme. The lab reads bundled ACF JSON, generates baseline and alternate field values, and runs the real block render callbacks. A failure is isolated to its scenario so the rest of the page still renders.
 
 Development checks are available through Composer. Run `composer install` once, then `composer test`. GitHub Actions also validates Composer configuration, lints every PHP file, and runs the static PHPUnit suite on supported PHP versions. The tests verify block metadata, referenced assets, ACF JSON integrity and conditional references, block-to-field-group coverage, renderer guards, and plugin version consistency.\n\nFor deployed-site smoke tests, install the Node development dependencies with `npm install`, install Chromium with `npx playwright install chromium`, then set `DPI_BLOCKS_TEST_URL`, `DPI_BLOCKS_TEST_USER`, and `DPI_BLOCKS_TEST_PASSWORD` before running `npm run test:e2e`. The repository also includes a manually dispatched Block Lab browser workflow that accepts the deployed site URL and reads the administrator credentials from repository or environment secrets.
 
@@ -38,7 +38,8 @@ Themes can override one block renderer at `dpi-blocks/blocks/<slug>/render.php` 
 == Changelog ==
 
 = 1.8.0 =
-* Added Tools > DPI Block Lab, an administrator-only schema-driven front-end visual smoke test for all bundled blocks.
+* Added a top-level DPI Blocks admin menu with dedicated Blocks, Top Bar & Search, Custom Post Types, Social, and Lab subpages.
+* Added DPI Blocks > Lab, an administrator-only schema-driven front-end visual smoke test for all bundled blocks.
 * Block Lab generates baseline and alternate ACF values, isolates renderer failures per scenario, and shows the generated data used for each preview.
 * Added PHPUnit metadata/ACF/version tests plus GitHub Actions PHP linting and a multi-version test matrix.\n* Added Playwright smoke tests for the deployed Block Lab, including renderer diagnostics, JavaScript errors, plugin asset failures, and Slick initialization.
 
