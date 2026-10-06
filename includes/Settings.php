@@ -23,8 +23,25 @@ final class Settings {
 	/** Rewrite flush request flag. */
 	public const REWRITE_FLAG = 'dpi_blocks_flush_rewrite_rules';
 
-	/** Settings page slug. */
+	/** Top-level admin menu and Blocks page slug. */
 	public const PAGE_SLUG = 'dpi-blocks';
+
+	/** Top Bar & Search page slug. */
+	public const HEADER_PAGE_SLUG = 'dpi-blocks-header';
+
+	/** Custom Post Types page slug. */
+	public const CONTENT_TYPES_PAGE_SLUG = 'dpi-blocks-content-types';
+
+	/** Social page slug. */
+	public const SOCIAL_PAGE_SLUG = 'dpi-blocks-social';
+
+	/** Admin settings sections mapped to their menu page slugs. */
+	private const SECTION_PAGES = array(
+		'blocks'        => self::PAGE_SLUG,
+		'header'        => self::HEADER_PAGE_SLUG,
+		'content-types' => self::CONTENT_TYPES_PAGE_SLUG,
+		'social'        => self::SOCIAL_PAGE_SLUG,
+	);
 
 	/** Supported blocks. */
 	private const BLOCKS = array(
@@ -169,13 +186,51 @@ final class Settings {
 		}
 	}
 
-	/** Add Settings > DPI Blocks. */
+	/** Add the top-level DPI Blocks menu and settings subpages. */
 	public function add_settings_page(): void {
-		add_options_page(
+		add_menu_page(
 			__( 'DPI Blocks', 'dpi-blocks' ),
 			__( 'DPI Blocks', 'dpi-blocks' ),
 			'manage_options',
 			self::PAGE_SLUG,
+			array( $this, 'render_page' ),
+			'dashicons-screenoptions',
+			58
+		);
+
+		add_submenu_page(
+			self::PAGE_SLUG,
+			__( 'Blocks', 'dpi-blocks' ),
+			__( 'Blocks', 'dpi-blocks' ),
+			'manage_options',
+			self::PAGE_SLUG,
+			array( $this, 'render_page' )
+		);
+
+		add_submenu_page(
+			self::PAGE_SLUG,
+			__( 'Top Bar & Search', 'dpi-blocks' ),
+			__( 'Top Bar & Search', 'dpi-blocks' ),
+			'manage_options',
+			self::HEADER_PAGE_SLUG,
+			array( $this, 'render_page' )
+		);
+
+		add_submenu_page(
+			self::PAGE_SLUG,
+			__( 'Custom Post Types', 'dpi-blocks' ),
+			__( 'Custom Post Types', 'dpi-blocks' ),
+			'manage_options',
+			self::CONTENT_TYPES_PAGE_SLUG,
+			array( $this, 'render_page' )
+		);
+
+		add_submenu_page(
+			self::PAGE_SLUG,
+			__( 'Social', 'dpi-blocks' ),
+			__( 'Social', 'dpi-blocks' ),
+			'manage_options',
+			self::SOCIAL_PAGE_SLUG,
 			array( $this, 'render_page' )
 		);
 	}
@@ -200,7 +255,10 @@ final class Settings {
 	 * @param string $hook_suffix Current admin page hook.
 	 */
 	public function enqueue_admin_assets( string $hook_suffix ): void {
-		if ( 'settings_page_' . self::PAGE_SLUG !== $hook_suffix ) {
+		unset( $hook_suffix );
+
+		$section = $this->current_section();
+		if ( null === $section ) {
 			return;
 		}
 
@@ -211,8 +269,7 @@ final class Settings {
 			DPI_BLOCKS_VERSION
 		);
 
-		$tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'blocks'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only presentation state.
-		if ( 'blocks' !== $tab ) {
+		if ( 'blocks' !== $section ) {
 			return;
 		}
 
@@ -223,6 +280,29 @@ final class Settings {
 			DPI_BLOCKS_VERSION,
 			true
 		);
+	}
+
+	/** Return the admin URL for one DPI Blocks settings section. */
+	public static function page_url( string $section = 'blocks' ): string {
+		$slug = self::SECTION_PAGES[ $section ] ?? self::PAGE_SLUG;
+
+		return add_query_arg(
+			'page',
+			$slug,
+			admin_url( 'admin.php' )
+		);
+	}
+
+	/** Resolve the active DPI Blocks settings section from the admin page slug. */
+	private function current_section(): ?string {
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only admin routing state.
+		if ( '' === $page ) {
+			return null;
+		}
+
+		$section = array_search( $page, self::SECTION_PAGES, true );
+
+		return is_string( $section ) ? $section : null;
 	}
 
 	/**
@@ -306,45 +386,23 @@ final class Settings {
 			return;
 		}
 
-		$tabs = array(
-			'blocks'      => __( 'Blocks', 'dpi-blocks' ),
-			'header'      => __( 'Top Bar & Search', 'dpi-blocks' ),
-			'directories' => __( 'Content Types', 'dpi-blocks' ),
-			'social'      => __( 'Social', 'dpi-blocks' ),
+		$section = $this->current_section() ?? 'blocks';
+		$labels  = array(
+			'blocks'        => __( 'Blocks', 'dpi-blocks' ),
+			'header'        => __( 'Top Bar & Search', 'dpi-blocks' ),
+			'content-types' => __( 'Custom Post Types', 'dpi-blocks' ),
+			'social'        => __( 'Social', 'dpi-blocks' ),
 		);
-		$tab  = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'blocks'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only presentation state.
-		if ( ! isset( $tabs[ $tab ] ) ) {
-			$tab = 'blocks';
-		}
 		$settings = self::get();
-		$referer  = add_query_arg(
-			array(
-				'page' => self::PAGE_SLUG,
-				'tab'  => $tab,
-			),
-			admin_url( 'options-general.php' )
-		);
+		$referer  = self::page_url( $section );
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'DPI Blocks', 'dpi-blocks' ); ?></h1>
-			<nav class="nav-tab-wrapper" aria-label="<?php esc_attr_e( 'DPI Blocks settings', 'dpi-blocks' ); ?>">
-				<?php foreach ( $tabs as $slug => $label ) : ?>
-					<?php
-					$tab_url = add_query_arg(
-						array(
-							'page' => self::PAGE_SLUG,
-							'tab'  => $slug,
-						),
-						admin_url( 'options-general.php' )
-					);
-					?>
-					<a class="nav-tab <?php echo $tab === $slug ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( $tab_url ); ?>"><?php echo esc_html( $label ); ?></a>
-				<?php endforeach; ?>
-			</nav>
+			<h1><?php echo esc_html( $labels[ $section ] ); ?></h1>
+			<?php settings_errors(); ?>
 			<form action="options.php" method="post">
 				<?php settings_fields( 'dpi_blocks' ); ?>
 				<input type="hidden" name="_wp_http_referer" value="<?php echo esc_attr( $referer ); ?>">
-				<?php $this->render_tab( $tab, $settings ); ?>
+				<?php $this->render_section( $section, $settings ); ?>
 				<?php submit_button(); ?>
 			</form>
 		</div>
@@ -352,14 +410,14 @@ final class Settings {
 	}
 
 	/**
-	 * Render one settings tab while carrying fields from other tabs forward.
+	 * Render one settings section while carrying fields from the other sections forward.
 	 *
 	 * @param string               $tab Active tab.
 	 * @param array<string, mixed> $settings Settings.
 	 */
-	private function render_tab( string $tab, array $settings ): void {
-		$this->render_preserved_fields( $tab, $settings );
-		if ( 'blocks' === $tab ) {
+	private function render_section( string $section, array $settings ): void {
+		$this->render_preserved_fields( $section, $settings );
+		if ( 'blocks' === $section ) {
 			echo '<div class="dpi-blocks-settings-header">';
 			echo '<div><h2>' . esc_html__( 'Available blocks', 'dpi-blocks' ) . '</h2>';
 			echo '<p>' . esc_html__( 'Choose the reusable building blocks this site needs. Disabled blocks disappear from the inserter but remain registered so existing content keeps rendering.', 'dpi-blocks' ) . '</p></div>';
@@ -385,7 +443,7 @@ final class Settings {
 			return;
 		}
 
-		if ( 'header' === $tab ) {
+		if ( 'header' === $section ) {
 			echo '<h2>' . esc_html__( 'Top bar and search', 'dpi-blocks' ) . '</h2><table class="form-table" role="presentation"><tbody>';
 			$this->checkbox_row( 'top_bar_enabled', __( 'Enable the top bar', 'dpi-blocks' ), $settings['top_bar_enabled'] );
 			$this->select_row(
@@ -423,7 +481,7 @@ final class Settings {
 			return;
 		}
 
-		if ( 'directories' === $tab ) {
+		if ( 'content-types' === $section ) {
 			echo '<h2>' . esc_html__( 'Staff', 'dpi-blocks' ) . '</h2><table class="form-table" role="presentation"><tbody>';
 			$this->checkbox_row( 'staff_enabled', __( 'Enable Staff content type', 'dpi-blocks' ), $settings['staff_enabled'] );
 			$this->text_row( 'staff_single_slug', __( 'Staff single slug', 'dpi-blocks' ), $settings['staff_single_slug'] );
@@ -467,15 +525,15 @@ final class Settings {
 	}
 
 	/** Preserve other tabs because WordPress replaces the whole option array. */
-	private function render_preserved_fields( string $active_tab, array $settings ): void {
-		$tab_keys = array(
-			'blocks'      => array( 'blocks' ),
-			'header'      => array( 'top_bar_enabled', 'top_bar_placement', 'top_bar_menu_location', 'search_enabled', 'search_location', 'search_menu_location', 'search_menu_item_class', 'search_template' ),
-			'directories' => array( 'staff_enabled', 'staff_single_slug', 'staff_archive_slug', 'staff_taxonomy_slug', 'staff_mode', 'ministry_enabled', 'ministry_single_slug', 'ministry_archive_slug', 'ministry_taxonomy_slug', 'office_enabled', 'office_single_slug', 'office_archive_slug', 'office_taxonomy_slug' ),
-			'social'      => array( 'social_profiles', 'social_feed_shortcode' ),
+	private function render_preserved_fields( string $active_section, array $settings ): void {
+		$section_keys = array(
+			'blocks'        => array( 'blocks' ),
+			'header'        => array( 'top_bar_enabled', 'top_bar_placement', 'top_bar_menu_location', 'search_enabled', 'search_location', 'search_menu_location', 'search_menu_item_class', 'search_template' ),
+			'content-types' => array( 'staff_enabled', 'staff_single_slug', 'staff_archive_slug', 'staff_taxonomy_slug', 'staff_mode', 'ministry_enabled', 'ministry_single_slug', 'ministry_archive_slug', 'ministry_taxonomy_slug', 'office_enabled', 'office_single_slug', 'office_archive_slug', 'office_taxonomy_slug' ),
+			'social'        => array( 'social_profiles', 'social_feed_shortcode' ),
 		);
-		foreach ( $tab_keys as $tab => $keys ) {
-			if ( $active_tab === $tab ) {
+		foreach ( $section_keys as $section => $keys ) {
+			if ( $active_section === $section ) {
 				continue;
 			}
 			foreach ( $keys as $key ) {
