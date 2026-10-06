@@ -21,3 +21,8 @@ Desktop.ini
 # Composer / PHPUnit development output
 /vendor/
 /.phpunit.result.cache
+
+# Playwright development output
+/node_modules/
+/playwright-report/
+/test-results/
