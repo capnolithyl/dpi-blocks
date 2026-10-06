@@ -54,9 +54,14 @@ final class UpdaterIntegrationTest extends TestCase {
 			JSON_THROW_ON_ERROR
 		);
 
-		$this->assertSame( '1.9.2', $metadata['version'] ?? null );
+		$plugin_source = (string) file_get_contents( $this->root . '/dpi-blocks.php' );
+		preg_match( '/^ \\* Version:\\s+([^\\s]+)$/m', $plugin_source, $matches );
+		$version = $matches[1] ?? '';
+
+		$this->assertNotSame( '', $version );
+		$this->assertSame( $version, $metadata['version'] ?? null );
 		$this->assertSame(
-			'https://github.com/capnolithyl/dpi-blocks/releases/download/v1.9.2/dpi-blocks.zip',
+			'https://github.com/capnolithyl/dpi-blocks/releases/download/v' . $version . '/dpi-blocks.zip',
 			$metadata['download_url'] ?? null
 		);
 	}
