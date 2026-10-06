@@ -5,7 +5,7 @@ Requires at least: 6.9
 Tested up to: 6.9
 Requires PHP: 8.0
 Requires Plugins: advanced-custom-fields-pro
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,8 +37,12 @@ Themes can override one block renderer at `dpi-blocks/blocks/<slug>/render.php` 
 
 == Changelog ==
 
+= 1.8.1 =
+* Consolidated plugin administration under a top-level DPI Blocks menu.
+* Split Blocks, Top Bar & Search, Custom Post Types, Social, and Lab into dedicated submenu pages while retaining the existing shared settings record.
+* Updated content-type diagnostics and Block Lab browser tests for the new admin routes.
+
 = 1.8.0 =
-* Added a top-level DPI Blocks admin menu with dedicated Blocks, Top Bar & Search, Custom Post Types, Social, and Lab subpages.
 * Added DPI Blocks > Lab, an administrator-only schema-driven front-end visual smoke test for all bundled blocks.
 * Block Lab generates baseline and alternate ACF values, isolates renderer failures per scenario, and shows the generated data used for each preview.
 * Added PHPUnit metadata/ACF/version tests plus GitHub Actions PHP linting and a multi-version test matrix.\n* Added Playwright smoke tests for the deployed Block Lab, including renderer diagnostics, JavaScript errors, plugin asset failures, and Slick initialization.
