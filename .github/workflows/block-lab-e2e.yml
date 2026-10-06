@@ -1,0 +1,57 @@
+name: DPI Block Lab browser smoke test
+
+on:
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: WordPress site URL with the DPI Blocks build deployed
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  block-lab:
+    name: Browser smoke test
+    runs-on: ubuntu-latest
+    env:
+      DPI_BLOCKS_TEST_URL: ${{ inputs.site_url }}
+      DPI_BLOCKS_TEST_USER: ${{ secrets.DPI_BLOCKS_TEST_USER }}
+      DPI_BLOCKS_TEST_PASSWORD: ${{ secrets.DPI_BLOCKS_TEST_PASSWORD }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate test credentials
+        shell: bash
+        run: |
+          if [ -z "$DPI_BLOCKS_TEST_USER" ] || [ -z "$DPI_BLOCKS_TEST_PASSWORD" ]; then
+            echo "::error::Set DPI_BLOCKS_TEST_USER and DPI_BLOCKS_TEST_PASSWORD repository or environment secrets."
+            exit 1
+          fi
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Playwright
+        run: |
+          npm install
+          npx playwright install --with-deps chromium
+
+      - name: Run Block Lab smoke test
+        run: npm run test:e2e
+
+      - name: Upload Playwright diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dpi-block-lab-playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7

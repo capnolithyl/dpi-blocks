@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
+	colors="true"
+	failOnWarning="true"
+	failOnRisky="true"
+	cacheResult="false">
+	<testsuites>
+		<testsuite name="DPI Blocks">
+			<directory suffix="Test.php">tests/Static</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>
