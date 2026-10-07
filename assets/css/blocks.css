@@ -5,7 +5,7 @@
  * WordPress block-support variables.
  */
 
-@layer dpi-blocks {
+@layer dpi-blocks.structure {
 :where(.dpi-block) {
 	--dpi-block-gap: var(--dpi-theme-gap, 1.5rem);
 	--dpi-section-gap: var(--dpi-block-gap);
@@ -16,12 +16,16 @@
 	--dpi-border-color: color-mix(in srgb, currentColor 30%, transparent);
 	--dpi-media-background: black;
 	--dpi-inverse-background: CanvasText;
+}
+}
+
+:where(.dpi-block) {
 	box-sizing: border-box;
 }
 
 :where(.dpi-block *),
-:where(.dpi-block *::before),
-:where(.dpi-block *::after) {
+:where(.dpi-block *)::before,
+:where(.dpi-block *)::after {
 	box-sizing: inherit;
 }
 
@@ -400,17 +404,19 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+
 	:where(.dpi-image-buttons__card--reveal:hover .dpi-image-buttons__caption) {
-		transform: translateY(var(--dpi-image-buttons-reveal-caption-shift, -2.5rem));
-	}
+	transform: translateY(var(--dpi-image-buttons-reveal-caption-shift, -2.5rem));
+}
 
 	:where(.dpi-image-buttons__card--reveal:hover .dpi-image-buttons__caption > p) {
-		opacity: 0;
-	}
+	opacity: 0;
+}
 
 	:where(.dpi-image-buttons__card--reveal:hover .dpi-image-buttons__reveal) {
-		transform: translateY(0);
-	}
+	transform: translateY(0);
+}
+
 }
 
 :where(.dpi-image-buttons__card--reveal:focus-visible .dpi-image-buttons__caption) {
@@ -572,7 +578,7 @@
 	border-radius: var(--dpi-block-radius);
 }
 
-:where(.dpi-staff-card__dialog::backdrop) {
+:where(.dpi-staff-card__dialog)::backdrop {
 	background: color-mix(in srgb, CanvasText 70%, transparent);
 }
 
@@ -622,30 +628,32 @@
 }
 
 @media (max-width: 47.99rem) {
+
 	:where(.dpi-featured-links--split .dpi-featured-links__body),
 :where(.dpi-hero--split .dpi-hero__slide),
 :where(.dpi-mass-times__inner),
 :where(.dpi-mission__inner),
 :where(.dpi-social-media--heading-inline .dpi-social-media__header),
 :where(.dpi-staff-card--horizontal) {
-		grid-template-columns: 1fr;
-	}
+	grid-template-columns: 1fr;
+}
 
 	:where(.dpi-mass-times--media-right .dpi-mass-times__media),
 :where(.dpi-mission--media-right .dpi-mission__media) {
-		order: initial;
-	}
+	order: initial;
+}
+
 }
 
 @media (prefers-reduced-motion: reduce) {
+
 	:where(.dpi-block *),
-:where(.dpi-block *::before),
-:where(.dpi-block *::after) {
-		scroll-behavior: auto !important;
-		transition-duration: 0.01ms !important;
-		animation-duration: 0.01ms !important;
-		animation-iteration-count: 1 !important;
-	}
+:where(.dpi-block *)::before,
+:where(.dpi-block *)::after {
+	scroll-behavior: auto !important;
+	transition-duration: 0.01ms !important;
+	animation-duration: 0.01ms !important;
+	animation-iteration-count: 1 !important;
 }
 
 }

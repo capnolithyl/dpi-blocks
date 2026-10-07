@@ -13,7 +13,7 @@ Portable ACF blocks, header utilities, and staff/ministry/office directories for
 
 == Description ==
 
-DPI Blocks provides sixteen dynamic ACF blocks, an optional top bar and accessible search UI, and opt-in Staff, Ministry, and Office content types. All sixteen blocks include neutral, responsive defaults that inherit the active theme. Themes can override the zero-specificity `dpi-*` rules and CSS variables without fighting the plugin.
+DPI Blocks provides sixteen dynamic ACF blocks, an optional top bar and accessible search UI, and opt-in Staff, Ministry, and Office content types. All sixteen blocks include neutral, responsive defaults that inherit the active theme. Themes can override the low-specificity `dpi-*` rules and CSS variables without fighting the plugin.
 
 Advanced Custom Fields Pro 6.6 or newer is required. ACF Extended and the ACF Font Awesome add-on are not required.
 
@@ -54,7 +54,7 @@ Themes can override one block renderer at `dpi-blocks/blocks/<slug>/render.php` 
 
 = 1.10.0 =
 * Added theme-aware, easily overridden presentation for all sixteen blocks and their layouts, with neutral fallbacks for themes without semantic Global Styles.
-* Preserved block-specific structural styles in the front end and editor, and placed plugin styles in an early, zero-specificity CSS layer.
+* Preserved block-specific structural styles in the front end and editor; defaults survive theme resets while scoped theme styles and CSS variables retain control.
 * Added narrow-column layouts, readable media captions, styled controls, and missing-media handling.
 * Expanded Block Lab to cover every field choice and optional-media cases, and added automated browser checks using the production renderers.
 

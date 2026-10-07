@@ -20,12 +20,16 @@ set a site-wide content width, or assign any parish content or assets.
 
 ## Ordinary CSS overrides
 
-All block rules use `:where(...)` in the `dpi-blocks` cascade layer. The plugin
-declares that layer before theme styles in the front end and before theme styles
-in the editor iframe. Normal unlayered theme CSS and later theme layers override
-it, even when the theme stylesheet loads first. Existing IHM-specific rules
-continue to win. No presentation rule needs `!important`.
+Structural selectors use `:where(...)`. Presentation adds one class of
+specificity so unlayered theme resets do not erase padding, borders, or heading
+sizes. Scope a theme override with `.dpi-block` (as in the button example below)
+and it wins regardless of stylesheet order. Existing scoped IHM-specific rules
+continue to win; no presentation override needs `!important`.
 
+Design tokens and inherited heading fonts remain in the early `dpi-blocks`
+cascade layer, so theme CSS variables and global heading typography retain
+priority. Themes that use CSS layers can override tokens in their own layer and
+use ordinary unlayered CSS for direct property overrides.
 ```css
 .dpi-block {
   --dpi-block-gap: 2rem;
@@ -33,7 +37,7 @@ continue to win. No presentation rule needs `!important`.
   --dpi-heading-font: var(--wp--preset--font-family--my-display-font);
 }
 
-.dpi-button {
+.dpi-block .dpi-button {
   background: var(--wp--preset--color--my-action-color);
   color: var(--wp--preset--color--my-button-text);
   border-radius: 0;
@@ -103,6 +107,6 @@ structural styles, JavaScript, and editor behavior.
   `DPI_BLOCKS_TEST_PASSWORD` configured.
 
 The offline suite checks all discovered Lab choices, optional media, semantic
-and absent theme tokens, theme override priority, dark banners, narrow columns,
+and absent theme tokens, unlayered reset resilience, theme override priority, dark banners, narrow columns,
 and keyboard controls. The deployed Lab remains the integration check for a
 real WordPress/ACF environment and third-party social feed providers.

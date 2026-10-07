@@ -64,7 +64,7 @@ final class ThemeStyles {
 			$declarations[] = '--dpi-theme-gap:' . $gap;
 		}
 
-		return $declarations ? '@layer dpi-blocks{:where(.dpi-block){' . implode( ';', $declarations ) . ';}}' : '';
+		return $declarations ? '@layer dpi-blocks.defaults{:where(.dpi-block){' . implode( ';', $declarations ) . ';}}' : '';
 	}
 
 	/** Resolve WordPress preset references without accepting CSS rule injection. */

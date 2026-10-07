@@ -93,13 +93,13 @@ final class Assets {
 
 	/** Declare our low-priority layer before a theme's own CSS layers exist. */
 	public function declare_style_layer(): void {
-		wp_print_inline_style_tag( '@layer dpi-blocks;', array( 'id' => 'dpi-blocks-layer-order' ) );
+		wp_print_inline_style_tag( '@layer dpi-blocks; @layer dpi-blocks.structure, dpi-blocks.defaults;', array( 'id' => 'dpi-blocks-layer-order' ) );
 	}
 
 	/** Establish the same cascade order before theme styles in the editor iframe. */
 	public function editor_style_layer( array $settings ): array {
 		$styles = isset( $settings['styles'] ) && is_array( $settings['styles'] ) ? $settings['styles'] : array();
-		array_unshift( $styles, array( 'css' => '@layer dpi-blocks;' ) );
+		array_unshift( $styles, array( 'css' => '@layer dpi-blocks; @layer dpi-blocks.structure, dpi-blocks.defaults;' ) );
 		$settings['styles'] = $styles;
 		return $settings;
 	}

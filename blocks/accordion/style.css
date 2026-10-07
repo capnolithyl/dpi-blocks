@@ -1,4 +1,3 @@
-@layer dpi-blocks {
 :where(.dpi-accordion__items) {
 	display: grid;
 }
@@ -37,8 +36,8 @@
 	flex: 0 0 1rem;
 }
 
-:where(.dpi-accordion__indicator::before),
-:where(.dpi-accordion__indicator::after) {
+:where(.dpi-accordion__indicator)::before,
+:where(.dpi-accordion__indicator)::after {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -49,12 +48,12 @@
 	transform: translate(-50%, -50%);
 }
 
-:where(.dpi-accordion__indicator::after) {
+:where(.dpi-accordion__indicator)::after {
 	transform: translate(-50%, -50%) rotate(90deg);
 	transition: transform 160ms ease;
 }
 
-:where(.dpi-accordion__trigger[aria-expanded="true"] .dpi-accordion__indicator::after) {
+:where(.dpi-accordion__trigger[aria-expanded="true"] .dpi-accordion__indicator)::after {
 	transform: translate(-50%, -50%) rotate(0deg);
 }
 
@@ -63,9 +62,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	:where(.dpi-accordion__indicator::after) {
-		transition: none;
-	}
+
+	:where(.dpi-accordion__indicator)::after {
+	transition: none;
 }
 
 }

@@ -21,9 +21,20 @@ $theme_css = \DPI\Blocks\ThemeStyles::from_styles( $styles );
 ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
 <title>DPI Blocks default styles fixture</title>
-<style>@layer dpi-blocks;</style>
+<style>@layer dpi-blocks; @layer dpi-blocks.structure, dpi-blocks.defaults;</style>
 <!-- Deliberately load the theme first to exercise cascade-layer precedence. -->
 <style>
+/* Exercise the unlayered reset used by the IHM Tailwind build. */
+*, ::before, ::after { box-sizing: border-box; border: 0 solid; margin: 0; padding: 0; }
+h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; border-radius: 0; background: transparent; }
+ol, ul, menu { list-style: none; }
+a { color: inherit; text-decoration: inherit; }
+img, svg, video { display: block; vertical-align: middle; }
+img, video { max-width: 100%; height: auto; }
+<?php if ( 'bare' !== $theme ) : ?>
+h1, h2, h3 { font-family: var(--wp--preset--font-family--display-97); font-weight: 700; color: var(--wp--preset--color--ink-97); }
+<?php endif; ?>
 @layer fixture-theme {
   :root {
     --wp--preset--color--ink-97: #23383c; --wp--preset--color--paper-97: #f4f0e8;
@@ -41,10 +52,10 @@ $theme_css = \DPI\Blocks\ThemeStyles::from_styles( $styles );
 <?php echo $theme_css; ?>
 </style>
 <link rel="stylesheet" href="/assets/css/blocks.css">
+<link rel="stylesheet" href="/assets/css/block-defaults.css">
 <?php foreach ( glob( DPI_BLOCKS_DIR . 'blocks/*/style.css' ) as $style ) : ?>
 <link rel="stylesheet" href="/blocks/<?php echo basename( dirname( $style ) ); ?>/style.css">
 <?php endforeach; ?>
-<link rel="stylesheet" href="/assets/css/block-defaults.css">
 <link rel="stylesheet" href="/assets/vendor/slick/slick.css">
 </head><body><main class="fixture-shell">
 <?php

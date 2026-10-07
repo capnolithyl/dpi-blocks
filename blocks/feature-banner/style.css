@@ -4,7 +4,6 @@
  * Themes are expected to provide the visual design.
  */
 
-@layer dpi-blocks {
 :where(.dpi-feature-banner) {
 	position: relative;
 	overflow: hidden;
@@ -105,14 +104,14 @@
 }
 
 @media (max-width: 47.99rem) {
+
 	:where(.dpi-feature-banner__slide--left),
 :where(.dpi-feature-banner__slide--right) {
-		grid-template-columns: 1fr;
-	}
+	grid-template-columns: 1fr;
+}
 
 	:where(.dpi-feature-banner__slide--right .dpi-feature-banner__media) {
-		order: initial;
-	}
+	order: initial;
 }
 
 }

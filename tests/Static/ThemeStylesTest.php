@@ -34,7 +34,7 @@ final class ThemeStylesTest extends TestCase {
 				'button' => array( 'color' => array( 'background' => 'var:preset|color|action-97', 'text' => '#fff' ) ),
 			),
 		) );
-		$this->assertStringContainsString( '@layer dpi-blocks{:where(.dpi-block){', $css );
+		$this->assertStringContainsString( '@layer dpi-blocks.defaults{:where(.dpi-block){', $css );
 		$this->assertStringContainsString( '--dpi-theme-text:var(--wp--preset--color--ink-97)', $css );
 		$this->assertStringContainsString( '--dpi-theme-heading-font:var(--wp--preset--font-family--display-97)', $css );
 		$this->assertStringContainsString( '--dpi-theme-button-background:var(--wp--preset--color--action-97)', $css );
@@ -78,7 +78,7 @@ final class ThemeStylesTest extends TestCase {
 			'styles' => array( array( 'css' => '@layer theme { h2 { color: red; } }' ) ),
 		) );
 		$this->assertTrue( $settings['other'] );
-		$this->assertSame( '@layer dpi-blocks;', $settings['styles'][0]['css'] );
+		$this->assertSame( '@layer dpi-blocks; @layer dpi-blocks.structure, dpi-blocks.defaults;', $settings['styles'][0]['css'] );
 		$this->assertStringStartsWith( '@layer theme', $settings['styles'][1]['css'] );
 	}
 }

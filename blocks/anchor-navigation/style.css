@@ -1,4 +1,3 @@
-@layer dpi-blocks {
 :where(.dpi-anchor-navigation) {
 	position: relative;
 	overflow-x: auto;
@@ -23,6 +22,4 @@
 :where(.dpi-anchor-navigation__link) {
 	display: block;
 	padding: 1rem clamp(0.75rem, 2vw, 1.5rem);
-}
-
 }

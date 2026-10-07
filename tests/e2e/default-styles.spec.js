@@ -21,6 +21,10 @@ test('all real renderers and Lab choices fit the page and keep their controls us
   }).map(node => node.parentElement.dataset));
   expect(overflow).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  const coverMedia = await page.locator('.dpi-hero--overlay .dpi-hero__media img').first().evaluate(node => {
+    return [node.getBoundingClientRect().height, node.parentElement.getBoundingClientRect().height];
+  });
+  expect(Math.abs(coverMedia[0] - coverMedia[1])).toBeLessThan(1);
   await expect(page.locator('.dpi-button').first()).toHaveCSS('border-top-style', 'solid');
   await expect(page.locator('[data-dpi-slick]:visible').first()).toHaveClass(/slick-initialized/);
   for (const slug of inventory) {
@@ -32,12 +36,13 @@ test('semantic theme styles work with arbitrary preset names and plain CSS still
   await gallery(page, '?block=mission');
   const block = page.locator('.dpi-block').first();
   const action = block.locator('.dpi-button').first();
+  await expect(action).toHaveCSS('border-top-width', '1px');
   await expect(action).toHaveCSS('background-color', 'rgb(52, 95, 98)');
   await expect(action).toHaveCSS('color', 'rgb(244, 240, 232)');
   await expect(block.locator('h2')).toHaveCSS('font-family', 'Georgia, serif');
   expect(await block.evaluate(node => getComputedStyle(node).getPropertyValue('--dpi-block-gap').trim())).toBe('24px');
 
-  await page.addStyleTag({ content: '@layer fixture-theme { .dpi-block { --dpi-block-gap: 17px; } .dpi-button { background: rgb(120, 40, 20); border-radius: 2px; padding: 11px; } }' });
+  await page.addStyleTag({ content: '.dpi-block { --dpi-block-gap: 17px; } .dpi-block .dpi-button { background: rgb(120, 40, 20); border-radius: 2px; padding: 11px; }' });
   await expect(action).toHaveCSS('background-color', 'rgb(120, 40, 20)');
   await expect(action).toHaveCSS('border-radius', '2px');
   await expect(action).toHaveCSS('padding-top', '11px');
@@ -71,7 +76,12 @@ test('dark themes and every banner image placement keep a readable foreground pa
         const style = getComputedStyle(node);
         return [style.color, style.backgroundColor];
       });
-      expect(colors[0]).not.toBe(colors[1]);
+      const luminance = color => color.match(/[\d.]+/g).slice(0, 3).map(Number).map(channel => {
+        const value = channel / 255;
+        return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+      }).reduce((sum, value, index) => sum + value * [0.2126, 0.7152, 0.0722][index], 0);
+      const levels = colors.map(luminance).sort((a, b) => a - b);
+      expect((levels[1] + 0.05) / (levels[0] + 0.05), `${placement} / ${variant}`).toBeGreaterThanOrEqual(4.5);
     }
   }
 });
@@ -86,6 +96,7 @@ test('blocks also stack inside narrow desktop columns', async ({ page }) => {
 test('accordion, tabs, staff dialog and image reveal retain keyboard affordances', async ({ page }) => {
   await gallery(page);
   const accordion = page.locator('[data-dpi-accordion-trigger]').first();
+  expect(await accordion.locator('.dpi-accordion__indicator').evaluate(node => getComputedStyle(node, '::before').content)).not.toBe('none');
   await accordion.focus();
   await expect(accordion).toHaveCSS('outline-style', 'solid');
   await page.keyboard.press('Enter');
@@ -98,6 +109,7 @@ test('accordion, tabs, staff dialog and image reveal retain keyboard affordances
 
   await page.locator('[data-dpi-dialog-open]').first().click();
   await expect(page.locator('dialog[open]')).toHaveCount(1);
+  expect(await page.locator('dialog[open]').evaluate(node => getComputedStyle(node, '::backdrop').backgroundColor)).toBe('rgba(0, 0, 0, 0.65)');
   await page.keyboard.press('Escape');
   await expect(page.locator('dialog[open]')).toHaveCount(0);
 
