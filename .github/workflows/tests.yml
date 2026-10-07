@@ -62,3 +62,29 @@ jobs:
 
       - name: Validate Playwright config and tests
         run: npx playwright test --list
+
+  default-styles:
+    name: Default block styles
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install browser dependencies
+        run: |
+          npm install
+          npx playwright install --with-deps chromium
+      - name: Render and verify real block defaults
+        run: npm run test:styles
+      - name: Upload block previews and browser diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dpi-default-styles-report
+          path: test-results/
+          retention-days: 7

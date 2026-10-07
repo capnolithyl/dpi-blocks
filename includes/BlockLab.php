@@ -365,7 +365,7 @@ final class BlockLab {
 	}
 
 	/**
-	 * Build a baseline and an alternate field configuration.
+	 * Build representative configurations, every choice, and optional-media cases.
 	 *
 	 * @param array<string,mixed> $group ACF field group.
 	 * @return list<array{name:string,fields:array<string,mixed>}>
@@ -398,7 +398,84 @@ final class BlockLab {
 			);
 		}
 
+		$scenarios = array_merge( $scenarios, $this->choice_scenarios( (array) ( $group['fields'] ?? array() ), $baseline ) );
+		$without_media = $this->without_media( (array) ( $group['fields'] ?? array() ), $baseline );
+		if ( $without_media !== $baseline ) {
+			$scenarios[] = array(
+				'name'   => __( 'Without optional media', 'dpi-blocks' ),
+				'fields' => $without_media,
+			);
+		}
+
+		// Several fields can produce the same configuration. Render each only once.
+		$unique = array();
+		foreach ( $scenarios as $scenario ) {
+			$key = hash( 'sha256', serialize( $scenario['fields'] ) );
+			if ( ! isset( $unique[ $key ] ) ) {
+				$unique[ $key ] = $scenario;
+			}
+		}
+		return array_values( $unique );
+	}
+
+	/** Vary a single choice at a time, including choices inside groups/repeaters. */
+	private function choice_scenarios( array $fields, array $baseline, bool $nested = false ): array {
+		$scenarios = array();
+		foreach ( $fields as $field ) {
+			$key = (string) ( $field[ $nested ? 'key' : 'name' ] ?? '' );
+			if ( '' === $key || ! array_key_exists( $key, $baseline ) ) {
+				continue;
+			}
+			$type  = (string) ( $field['type'] ?? '' );
+			$label = (string) ( $field['label'] ?? $key );
+			if ( in_array( $type, array( 'select', 'radio', 'button_group' ), true ) && empty( $field['multiple'] ) ) {
+				foreach ( (array) ( $field['choices'] ?? array() ) as $choice => $choice_label ) {
+					$values         = $baseline;
+					$values[ $key ] = $choice;
+					$scenarios[]    = array( 'name' => $label . ': ' . $choice_label, 'fields' => $values );
+				}
+			}
+			if ( in_array( $type, array( 'group', 'repeater' ), true ) ) {
+				$row = 'repeater' === $type ? ( $baseline[ $key ][0] ?? array() ) : $baseline[ $key ];
+				if ( ! is_array( $row ) ) {
+					continue;
+				}
+				foreach ( $this->choice_scenarios( (array) ( $field['sub_fields'] ?? array() ), $row, true ) as $child ) {
+					$values = $baseline;
+					if ( 'repeater' === $type ) {
+						$values[ $key ][0] = $child['fields'];
+					} else {
+						$values[ $key ] = $child['fields'];
+					}
+					$scenarios[] = array( 'name' => $label . ' / ' . $child['name'], 'fields' => $values );
+				}
+			}
+		}
 		return $scenarios;
+	}
+
+	/** Remove media recursively while keeping representative text and actions. */
+	private function without_media( array $fields, array $values, bool $nested = false ): array {
+		foreach ( $fields as $field ) {
+			$key  = (string) ( $field[ $nested ? 'key' : 'name' ] ?? '' );
+			$type = (string) ( $field['type'] ?? '' );
+			if ( ! array_key_exists( $key, $values ) ) {
+				continue;
+			}
+			if ( in_array( $type, array( 'image', 'file', 'gallery' ), true ) ) {
+				$values[ $key ] = 'gallery' === $type ? array() : 0;
+			} elseif ( 'group' === $type && is_array( $values[ $key ] ) ) {
+				$values[ $key ] = $this->without_media( (array) ( $field['sub_fields'] ?? array() ), $values[ $key ], true );
+			} elseif ( 'repeater' === $type && is_array( $values[ $key ] ) ) {
+				foreach ( $values[ $key ] as &$row ) {
+					if ( is_array( $row ) ) {
+						$row = $this->without_media( (array) ( $field['sub_fields'] ?? array() ), $row, true );
+					}
+				}
+				unset( $row );
+			}
+		}
+		return $values;
 	}
 
 	/** Generate one representative raw ACF value from a field definition. */

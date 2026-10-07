@@ -1,20 +1,21 @@
-.dpi-accordion__items {
+@layer dpi-blocks {
+:where(.dpi-accordion__items) {
 	display: grid;
 }
 
-.dpi-accordion__item {
+:where(.dpi-accordion__item) {
 	border-block-start: 1px solid color-mix(in srgb, currentColor 25%, transparent);
 }
 
-.dpi-accordion__item:last-child {
+:where(.dpi-accordion__item:last-child) {
 	border-block-end: 1px solid color-mix(in srgb, currentColor 25%, transparent);
 }
 
-.dpi-accordion__item-heading {
+:where(.dpi-accordion__item-heading) {
 	margin: 0;
 }
 
-.dpi-accordion__trigger {
+:where(.dpi-accordion__trigger) {
 	display: flex;
 	width: 100%;
 	padding: 1rem 0;
@@ -29,15 +30,15 @@
 	cursor: pointer;
 }
 
-.dpi-accordion__indicator {
+:where(.dpi-accordion__indicator) {
 	position: relative;
 	width: 1rem;
 	height: 1rem;
 	flex: 0 0 1rem;
 }
 
-.dpi-accordion__indicator::before,
-.dpi-accordion__indicator::after {
+:where(.dpi-accordion__indicator::before),
+:where(.dpi-accordion__indicator::after) {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -48,21 +49,23 @@
 	transform: translate(-50%, -50%);
 }
 
-.dpi-accordion__indicator::after {
+:where(.dpi-accordion__indicator::after) {
 	transform: translate(-50%, -50%) rotate(90deg);
 	transition: transform 160ms ease;
 }
 
-.dpi-accordion__trigger[aria-expanded="true"] .dpi-accordion__indicator::after {
+:where(.dpi-accordion__trigger[aria-expanded="true"] .dpi-accordion__indicator::after) {
 	transform: translate(-50%, -50%) rotate(0deg);
 }
 
-.dpi-accordion__panel {
+:where(.dpi-accordion__panel) {
 	padding-block-end: 1.25rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.dpi-accordion__indicator::after {
+	:where(.dpi-accordion__indicator::after) {
 		transition: none;
 	}
+}
+
 }

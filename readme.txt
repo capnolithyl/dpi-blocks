@@ -5,7 +5,7 @@ Requires at least: 6.9
 Tested up to: 6.9
 Requires PHP: 8.0
 Requires Plugins: advanced-custom-fields-pro
-Stable tag: 1.9.3
+Stable tag: 1.10.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,7 @@ Portable ACF blocks, header utilities, and staff/ministry/office directories for
 
 == Description ==
 
-DPI Blocks provides sixteen dynamic ACF blocks, an optional top bar and accessible search UI, and opt-in Staff, Ministry, and Office content types. Presentation is intentionally neutral so themes can style the stable `dpi-*` classes and CSS variables.
+DPI Blocks provides sixteen dynamic ACF blocks, an optional top bar and accessible search UI, and opt-in Staff, Ministry, and Office content types. All sixteen blocks include neutral, responsive defaults that inherit the active theme. Themes can override the zero-specificity `dpi-*` rules and CSS variables without fighting the plugin.
 
 Advanced Custom Fields Pro 6.6 or newer is required. ACF Extended and the ACF Font Awesome add-on are not required.
 
@@ -27,7 +27,9 @@ Advanced Custom Fields Pro 6.6 or newer is required. ACF Extended and the ACF Fo
 
 == Block Lab and automated tests ==
 
-DPI Blocks > Lab inventories every bundled block and opens an administrator-only front-end lab using the active theme. The lab reads bundled ACF JSON, generates baseline and alternate field values, and runs the real block render callbacks. A failure is isolated to its scenario so the rest of the page still renders.
+DPI Blocks > Lab inventories every bundled block and opens an administrator-only front-end lab using the active theme. The lab reads bundled ACF JSON, generates baseline and alternate field values, covers every choice and missing optional media, and runs the real block render callbacks. A failure is isolated to its scenario so the rest of the page still renders.
+
+Run `npm run test:styles` for offline browser checks of the production renderers at desktop, tablet, and phone widths. CI runs these automatically and saves block previews. See `docs/DEFAULT-STYLES.md` for theme token mapping, overrides, and the presentation opt-out.
 
 Development checks are available through Composer. Run `composer install` once, then `composer test`. GitHub Actions also validates Composer configuration, lints every PHP file, and runs the static PHPUnit suite on supported PHP versions. The tests verify block metadata, referenced assets, ACF JSON integrity and conditional references, block-to-field-group coverage, renderer guards, and plugin version consistency.\n\nFor deployed-site smoke tests, install the Node development dependencies with `npm install`, install Chromium with `npx playwright install chromium`, then set `DPI_BLOCKS_TEST_URL`, `DPI_BLOCKS_TEST_USER`, and `DPI_BLOCKS_TEST_PASSWORD` before running `npm run test:e2e`. The repository also includes a manually dispatched Block Lab browser workflow that accepts the deployed site URL and reads the administrator credentials from repository or environment secrets.
 
@@ -49,6 +51,12 @@ Maintainer release flow:
 Themes can override one block renderer at `dpi-blocks/blocks/<slug>/render.php` while the plugin remains the fallback. They can call `dpi_blocks_render_top_bar()` and `dpi_blocks_render_search_trigger()`, or use the `dpi_blocks/top_bar` and `dpi_blocks/search_trigger` actions. Directory templates may also be overridden inside a theme's `dpi-blocks` directory. See `docs/EXTENDING.md` for the complete template, field, metadata, asset, CSS, and JavaScript extension contract.
 
 == Changelog ==
+
+= 1.10.0 =
+* Added theme-aware, easily overridden presentation for all sixteen blocks and their layouts, with neutral fallbacks for themes without semantic Global Styles.
+* Preserved block-specific structural styles in the front end and editor, and placed plugin styles in an early, zero-specificity CSS layer.
+* Added narrow-column layouts, readable media captions, styled controls, and missing-media handling.
+* Expanded Block Lab to cover every field choice and optional-media cases, and added automated browser checks using the production renderers.
 
 = 1.9.3 =
 * Maintenance release used to verify one-click WordPress updates through the static update metadata feed.

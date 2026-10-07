@@ -1,5 +1,9 @@
 # Extending DPI Blocks
 
+Blocks include neutral theme-aware default styling. See [Default styles](DEFAULT-STYLES.md)
+for the theme.json token mapping, CSS override priority, presentation opt-out,
+and automated visual regression checks.
+
 DPI Blocks intentionally has no build step. PHP, CSS, JavaScript, block metadata, and ACF JSON are shipped as readable source. The plugin remains the canonical fallback while a theme customizes only the parts it owns.
 
 ## Override one block renderer

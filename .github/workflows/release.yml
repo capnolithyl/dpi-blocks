@@ -133,6 +133,7 @@ jobs:
             --exclude='package.json' \
             --exclude='package-lock.json' \
             --exclude='playwright.config.js' \
+            --exclude='playwright.styles.config.js' \
             --exclude='phpunit.xml.dist' \
             --exclude='.phpunit.result.cache'
 

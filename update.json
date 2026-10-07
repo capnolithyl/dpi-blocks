@@ -1,13 +1,13 @@
 {
   "name": "DPI Blocks",
-  "version": "1.9.3",
-  "download_url": "https://github.com/capnolithyl/dpi-blocks/releases/download/v1.9.3/dpi-blocks.zip",
+  "version": "1.10.0",
+  "download_url": "https://github.com/capnolithyl/dpi-blocks/releases/download/v1.10.0/dpi-blocks.zip",
   "homepage": "https://github.com/capnolithyl/dpi-blocks",
   "requires": "6.9",
   "tested": "6.9",
   "requires_php": "8.0",
   "sections": {
     "description": "Portable ACF blocks, header utilities, and directory content types for custom WordPress sites.",
-    "changelog": "<h4>1.9.3</h4><ul><li>Maintenance release used to verify one-click WordPress updates through the static update metadata feed.</li></ul>"
+    "changelog": "<h4>1.10.0</h4><ul><li>Theme-aware responsive defaults for all sixteen blocks, with easy theme overrides.</li><li>Preserved block-specific styles in the frontend and editor.</li><li>Expanded Block Lab variations and automated PHP/browser regression coverage.</li></ul>"
   }
 }
