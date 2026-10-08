@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class Assets {
+	private const STYLE_LAYER_HANDLE = 'dpi-blocks-layer-order';
 	private const CAROUSEL_BLOCKS    = array(
 		'dpi/community-slider',
 		'dpi/feature-banner',
@@ -31,7 +32,7 @@ final class Assets {
 	/** Register asset hooks. */
 	public function register(): void {
 		add_action( 'init', array( $this, 'register_assets' ), 2 );
-		add_action( 'wp_head', array( $this, 'declare_style_layer' ), 0 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_style_layer' ), 0 );
 		add_filter( 'block_editor_settings_all', array( $this, 'editor_style_layer' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_for_request' ), 20 );
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_editor_assets' ) );
@@ -40,6 +41,14 @@ final class Assets {
 
 	/** Register reusable handles without loading them. */
 	public function register_assets(): void {
+		wp_register_style(
+			self::STYLE_LAYER_HANDLE,
+			false,
+			array(),
+			DPI_BLOCKS_VERSION
+		);
+		wp_add_inline_style( self::STYLE_LAYER_HANDLE, '@layer dpi-blocks; @layer dpi-blocks.structure, dpi-blocks.defaults;' );
+
 		$default_styles = (bool) apply_filters( 'dpi_blocks/default_styles_enabled', true );
 		wp_register_style(
 			'dpi-blocks-defaults',
@@ -55,7 +64,7 @@ final class Assets {
 		wp_register_style(
 			'dpi-blocks',
 			DPI_BLOCKS_URL . 'assets/css/blocks.css',
-			array(),
+			array( self::STYLE_LAYER_HANDLE ),
 			DPI_BLOCKS_VERSION
 		);
 		wp_register_style(
@@ -91,9 +100,9 @@ final class Assets {
 		);
 	}
 
-	/** Declare our low-priority layer before a theme's own CSS layers exist. */
-	public function declare_style_layer(): void {
-		wp_print_inline_style_tag( '@layer dpi-blocks; @layer dpi-blocks.structure, dpi-blocks.defaults;', array( 'id' => 'dpi-blocks-layer-order' ) );
+	/** Establish the plugin's low-priority cascade layer before theme styles. */
+	public function enqueue_style_layer(): void {
+		wp_enqueue_style( self::STYLE_LAYER_HANDLE );
 	}
 
 	/** Establish the same cascade order before theme styles in the editor iframe. */
