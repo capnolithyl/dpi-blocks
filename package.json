@@ -2,10 +2,12 @@
   "name": "dpi-blocks-tests",
   "private": true,
   "scripts": {
+    "test:styles": "playwright test --config=playwright.styles.config.js",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed"
   },
   "devDependencies": {
-    "@playwright/test": "^1.63.0"
+    "@playwright/test": "^1.63.0",
+    "jquery": "^3.7.1"
   }
 }

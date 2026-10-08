@@ -24,6 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class BlockLab {
 	public const PAGE_SLUG = 'dpi-blocks-lab';
 	public const QUERY_VAR = 'dpi_blocks_lab';
+	private const INDEX_VALUE = 'index';
 
 	/** @var array<string, mixed> */
 	private array $active_fields = array();
@@ -78,7 +79,7 @@ final class BlockLab {
 		}
 
 		$inventory   = $this->inventory();
-		$preview_url = add_query_arg( self::QUERY_VAR, '1', home_url( '/' ) );
+		$preview_url = $this->lab_url();
 		?>
 		<div class="wrap dpi-block-lab-admin">
 			<h1><?php esc_html_e( 'DPI Block Lab', 'dpi-blocks' ); ?></h1>
@@ -96,6 +97,7 @@ final class BlockLab {
 						<th><?php esc_html_e( 'Field group', 'dpi-blocks' ); ?></th>
 						<th><?php esc_html_e( 'Scenarios', 'dpi-blocks' ); ?></th>
 						<th><?php esc_html_e( 'Status', 'dpi-blocks' ); ?></th>
+						<th><?php esc_html_e( 'Preview', 'dpi-blocks' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -111,6 +113,7 @@ final class BlockLab {
 									<span class="dpi-block-lab-status dpi-block-lab-status--warning"><?php esc_html_e( 'Needs ACF field group', 'dpi-blocks' ); ?></span>
 								<?php endif; ?>
 							</td>
+							<td><a href="<?php echo esc_url( $this->lab_url( $item['name'] ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'View scenarios', 'dpi-blocks' ); ?></a></td>
 						</tr>
 					<?php endforeach; ?>
 				</tbody>
@@ -121,7 +124,8 @@ final class BlockLab {
 
 	/** Intercept the administrator-only front-end lab request. */
 	public function maybe_render_frontend(): void {
-		if ( '1' !== (string) get_query_var( self::QUERY_VAR ) ) {
+		$request = sanitize_key( (string) get_query_var( self::QUERY_VAR ) );
+		if ( '' === $request ) {
 			return;
 		}
 
@@ -144,35 +148,74 @@ final class BlockLab {
 
 		nocache_headers();
 		$this->enqueue_frontend_assets();
+		$inventory = $this->inventory();
+		$selected  = $this->requested_item( $inventory, $request );
+
+		if ( null === $selected && ! in_array( $request, array( '1', self::INDEX_VALUE ), true ) ) {
+			status_header( 404 );
+			wp_die( esc_html__( 'That block does not exist in the DPI Block Lab.', 'dpi-blocks' ), '', array( 'response' => 404 ) );
+		}
 
 		get_header();
 		?>
 		<main id="primary" class="dpi-block-lab">
 			<header class="dpi-block-lab__intro">
 				<h1><?php esc_html_e( 'DPI Block Lab', 'dpi-blocks' ); ?></h1>
-				<p><?php esc_html_e( 'Each example below is rendered by the real plugin block callback using generated test data. Errors are isolated per scenario so one broken block does not hide the rest of the report.', 'dpi-blocks' ); ?></p>
+				<?php if ( null === $selected ) : ?>
+					<p><?php esc_html_e( 'Choose a block to inspect every generated layout and content variation on its own page.', 'dpi-blocks' ); ?></p>
+				<?php else : ?>
+					<p><?php esc_html_e( 'Each example is rendered by the real plugin block callback using generated test data. Errors are isolated per scenario so one broken variation does not hide the rest of the report.', 'dpi-blocks' ); ?></p>
+				<?php endif; ?>
 			</header>
 
-			<?php foreach ( $this->inventory() as $item ) : ?>
-				<section class="dpi-block-lab__block" data-dpi-lab-block="<?php echo esc_attr( $item['name'] ); ?>">
+			<?php if ( null === $selected ) : ?>
+				<nav class="dpi-block-lab__index" aria-label="<?php esc_attr_e( 'Block Lab pages', 'dpi-blocks' ); ?>">
+					<?php foreach ( $inventory as $item ) : ?>
+						<a class="dpi-block-lab__index-link" href="<?php echo esc_url( $this->lab_url( $item['name'] ) ); ?>">
+							<strong><?php echo esc_html( $item['title'] ); ?></strong>
+							<code><?php echo esc_html( $item['name'] ); ?></code>
+							<span><?php echo esc_html( sprintf( _n( '%d scenario', '%d scenarios', count( $item['scenarios'] ), 'dpi-blocks' ), count( $item['scenarios'] ) ) ); ?></span>
+						</a>
+					<?php endforeach; ?>
+				</nav>
+			<?php else : ?>
+				<nav class="dpi-block-lab__navigation" aria-label="<?php esc_attr_e( 'Block Lab navigation', 'dpi-blocks' ); ?>">
+					<a href="<?php echo esc_url( $this->lab_url() ); ?>">&larr; <?php esc_html_e( 'All blocks', 'dpi-blocks' ); ?></a>
+				</nav>
+				<section class="dpi-block-lab__block" data-dpi-lab-block="<?php echo esc_attr( $selected['name'] ); ?>">
 					<header class="dpi-block-lab__block-header">
-						<h2><?php echo esc_html( $item['title'] ); ?></h2>
-						<code><?php echo esc_html( $item['name'] ); ?></code>
+						<h2><?php echo esc_html( $selected['title'] ); ?></h2>
+						<code><?php echo esc_html( $selected['name'] ); ?></code>
 					</header>
-
-					<?php if ( ! $item['field_group'] ) : ?>
+					<?php if ( ! $selected['field_group'] ) : ?>
 						<div class="dpi-block-lab__error"><?php esc_html_e( 'No bundled ACF field group targets this block.', 'dpi-blocks' ); ?></div>
 					<?php else : ?>
-						<?php foreach ( $item['scenarios'] as $scenario ) : ?>
-							<?php $this->render_scenario( $item['name'], $scenario ); ?>
+						<?php foreach ( $selected['scenarios'] as $scenario ) : ?>
+							<?php $this->render_scenario( $selected['name'], $scenario ); ?>
 						<?php endforeach; ?>
 					<?php endif; ?>
 				</section>
-			<?php endforeach; ?>
+			<?php endif; ?>
 		</main>
 		<?php
 		get_footer();
 		exit;
+	}
+
+	/** Build a private Lab index or block-detail URL. */
+	private function lab_url( string $block_name = '' ): string {
+		$value = '' === $block_name ? self::INDEX_VALUE : substr( $block_name, strpos( $block_name, '/' ) + 1 );
+		return add_query_arg( self::QUERY_VAR, $value, home_url( '/' ) );
+	}
+
+	/** Find the requested block by its URL-safe slug. */
+	private function requested_item( array $inventory, string $request ): ?array {
+		foreach ( $inventory as $item ) {
+			if ( $request === substr( $item['name'], strpos( $item['name'], '/' ) + 1 ) ) {
+				return $item;
+			}
+		}
+		return null;
 	}
 
 	/** Ensure shared interactive assets are available before the theme prints wp_head(). */
@@ -365,7 +408,7 @@ final class BlockLab {
 	}
 
 	/**
-	 * Build a baseline and an alternate field configuration.
+	 * Build representative configurations, every choice, and optional-media cases.
 	 *
 	 * @param array<string,mixed> $group ACF field group.
 	 * @return list<array{name:string,fields:array<string,mixed>}>
@@ -398,7 +441,84 @@ final class BlockLab {
 			);
 		}
 
+		$scenarios = array_merge( $scenarios, $this->choice_scenarios( (array) ( $group['fields'] ?? array() ), $baseline ) );
+		$without_media = $this->without_media( (array) ( $group['fields'] ?? array() ), $baseline );
+		if ( $without_media !== $baseline ) {
+			$scenarios[] = array(
+				'name'   => __( 'Without optional media', 'dpi-blocks' ),
+				'fields' => $without_media,
+			);
+		}
+
+		// Several fields can produce the same configuration. Render each only once.
+		$unique = array();
+		foreach ( $scenarios as $scenario ) {
+			$key = hash( 'sha256', serialize( $scenario['fields'] ) );
+			if ( ! isset( $unique[ $key ] ) ) {
+				$unique[ $key ] = $scenario;
+			}
+		}
+		return array_values( $unique );
+	}
+
+	/** Vary a single choice at a time, including choices inside groups/repeaters. */
+	private function choice_scenarios( array $fields, array $baseline, bool $nested = false ): array {
+		$scenarios = array();
+		foreach ( $fields as $field ) {
+			$key = (string) ( $field[ $nested ? 'key' : 'name' ] ?? '' );
+			if ( '' === $key || ! array_key_exists( $key, $baseline ) ) {
+				continue;
+			}
+			$type  = (string) ( $field['type'] ?? '' );
+			$label = (string) ( $field['label'] ?? $key );
+			if ( in_array( $type, array( 'select', 'radio', 'button_group' ), true ) && empty( $field['multiple'] ) ) {
+				foreach ( (array) ( $field['choices'] ?? array() ) as $choice => $choice_label ) {
+					$values         = $baseline;
+					$values[ $key ] = $choice;
+					$scenarios[]    = array( 'name' => $label . ': ' . $choice_label, 'fields' => $values );
+				}
+			}
+			if ( in_array( $type, array( 'group', 'repeater' ), true ) ) {
+				$row = 'repeater' === $type ? ( $baseline[ $key ][0] ?? array() ) : $baseline[ $key ];
+				if ( ! is_array( $row ) ) {
+					continue;
+				}
+				foreach ( $this->choice_scenarios( (array) ( $field['sub_fields'] ?? array() ), $row, true ) as $child ) {
+					$values = $baseline;
+					if ( 'repeater' === $type ) {
+						$values[ $key ][0] = $child['fields'];
+					} else {
+						$values[ $key ] = $child['fields'];
+					}
+					$scenarios[] = array( 'name' => $label . ' / ' . $child['name'], 'fields' => $values );
+				}
+			}
+		}
 		return $scenarios;
+	}
+
+	/** Remove media recursively while keeping representative text and actions. */
+	private function without_media( array $fields, array $values, bool $nested = false ): array {
+		foreach ( $fields as $field ) {
+			$key  = (string) ( $field[ $nested ? 'key' : 'name' ] ?? '' );
+			$type = (string) ( $field['type'] ?? '' );
+			if ( ! array_key_exists( $key, $values ) ) {
+				continue;
+			}
+			if ( in_array( $type, array( 'image', 'file', 'gallery' ), true ) ) {
+				$values[ $key ] = 'gallery' === $type ? array() : 0;
+			} elseif ( 'group' === $type && is_array( $values[ $key ] ) ) {
+				$values[ $key ] = $this->without_media( (array) ( $field['sub_fields'] ?? array() ), $values[ $key ], true );
+			} elseif ( 'repeater' === $type && is_array( $values[ $key ] ) ) {
+				foreach ( $values[ $key ] as &$row ) {
+					if ( is_array( $row ) ) {
+						$row = $this->without_media( (array) ( $field['sub_fields'] ?? array() ), $row, true );
+					}
+				}
+				unset( $row );
+			}
+		}
+		return $values;
 	}
 
 	/** Generate one representative raw ACF value from a field definition. */

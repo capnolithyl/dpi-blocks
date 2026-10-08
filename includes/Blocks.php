@@ -168,11 +168,11 @@ final class Blocks {
 		$metadata['category'] = $this->resolve_category()['slug'];
 
 		/*
-		 * Register the shared structural stylesheet as the block's style handle.
+		 * Keep each block's structural stylesheet alongside the shared defaults.
 		 * WordPress then loads it in both the front end and the iframe-based block
 		 * editor canvas. Theme editor styles can safely layer presentation on top.
 		 */
-		$metadata['style'] = 'dpi-blocks';
+		$metadata['style'] = $this->block_styles( $metadata['style'] ?? array() );
 
 		if ( ! in_array( $name, self::CANONICAL_BLOCKS, true ) || ! $this->is_canonical_source( $metadata, $name ) ) {
 			return $metadata;
@@ -242,6 +242,13 @@ final class Blocks {
 		}
 
 		return $metadata;
+	}
+
+	/** Preserve metadata-declared styles in front-end and iframe editor previews. */
+	private function block_styles( mixed $styles ): array {
+		$styles = is_array( $styles ) ? $styles : array( $styles );
+		$styles = array_filter( $styles, static fn( $style ): bool => is_string( $style ) && '' !== $style );
+		return array_values( array_unique( array_merge( array( 'dpi-blocks' ), $styles, array( 'dpi-blocks-defaults' ) ) ) );
 	}
 
 	/** Display duplicate and invalid registration diagnostics to administrators. */

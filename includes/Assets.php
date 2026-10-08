@@ -31,6 +31,8 @@ final class Assets {
 	/** Register asset hooks. */
 	public function register(): void {
 		add_action( 'init', array( $this, 'register_assets' ), 2 );
+		add_action( 'wp_head', array( $this, 'declare_style_layer' ), 0 );
+		add_filter( 'block_editor_settings_all', array( $this, 'editor_style_layer' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_for_request' ), 20 );
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_editor_assets' ) );
 		add_filter( 'render_block', array( $this, 'enqueue_rendered_block' ), 10, 2 );
@@ -38,6 +40,18 @@ final class Assets {
 
 	/** Register reusable handles without loading them. */
 	public function register_assets(): void {
+		$default_styles = (bool) apply_filters( 'dpi_blocks/default_styles_enabled', true );
+		wp_register_style(
+			'dpi-blocks-defaults',
+			$default_styles ? DPI_BLOCKS_URL . 'assets/css/block-defaults.css' : false,
+			array( 'dpi-blocks' ),
+			DPI_BLOCKS_VERSION
+		);
+		$theme_css = ThemeStyles::css();
+		if ( $default_styles && '' !== $theme_css ) {
+			wp_add_inline_style( 'dpi-blocks-defaults', $theme_css );
+		}
+
 		wp_register_style(
 			'dpi-blocks',
 			DPI_BLOCKS_URL . 'assets/css/blocks.css',
@@ -75,6 +89,19 @@ final class Assets {
 				'nextIcon'      => IconRegistry::render( 'solid:chevron-right' ),
 			)
 		);
+	}
+
+	/** Declare our low-priority layer before a theme's own CSS layers exist. */
+	public function declare_style_layer(): void {
+		wp_print_inline_style_tag( '@layer dpi-blocks; @layer dpi-blocks.structure, dpi-blocks.defaults;', array( 'id' => 'dpi-blocks-layer-order' ) );
+	}
+
+	/** Establish the same cascade order before theme styles in the editor iframe. */
+	public function editor_style_layer( array $settings ): array {
+		$styles = isset( $settings['styles'] ) && is_array( $settings['styles'] ) ? $settings['styles'] : array();
+		array_unshift( $styles, array( 'css' => '@layer dpi-blocks; @layer dpi-blocks.structure, dpi-blocks.defaults;' ) );
+		$settings['styles'] = $styles;
+		return $settings;
 	}
 
 	/** Load shared assets for blocks found in the queried content and directories. */
@@ -174,7 +201,7 @@ final class Assets {
 		);
 
 		if ( $requirements['styles'] ) {
-			wp_enqueue_style( 'dpi-blocks' );
+			wp_enqueue_style( 'dpi-blocks-defaults' );
 		}
 
 		if ( $requirements['slick'] ) {

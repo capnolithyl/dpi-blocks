@@ -42,6 +42,51 @@
 	padding-block: 3rem 2rem;
 }
 
+.dpi-block-lab__index,
+.dpi-block-lab__navigation {
+	box-sizing: border-box;
+	margin-inline: auto;
+	max-width: 90rem;
+	padding: 0 clamp(1rem, 4vw, 3rem) 4rem;
+}
+
+.dpi-block-lab__index {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+	gap: 1rem;
+}
+
+.dpi-block-lab__index-link {
+	display: grid;
+	gap: 0.5rem;
+	padding: 1.25rem;
+	border: 1px solid currentColor;
+	border-radius: 0.5rem;
+	color: inherit;
+	text-decoration: none;
+}
+
+.dpi-block-lab__index-link:hover,
+.dpi-block-lab__index-link:focus-visible {
+	background: color-mix(in srgb, currentColor 6%, transparent);
+}
+
+.dpi-block-lab__index-link strong {
+	font-size: 1.2rem;
+}
+
+.dpi-block-lab__index-link span {
+	font-size: 0.9rem;
+}
+
+.dpi-block-lab__navigation {
+	padding-bottom: 1.5rem;
+}
+
+.dpi-block-lab__navigation a {
+	color: inherit;
+}
+
 .dpi-block-lab__block {
 	border-top: 1px solid currentColor;
 	padding-block: 2rem 4rem;

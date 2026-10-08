@@ -1,16 +1,16 @@
-.dpi-anchor-navigation {
+:where(.dpi-anchor-navigation) {
 	position: relative;
 	overflow-x: auto;
 	overscroll-behavior-inline: contain;
 }
 
-.dpi-anchor-navigation--sticky {
+:where(.dpi-anchor-navigation--sticky) {
 	position: sticky;
 	top: var(--dpi-anchor-navigation-offset, 0);
 	z-index: var(--dpi-anchor-navigation-z-index, 10);
 }
 
-.dpi-anchor-navigation__list {
+:where(.dpi-anchor-navigation__list) {
 	display: flex;
 	width: max-content;
 	min-width: 100%;
@@ -19,7 +19,7 @@
 	white-space: nowrap;
 }
 
-.dpi-anchor-navigation__link {
+:where(.dpi-anchor-navigation__link) {
 	display: block;
 	padding: 1rem clamp(0.75rem, 2vw, 1.5rem);
 }
