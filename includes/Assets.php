@@ -32,6 +32,7 @@ final class Assets {
 	/** Register asset hooks. */
 	public function register(): void {
 		add_action( 'init', array( $this, 'register_assets' ), 2 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_style_layer' ), 0 );
 		add_filter( 'block_editor_settings_all', array( $this, 'editor_style_layer' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_for_request' ), 20 );
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_editor_assets' ) );
@@ -97,6 +98,11 @@ final class Assets {
 				'nextIcon'      => IconRegistry::render( 'solid:chevron-right' ),
 			)
 		);
+	}
+
+	/** Establish the plugin's low-priority cascade layer before theme styles. */
+	public function enqueue_style_layer(): void {
+		wp_enqueue_style( self::STYLE_LAYER_HANDLE );
 	}
 
 	/** Establish the same cascade order before theme styles in the editor iframe. */

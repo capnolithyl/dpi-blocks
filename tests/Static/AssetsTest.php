@@ -56,10 +56,27 @@ if ( ! function_exists( 'esc_url' ) ) {
 		return (string) $value;
 	}
 }
+if ( ! function_exists( 'add_action' ) ) {
+	function add_action( string $hook_name, mixed $callback, int $priority = 10, int $accepted_args = 1 ): bool {
+		$GLOBALS['dpi_assets_test_actions'][ $hook_name ][] = compact( 'callback', 'priority', 'accepted_args' );
+		return true;
+	}
+}
+if ( ! function_exists( 'add_filter' ) ) {
+	function add_filter( string $hook_name, mixed $callback, int $priority = 10, int $accepted_args = 1 ): bool {
+		$GLOBALS['dpi_assets_test_filters'][ $hook_name ][] = compact( 'callback', 'priority', 'accepted_args' );
+		return true;
+	}
+}
 if ( ! function_exists( 'wp_register_style' ) ) {
 	function wp_register_style( string $handle, string|false $src, array $deps = array(), string|bool|null $ver = false, string $media = 'all' ): bool {
 		$GLOBALS['dpi_assets_test_styles'][ $handle ] = compact( 'src', 'deps', 'ver', 'media' );
 		return true;
+	}
+}
+if ( ! function_exists( 'wp_enqueue_style' ) ) {
+	function wp_enqueue_style( string $handle ): void {
+		$GLOBALS['dpi_assets_test_enqueued_styles'][] = $handle;
 	}
 }
 if ( ! function_exists( 'wp_add_inline_style' ) ) {
@@ -87,14 +104,20 @@ require_once dirname( __DIR__, 2 ) . '/includes/Assets.php';
 
 final class AssetsTest extends TestCase {
 	protected function setUp(): void {
-		$GLOBALS['dpi_assets_test_styles']        = array();
-		$GLOBALS['dpi_assets_test_inline_styles'] = array();
-		$GLOBALS['dpi_assets_test_scripts']       = array();
-		$GLOBALS['dpi_assets_test_localizations'] = array();
+		$GLOBALS['dpi_assets_test_actions']         = array();
+		$GLOBALS['dpi_assets_test_filters']         = array();
+		$GLOBALS['dpi_assets_test_styles']          = array();
+		$GLOBALS['dpi_assets_test_enqueued_styles'] = array();
+		$GLOBALS['dpi_assets_test_inline_styles']   = array();
+		$GLOBALS['dpi_assets_test_scripts']         = array();
+		$GLOBALS['dpi_assets_test_localizations']   = array();
 	}
 
 	public function test_frontend_layer_order_is_a_registered_inline_style_dependency(): void {
-		( new Assets() )->register_assets();
+		$assets = new Assets();
+		$assets->register_assets();
+		$assets->register();
+		$assets->enqueue_style_layer();
 
 		$this->assertSame( false, $GLOBALS['dpi_assets_test_styles']['dpi-blocks-layer-order']['src'] );
 		$this->assertSame(
@@ -105,5 +128,8 @@ final class AssetsTest extends TestCase {
 			array( 'dpi-blocks-layer-order' ),
 			$GLOBALS['dpi_assets_test_styles']['dpi-blocks']['deps']
 		);
+		$this->assertSame( 'enqueue_style_layer', $GLOBALS['dpi_assets_test_actions']['wp_enqueue_scripts'][0]['callback'][1] );
+		$this->assertSame( 0, $GLOBALS['dpi_assets_test_actions']['wp_enqueue_scripts'][0]['priority'] );
+		$this->assertSame( array( 'dpi-blocks-layer-order' ), $GLOBALS['dpi_assets_test_enqueued_styles'] );
 	}
 }
