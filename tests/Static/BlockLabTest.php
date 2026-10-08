@@ -105,6 +105,34 @@ final class BlockLabTest extends TestCase {
 		$this->assertFalse( $method->invoke( $lab, 'dpi/anchor-navigation', $settings ) );
 	}
 
+	public function test_generated_rows_short_circuit_acf_formatting_in_renderer_shape(): void {
+		$lab      = new BlockLab();
+		$property = new ReflectionProperty( BlockLab::class, 'active_fields' );
+		$property->setAccessible( true );
+		$property->setValue(
+			$lab,
+			array(
+				'items' => array(
+					array(
+						'question' => 'Sample question',
+						'answer'   => 'Sample answer',
+					),
+				),
+			)
+		);
+
+		$this->assertSame(
+			array(
+				array(
+					'question' => 'Sample question',
+					'answer'   => 'Sample answer',
+				),
+			),
+			$lab->preformat_field_value( null, array(), 'block_test', array( 'name' => 'items' ) )
+		);
+		$this->assertNull( $lab->preformat_field_value( null, array(), 'block_test', array( 'name' => 'missing' ) ) );
+	}
+
 	public function test_each_scenario_gets_a_distinct_stable_acf_block_id(): void {
 		$lab    = new BlockLab();
 		$method = new ReflectionMethod( BlockLab::class, 'scenario_block_id' );
