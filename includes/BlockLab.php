@@ -340,7 +340,8 @@ final class BlockLab {
 		unset( $post_id );
 
 		$name = isset( $field['name'] ) ? (string) $field['name'] : '';
-		if ( '' !== $name && array_key_exists( $name, $this->active_fields ) ) {
+		$type = isset( $field['type'] ) ? (string) $field['type'] : '';
+		if ( in_array( $type, array( 'group', 'repeater' ), true ) && '' !== $name && array_key_exists( $name, $this->active_fields ) ) {
 			return $this->active_fields[ $name ];
 		}
 
@@ -352,7 +353,8 @@ final class BlockLab {
 	 *
 	 * ACF's normal repeater and group formatters expect database-shaped rows
 	 * keyed by field keys. Lab values are generated in the same name-keyed shape
-	 * returned by get_field(), so short-circuit formatting for active scenarios.
+	 * returned by get_field(), so short-circuit formatting for active container
+	 * fields while leaf fields retain ACF's normal return-format conversion.
 	 */
 	public function preformat_field_value( mixed $check, mixed $value, mixed $post_id, array $field, bool $escape_html = false ): mixed {
 		unset( $value, $post_id, $escape_html );

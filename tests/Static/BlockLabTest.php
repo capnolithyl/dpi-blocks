@@ -128,9 +128,9 @@ final class BlockLabTest extends TestCase {
 					'answer'   => 'Sample answer',
 				),
 			),
-			$lab->preformat_field_value( null, array(), 'block_test', array( 'name' => 'items' ) )
+			$lab->preformat_field_value( null, array(), 'block_test', array( 'name' => 'items', 'type' => 'repeater' ) )
 		);
-		$this->assertNull( $lab->preformat_field_value( null, array(), 'block_test', array( 'name' => 'missing' ) ) );
+		$this->assertNull( $lab->preformat_field_value( null, array(), 'block_test', array( 'name' => 'items', 'type' => 'image' ) ) );
 	}
 
 	public function test_each_scenario_gets_a_distinct_stable_acf_block_id(): void {
