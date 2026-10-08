@@ -118,6 +118,7 @@ final class BlockLabTest extends TestCase {
 						'answer'   => 'Sample answer',
 					),
 				),
+				'background_image' => 42,
 			)
 		);
 
@@ -130,7 +131,8 @@ final class BlockLabTest extends TestCase {
 			),
 			$lab->preformat_field_value( null, array(), 'block_test', array( 'name' => 'items', 'type' => 'repeater' ) )
 		);
-		$this->assertNull( $lab->preformat_field_value( null, array(), 'block_test', array( 'name' => 'items', 'type' => 'image' ) ) );
+		$this->assertSame( 42, $lab->preload_field_value( null, 'block_test', array( 'name' => 'background_image', 'type' => 'image' ) ) );
+		$this->assertNull( $lab->preformat_field_value( null, 42, 'block_test', array( 'name' => 'background_image', 'type' => 'image' ) ) );
 	}
 
 	public function test_each_scenario_gets_a_distinct_stable_acf_block_id(): void {

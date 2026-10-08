@@ -340,8 +340,7 @@ final class BlockLab {
 		unset( $post_id );
 
 		$name = isset( $field['name'] ) ? (string) $field['name'] : '';
-		$type = isset( $field['type'] ) ? (string) $field['type'] : '';
-		if ( in_array( $type, array( 'group', 'repeater' ), true ) && '' !== $name && array_key_exists( $name, $this->active_fields ) ) {
+		if ( '' !== $name && array_key_exists( $name, $this->active_fields ) ) {
 			return $this->active_fields[ $name ];
 		}
 
@@ -360,7 +359,8 @@ final class BlockLab {
 		unset( $value, $post_id, $escape_html );
 
 		$name = isset( $field['name'] ) ? (string) $field['name'] : '';
-		if ( '' !== $name && array_key_exists( $name, $this->active_fields ) ) {
+		$type = isset( $field['type'] ) ? (string) $field['type'] : '';
+		if ( in_array( $type, array( 'group', 'repeater' ), true ) && '' !== $name && array_key_exists( $name, $this->active_fields ) ) {
 			return $this->active_fields[ $name ];
 		}
 
