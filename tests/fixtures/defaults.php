@@ -68,8 +68,8 @@ foreach ( $items as $item ) {
 			foreach ( array( 'light', 'dark' ) as $variant ) {
 				$sample = $scenarios[0];
 				$sample['name'] = $placement . ' / ' . $variant;
-				$sample['fields']['slides'][0]['field_dpi_feature_banner_slide_image_layout'] = $placement;
-				$sample['fields']['slides'][0]['field_dpi_feature_banner_slide_visual_variant'] = $variant;
+				$sample['fields']['slides'][0]['image_layout'] = $placement;
+				$sample['fields']['slides'][0]['visual_variant'] = $variant;
 				$scenarios[] = $sample;
 			}
 		}

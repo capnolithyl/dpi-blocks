@@ -31,8 +31,8 @@ final class BlockLabTest extends TestCase {
 		$group = array( 'fields' => array(
 			array( 'name' => 'layout', 'type' => 'button_group', 'choices' => array( 'left' => 'Left', 'right' => 'Right', 'stacked' => 'Stacked' ), 'default_value' => 'left' ),
 			array( 'name' => 'slides', 'type' => 'repeater', 'sub_fields' => array(
-				array( 'key' => 'field_placement', 'type' => 'select', 'choices' => array( 'background' => 'Background', 'left' => 'Left', 'right' => 'Right' ) ),
-				array( 'key' => 'field_image', 'type' => 'image' ),
+				array( 'key' => 'field_placement', 'name' => 'placement', 'type' => 'select', 'choices' => array( 'background' => 'Background', 'left' => 'Left', 'right' => 'Right' ) ),
+				array( 'key' => 'field_image', 'name' => 'image', 'type' => 'image' ),
 			) ),
 		) );
 		// Use a deterministic image ID without a WordPress database.
@@ -40,7 +40,7 @@ final class BlockLabTest extends TestCase {
 		$group['fields'][1]['sub_fields'][1]['default_value'] = 99;
 		$scenarios = $method->invoke( $lab, $group );
 		$this->assertContains( 'stacked', array_column( array_column( $scenarios, 'fields' ), 'layout' ) );
-		$this->assertContains( 'right', array_map( static fn( $scenario ) => $scenario['fields']['slides'][0]['field_placement'], $scenarios ) );
+		$this->assertContains( 'right', array_map( static fn( $scenario ) => $scenario['fields']['slides'][0]['placement'], $scenarios ) );
 		$values = array_map( static fn( $scenario ) => serialize( $scenario['fields'] ), $scenarios );
 		$this->assertSame( count( $values ), count( array_unique( $values ) ) );
 
@@ -48,10 +48,10 @@ final class BlockLabTest extends TestCase {
 		$method->setAccessible( true );
 		$group['fields'][1]['sub_fields'][1]['type'] = 'image';
 		$fields = $method->invoke( $lab, $group['fields'], $scenarios[0]['fields'] );
-		$this->assertSame( 0, $fields['slides'][0]['field_image'] );
+		$this->assertSame( 0, $fields['slides'][0]['image'] );
 		$this->assertSame( 'left', $fields['layout'] );
 	}
-	public function test_generated_repeater_and_group_rows_use_acf_field_keys_recursively(): void {
+	public function test_generated_repeater_and_group_rows_use_formatted_acf_field_names_recursively(): void {
 		$lab    = new BlockLab();
 		$method = new ReflectionMethod( BlockLab::class, 'sample_value' );
 		$method->setAccessible( true );
@@ -82,13 +82,57 @@ final class BlockLabTest extends TestCase {
 		$this->assertSame(
 			array(
 				array(
-					'field_nested_group' => array(
-						'field_nested_toggle' => true,
+					'settings' => array(
+						'enabled' => true,
 					),
 				),
 			),
 			$method->invoke( $lab, $field, false )
 		);
+	}
+
+	public function test_disabled_blocks_are_excluded_from_the_lab_inventory(): void {
+		$lab    = new BlockLab();
+		$method = new ReflectionMethod( BlockLab::class, 'block_is_enabled' );
+		$method->setAccessible( true );
+
+		$settings = array(
+			'accordion'         => true,
+			'anchor-navigation' => false,
+		);
+
+		$this->assertTrue( $method->invoke( $lab, 'dpi/accordion', $settings ) );
+		$this->assertFalse( $method->invoke( $lab, 'dpi/anchor-navigation', $settings ) );
+	}
+
+	public function test_generated_rows_short_circuit_acf_formatting_in_renderer_shape(): void {
+		$lab      = new BlockLab();
+		$property = new ReflectionProperty( BlockLab::class, 'active_fields' );
+		$property->setAccessible( true );
+		$property->setValue(
+			$lab,
+			array(
+				'items' => array(
+					array(
+						'question' => 'Sample question',
+						'answer'   => 'Sample answer',
+					),
+				),
+				'background_image' => 42,
+			)
+		);
+
+		$this->assertSame(
+			array(
+				array(
+					'question' => 'Sample question',
+					'answer'   => 'Sample answer',
+				),
+			),
+			$lab->preformat_field_value( null, array(), 'block_test', array( 'name' => 'items', 'type' => 'repeater' ) )
+		);
+		$this->assertSame( 42, $lab->preload_field_value( null, 'block_test', array( 'name' => 'background_image', 'type' => 'image' ) ) );
+		$this->assertNull( $lab->preformat_field_value( null, 42, 'block_test', array( 'name' => 'background_image', 'type' => 'image' ) ) );
 	}
 
 	public function test_each_scenario_gets_a_distinct_stable_acf_block_id(): void {

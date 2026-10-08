@@ -5,7 +5,7 @@ Requires at least: 6.9
 Tested up to: 6.9
 Requires PHP: 8.0
 Requires Plugins: advanced-custom-fields-pro
-Stable tag: 1.10.1
+Stable tag: 1.10.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,7 +27,7 @@ Advanced Custom Fields Pro 6.6 or newer is required. ACF Extended and the ACF Fo
 
 == Block Lab and automated tests ==
 
-DPI Blocks > Lab inventories every bundled block and opens an administrator-only front-end index with a dedicated page for each block. The lab reads bundled ACF JSON, generates baseline and alternate field values, covers every choice and missing optional media, and runs the real block render callbacks. A failure is isolated to its scenario so the rest of the block page still renders.
+DPI Blocks > Lab inventories every enabled bundled block and opens an administrator-only front-end index with a dedicated page for each block. The lab reads bundled ACF JSON, generates baseline and alternate field values, covers every choice and missing optional media, and runs the real block render callbacks. A failure is isolated to its scenario so the rest of the block page still renders.
 
 Run `npm run test:styles` for offline browser checks of the production renderers at desktop, tablet, and phone widths. CI runs these automatically and saves block previews. See `docs/DEFAULT-STYLES.md` for theme token mapping, overrides, and the presentation opt-out.
 
@@ -51,6 +51,11 @@ Maintainer release flow:
 Themes can override one block renderer at `dpi-blocks/blocks/<slug>/render.php` while the plugin remains the fallback. They can call `dpi_blocks_render_top_bar()` and `dpi_blocks_render_search_trigger()`, or use the `dpi_blocks/top_bar` and `dpi_blocks/search_trigger` actions. Directory templates may also be overridden inside a theme's `dpi-blocks` directory. See `docs/EXTENDING.md` for the complete template, field, metadata, asset, CSS, and JavaScript extension contract.
 
 == Changelog ==
+
+= 1.10.2 =
+* Fixed generated repeater and group values so Accordion, Anchor Navigation, and other nested-content blocks render real content in the Block Lab.
+* Excluded blocks disabled in DPI Blocks settings from the Lab inventory.
+* Added browser assertions that Accordion and Anchor Navigation scenarios contain rendered block markup.
 
 = 1.10.1 =
 * Fixed a fatal error on the front-end Block Lab index and block scenario pages by registering the CSS layer declaration through WordPress's stylesheet API.

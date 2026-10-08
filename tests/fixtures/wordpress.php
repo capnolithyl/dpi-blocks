@@ -106,19 +106,19 @@ function get_field( string $name, $post_id = false ) {
 	return $GLOBALS['fixture_fields'][ $name ] ?? null;
 }
 
-/** Format the raw field-key data exactly where ACF would provide field names. */
-function fixture_format_fields( array $fields, array $values, bool $nested = false ): array {
+/** Format generated Lab data into the return shapes expected by renderers. */
+function fixture_format_fields( array $fields, array $values ): array {
 	$result = array();
 	foreach ( $fields as $field ) {
 		$name = $field['name'] ?? '';
-		$key = $field[ $nested ? 'key' : 'name' ] ?? '';
+		$key = $name;
 		if ( '' === $name || ! array_key_exists( $key, $values ) ) { continue; }
 		$value = $values[ $key ];
 		$type = $field['type'];
 		if ( 'repeater' === $type ) {
-			$value = array_map( static fn( array $row ) => fixture_format_fields( $field['sub_fields'], $row, true ), (array) $value );
+			$value = array_map( static fn( array $row ) => fixture_format_fields( $field['sub_fields'], $row ), (array) $value );
 		} elseif ( 'group' === $type ) {
-			$value = fixture_format_fields( $field['sub_fields'], (array) $value, true );
+			$value = fixture_format_fields( $field['sub_fields'], (array) $value );
 		} elseif ( 'image' === $type ) {
 			$value = $value ? array( 'ID' => $value, 'url' => '/tests/fixtures/photo.svg' ) : false;
 		}
