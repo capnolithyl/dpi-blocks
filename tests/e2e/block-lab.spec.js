@@ -7,7 +7,7 @@ const password = process.env.DPI_BLOCKS_TEST_PASSWORD || '';
 test.describe('DPI Block Lab', () => {
   test.skip(!siteUrl || !username || !password, 'Set DPI_BLOCKS_TEST_URL, DPI_BLOCKS_TEST_USER, and DPI_BLOCKS_TEST_PASSWORD.');
 
-  test('renders every bundled block without renderer, JavaScript, or plugin asset failures', async ({ page }) => {
+  test('renders every enabled bundled block without renderer, JavaScript, or plugin asset failures', async ({ page }) => {
     const pageErrors = [];
     const failedPluginRequests = [];
 
@@ -42,7 +42,7 @@ test.describe('DPI Block Lab', () => {
     await expect(page.getByRole('heading', { name: 'DPI Block Lab', level: 1 })).toBeVisible();
 
     const inventoryRows = page.locator('.dpi-block-lab-table tbody tr');
-    expect(await inventoryRows.count()).toBeGreaterThanOrEqual(16);
+    expect(await inventoryRows.count()).toBeGreaterThan(0);
 
     const preview = page.getByRole('link', { name: 'Open front-end Block Lab' });
     await expect(preview).toBeVisible();
@@ -55,7 +55,7 @@ test.describe('DPI Block Lab', () => {
     await expect(page.getByRole('heading', { name: 'DPI Block Lab', level: 1 })).toBeVisible();
 
     const blockLinks = page.locator('.dpi-block-lab__index-link');
-    expect(await blockLinks.count()).toBeGreaterThanOrEqual(16);
+    expect(await blockLinks.count()).toBeGreaterThan(0);
     const blockPages = await blockLinks.evaluateAll(links => links.map(link => ({ href: link.href, title: link.querySelector('strong')?.textContent?.trim() })));
 
     for (const blockPage of blockPages) {
@@ -64,6 +64,16 @@ test.describe('DPI Block Lab', () => {
       await expect(page.locator('[data-dpi-lab-scenario]').first(), blockPage.title).toBeVisible();
       await expect(page.locator('.dpi-block-lab__error'), blockPage.title).toHaveCount(0);
       await expect(page.getByRole('link', { name: 'All blocks' }), blockPage.title).toBeVisible();
+
+
+      if (blockPage.href.includes('dpi_blocks_lab=accordion')) {
+        await expect(page.locator('.dpi-block-lab__canvas').first().locator('[data-dpi-accordion-item]')).toHaveCount(1);
+      }
+
+      if (blockPage.href.includes('dpi_blocks_lab=anchor-navigation')) {
+        await expect(page.locator('.dpi-block-lab__canvas').first().locator('[data-dpi-anchor-navigation]')).toHaveCount(1);
+        await expect(page.locator('.dpi-block-lab__canvas').first().locator('.dpi-anchor-navigation__link')).toHaveCount(1);
+      }
 
       const slickCandidates = page.locator('[data-dpi-slick]:visible');
       if (await slickCandidates.count()) {

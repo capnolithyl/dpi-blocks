@@ -351,8 +351,10 @@ final class BlockLab {
 	 * @return list<array{name:string,title:string,field_group:?array,scenarios:list<array{name:string,fields:array<string,mixed>}>}>
 	 */
 	private function inventory(): array {
-		$groups = $this->field_groups_by_block();
-		$items  = array();
+		$groups         = $this->field_groups_by_block();
+		$enabled_blocks = Settings::get( 'blocks', array() );
+		$enabled_blocks = is_array( $enabled_blocks ) ? $enabled_blocks : array();
+		$items          = array();
 
 		foreach ( glob( DPI_BLOCKS_DIR . 'blocks/*/block.json' ) ?: array() as $metadata_file ) {
 			$metadata = wp_json_file_decode( $metadata_file, array( 'associative' => true ) );
@@ -361,6 +363,10 @@ final class BlockLab {
 			}
 
 			$name  = (string) $metadata['name'];
+			if ( ! $this->block_is_enabled( $name, $enabled_blocks ) ) {
+				continue;
+			}
+
 			$group = $groups[ $name ] ?? null;
 
 			$items[] = array(
@@ -377,6 +383,16 @@ final class BlockLab {
 		);
 
 		return $items;
+	}
+
+	/** Return whether a bundled block is enabled in the plugin settings. */
+	private function block_is_enabled( string $name, array $enabled_blocks ): bool {
+		if ( ! str_starts_with( $name, 'dpi/' ) ) {
+			return true;
+		}
+
+		$slug = sanitize_key( substr( $name, 4 ) );
+		return ! array_key_exists( $slug, $enabled_blocks ) || ! empty( $enabled_blocks[ $slug ] );
 	}
 
 	/** @return array<string, array<string,mixed>> */
@@ -462,10 +478,10 @@ final class BlockLab {
 	}
 
 	/** Vary a single choice at a time, including choices inside groups/repeaters. */
-	private function choice_scenarios( array $fields, array $baseline, bool $nested = false ): array {
+	private function choice_scenarios( array $fields, array $baseline ): array {
 		$scenarios = array();
 		foreach ( $fields as $field ) {
-			$key = (string) ( $field[ $nested ? 'key' : 'name' ] ?? '' );
+			$key = is_array( $field ) ? $this->field_value_key( $field ) : '';
 			if ( '' === $key || ! array_key_exists( $key, $baseline ) ) {
 				continue;
 			}
@@ -483,7 +499,7 @@ final class BlockLab {
 				if ( ! is_array( $row ) ) {
 					continue;
 				}
-				foreach ( $this->choice_scenarios( (array) ( $field['sub_fields'] ?? array() ), $row, true ) as $child ) {
+				foreach ( $this->choice_scenarios( (array) ( $field['sub_fields'] ?? array() ), $row ) as $child ) {
 					$values = $baseline;
 					if ( 'repeater' === $type ) {
 						$values[ $key ][0] = $child['fields'];
@@ -498,9 +514,9 @@ final class BlockLab {
 	}
 
 	/** Remove media recursively while keeping representative text and actions. */
-	private function without_media( array $fields, array $values, bool $nested = false ): array {
+	private function without_media( array $fields, array $values ): array {
 		foreach ( $fields as $field ) {
-			$key  = (string) ( $field[ $nested ? 'key' : 'name' ] ?? '' );
+			$key  = is_array( $field ) ? $this->field_value_key( $field ) : '';
 			$type = (string) ( $field['type'] ?? '' );
 			if ( ! array_key_exists( $key, $values ) ) {
 				continue;
@@ -508,11 +524,11 @@ final class BlockLab {
 			if ( in_array( $type, array( 'image', 'file', 'gallery' ), true ) ) {
 				$values[ $key ] = 'gallery' === $type ? array() : 0;
 			} elseif ( 'group' === $type && is_array( $values[ $key ] ) ) {
-				$values[ $key ] = $this->without_media( (array) ( $field['sub_fields'] ?? array() ), $values[ $key ], true );
+				$values[ $key ] = $this->without_media( (array) ( $field['sub_fields'] ?? array() ), $values[ $key ] );
 			} elseif ( 'repeater' === $type && is_array( $values[ $key ] ) ) {
 				foreach ( $values[ $key ] as &$row ) {
 					if ( is_array( $row ) ) {
-						$row = $this->without_media( (array) ( $field['sub_fields'] ?? array() ), $row, true );
+						$row = $this->without_media( (array) ( $field['sub_fields'] ?? array() ), $row );
 					}
 				}
 				unset( $row );
@@ -556,7 +572,7 @@ final class BlockLab {
 			for ( $index = 0; $index < $rows; $index++ ) {
 				$row = array();
 				foreach ( (array) ( $field['sub_fields'] ?? array() ) as $sub_field ) {
-					$sub_field_key = is_array( $sub_field ) ? (string) ( $sub_field['key'] ?? '' ) : '';
+					$sub_field_key = is_array( $sub_field ) ? $this->field_value_key( $sub_field ) : '';
 					if ( '' !== $sub_field_key ) {
 						$row[ $sub_field_key ] = $this->sample_value( $sub_field, $alternate || $index > 0 );
 					}
@@ -569,7 +585,7 @@ final class BlockLab {
 		if ( 'group' === $type ) {
 			$value = array();
 			foreach ( (array) ( $field['sub_fields'] ?? array() ) as $sub_field ) {
-				$sub_field_key = is_array( $sub_field ) ? (string) ( $sub_field['key'] ?? '' ) : '';
+				$sub_field_key = is_array( $sub_field ) ? $this->field_value_key( $sub_field ) : '';
 				if ( '' !== $sub_field_key ) {
 					$value[ $sub_field_key ] = $this->sample_value( $sub_field, $alternate );
 				}
@@ -660,6 +676,12 @@ final class BlockLab {
 		return $alternate
 			? sprintf( __( 'Alternate %s', 'dpi-blocks' ), $label )
 			: sprintf( __( 'Sample %s', 'dpi-blocks' ), $label );
+	}
+
+	/** Return the key exposed by ACF in a formatted group or repeater row. */
+	private function field_value_key( array $field ): string {
+		$name = isset( $field['name'] ) ? (string) $field['name'] : '';
+		return '' !== $name ? $name : (string) ( $field['key'] ?? '' );
 	}
 
 	/** Pick a default or alternate choice value. */
