@@ -8,6 +8,6 @@
   "requires_php": "8.0",
   "sections": {
     "description": "Portable ACF blocks, header utilities, and directory content types for custom WordPress sites.",
-    "changelog": "<h4>1.10.0</h4><ul><li>Theme-aware responsive defaults for all sixteen blocks, with easy theme overrides.</li><li>Preserved block-specific styles in the frontend and editor.</li><li>Expanded Block Lab variations and automated PHP/browser regression coverage.</li></ul>"
+    "changelog": "<h4>1.10.0</h4><ul><li>Theme-aware responsive defaults for all sixteen blocks, with easy theme overrides.</li><li>Preserved block-specific styles in the frontend and editor.</li><li>Split Block Lab into an index and dedicated block pages, expanded its variations, and added automated PHP/browser regression coverage.</li></ul>"
   }
 }

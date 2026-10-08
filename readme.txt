@@ -27,7 +27,7 @@ Advanced Custom Fields Pro 6.6 or newer is required. ACF Extended and the ACF Fo
 
 == Block Lab and automated tests ==
 
-DPI Blocks > Lab inventories every bundled block and opens an administrator-only front-end lab using the active theme. The lab reads bundled ACF JSON, generates baseline and alternate field values, covers every choice and missing optional media, and runs the real block render callbacks. A failure is isolated to its scenario so the rest of the page still renders.
+DPI Blocks > Lab inventories every bundled block and opens an administrator-only front-end index with a dedicated page for each block. The lab reads bundled ACF JSON, generates baseline and alternate field values, covers every choice and missing optional media, and runs the real block render callbacks. A failure is isolated to its scenario so the rest of the block page still renders.
 
 Run `npm run test:styles` for offline browser checks of the production renderers at desktop, tablet, and phone widths. CI runs these automatically and saves block previews. See `docs/DEFAULT-STYLES.md` for theme token mapping, overrides, and the presentation opt-out.
 
@@ -56,7 +56,7 @@ Themes can override one block renderer at `dpi-blocks/blocks/<slug>/render.php` 
 * Added theme-aware, easily overridden presentation for all sixteen blocks and their layouts, with neutral fallbacks for themes without semantic Global Styles.
 * Preserved block-specific structural styles in the front end and editor; defaults survive theme resets while scoped theme styles and CSS variables retain control.
 * Added narrow-column layouts, readable media captions, styled controls, and missing-media handling.
-* Expanded Block Lab to cover every field choice and optional-media cases, and added automated browser checks using the production renderers.
+* Split the Block Lab into an index and a dedicated page per block, expanded it to cover every field choice and optional-media case, and added automated browser checks using the production renderers.
 
 = 1.9.3 =
 * Maintenance release used to verify one-click WordPress updates through the static update metadata feed.

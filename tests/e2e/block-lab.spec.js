@@ -46,6 +46,7 @@ test.describe('DPI Block Lab', () => {
 
     const preview = page.getByRole('link', { name: 'Open front-end Block Lab' });
     await expect(preview).toBeVisible();
+    await expect(inventoryRows.first().getByRole('link', { name: 'View scenarios' })).toBeVisible();
 
     const previewHref = await preview.getAttribute('href');
     expect(previewHref).toBeTruthy();
@@ -53,19 +54,21 @@ test.describe('DPI Block Lab', () => {
     await page.goto(previewHref, { waitUntil: 'networkidle' });
     await expect(page.getByRole('heading', { name: 'DPI Block Lab', level: 1 })).toBeVisible();
 
-    const blockSections = page.locator('[data-dpi-lab-block]');
-    const scenarioSections = page.locator('[data-dpi-lab-scenario]');
+    const blockLinks = page.locator('.dpi-block-lab__index-link');
+    expect(await blockLinks.count()).toBeGreaterThanOrEqual(16);
+    const blockPages = await blockLinks.evaluateAll(links => links.map(link => ({ href: link.href, title: link.querySelector('strong')?.textContent?.trim() })));
 
-    expect(await blockSections.count()).toBeGreaterThanOrEqual(16);
-    expect(await scenarioSections.count()).toBeGreaterThanOrEqual(await blockSections.count());
+    for (const blockPage of blockPages) {
+      await page.goto(blockPage.href, { waitUntil: 'networkidle' });
+      await expect(page.locator('[data-dpi-lab-block]'), blockPage.title).toHaveCount(1);
+      await expect(page.locator('[data-dpi-lab-scenario]').first(), blockPage.title).toBeVisible();
+      await expect(page.locator('.dpi-block-lab__error'), blockPage.title).toHaveCount(0);
+      await expect(page.getByRole('link', { name: 'All blocks' }), blockPage.title).toBeVisible();
 
-    await expect(page.locator('.dpi-block-lab__error')).toHaveCount(0);
-
-    const slickCandidates = page.locator('[data-dpi-slick]:visible');
-    const slickCount = await slickCandidates.count();
-
-    if (slickCount > 0) {
-      await expect(slickCandidates.first()).toHaveClass(/slick-initialized/);
+      const slickCandidates = page.locator('[data-dpi-slick]:visible');
+      if (await slickCandidates.count()) {
+        await expect(slickCandidates.first(), blockPage.title).toHaveClass(/slick-initialized/);
+      }
     }
 
     expect(failedPluginRequests, failedPluginRequests.join('\n')).toEqual([]);

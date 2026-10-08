@@ -104,4 +104,17 @@ final class BlockLabTest extends TestCase {
 		$this->assertStringStartsWith( 'block_dpi_lab_', $baseline );
 		$this->assertStringStartsWith( 'block_dpi_lab_', $alternate );
 	}
+
+	public function test_frontend_request_selects_one_inventory_item_by_block_slug(): void {
+		$lab    = new BlockLab();
+		$method = new ReflectionMethod( BlockLab::class, 'requested_item' );
+		$method->setAccessible( true );
+		$items = array(
+			array( 'name' => 'dpi/accordion', 'title' => 'Accordion' ),
+			array( 'name' => 'dpi/feature-banner', 'title' => 'Feature Banner' ),
+		);
+
+		$this->assertSame( $items[1], $method->invoke( $lab, $items, 'feature-banner' ) );
+		$this->assertNull( $method->invoke( $lab, $items, 'missing-block' ) );
+	}
 }
