@@ -55,6 +55,7 @@ final class Plugin {
 		$this->settings->register();
 		$this->assets->register();
 		$this->content_types->register();
+		( new StaffContact() )->register();
 		$this->header->register();
 		$this->templates->register();
 		$this->block_lab->register();
