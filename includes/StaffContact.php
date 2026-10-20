@@ -26,10 +26,10 @@ final class StaffContact {
 	/** Process and redirect without putting submitted personal data in the URL. */
 	public function submit(): void {
 		$back = get_post_type_archive_link( 'staff' );
-		$back = $back ? $back . '#staff-contact' : home_url( '/staff/#staff-contact' );
+		$back = $back ?: home_url( '/staff/' );
 
 		$finish = static function ( string $status ) use ( $back ): void {
-			wp_safe_redirect( add_query_arg( 'staff_message', $status, $back ), 303 );
+			wp_safe_redirect( add_query_arg( 'staff_message', $status, $back ) . '#staff-contact', 303 );
 			exit;
 		};
 
