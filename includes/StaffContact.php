@@ -47,17 +47,39 @@ final class StaffContact {
 			$finish( 'sent' );
 		}
 
-		$staff_id = absint( $_POST['staff_member'] ?? 0 );
-		$name     = sanitize_text_field( wp_unslash( (string) ( $_POST['sender_name'] ?? '' ) ) );
+		$selection  = sanitize_text_field( wp_unslash( (string) ( $_POST['staff_member'] ?? '' ) ) );
+		$is_group   = str_starts_with( $selection, 'department:' );
+		$staff_id   = $is_group ? 0 : absint( $selection );
+		$department = $is_group ? sanitize_title( substr( $selection, strlen( 'department:' ) ) ) : '';
+		$name       = sanitize_text_field( wp_unslash( (string) ( $_POST['sender_name'] ?? '' ) ) );
 		$email    = sanitize_email( wp_unslash( (string) ( $_POST['sender_email'] ?? '' ) ) );
 		$phone    = sanitize_text_field( wp_unslash( (string) ( $_POST['sender_phone'] ?? '' ) ) );
 		$message  = sanitize_textarea_field( wp_unslash( (string) ( $_POST['sender_message'] ?? '' ) ) );
 
-		if ( ! $staff_id || 'staff' !== get_post_type( $staff_id ) || 'publish' !== get_post_status( $staff_id )
+		if (
+			( ! $is_group && ( ! $staff_id || 'staff' !== get_post_type( $staff_id ) || 'publish' !== get_post_status( $staff_id ) ) )
+			|| ( $is_group && '' === $department )
 			|| '' === $name || strlen( $name ) > 120 || ! is_email( $email )
 			|| strlen( $phone ) > 60 || '' === $message || strlen( $message ) > 5000
 		) {
 			$finish( 'error' );
+		}
+
+		// Validate submitted department against current published Staff. This
+		// prevents visitors from inventing a routing destination.
+		$department_label = '';
+		if ( $is_group ) {
+			$members = get_posts( array( 'post_type' => 'staff', 'post_status' => 'publish', 'fields' => 'ids', 'posts_per_page' => -1 ) );
+			foreach ( $members as $member_id ) {
+				$candidate = dpi_blocks_get_staff_field( (int) $member_id, 'department' );
+				if ( $candidate && sanitize_title( $candidate ) === $department ) {
+					$department_label = $candidate;
+					break;
+				}
+			}
+			if ( '' === $department_label ) {
+				$finish( 'error' );
+			}
 		}
 
 		// Limit submissions per visitor. Never store the submitted details here.
@@ -67,7 +89,7 @@ final class StaffContact {
 			$finish( 'rate' );
 		}
 
-		$recipient = sanitize_email( dpi_blocks_get_staff_field( $staff_id, 'email' ) );
+		$recipient = $is_group ? '' : sanitize_email( dpi_blocks_get_staff_field( $staff_id, 'email' ) );
 		if ( ! is_email( $recipient ) ) {
 			$recipient = sanitize_email( (string) get_option( 'admin_email', '' ) );
 		}
@@ -75,10 +97,11 @@ final class StaffContact {
 			$finish( 'error' );
 		}
 
-		$subject = sprintf( __( 'Staff inquiry for %s', 'dpi-blocks' ), get_the_title( $staff_id ) );
-		$body    = sprintf(
-			"Staff member: %s\nFrom: %s\nEmail: %s\nPhone: %s\n\nMessage:\n%s",
-			get_the_title( $staff_id ),
+		$destination = $is_group ? $department_label : get_the_title( $staff_id );
+		$subject     = sprintf( __( 'Staff inquiry for %s', 'dpi-blocks' ), $destination );
+		$body        = sprintf(
+			"Department / Staff: %s\nFrom: %s\nEmail: %s\nPhone: %s\n\nMessage:\n%s",
+			$destination,
 			$name,
 			$email,
 			$phone,
