@@ -30,6 +30,7 @@ final class StaffDirectoryTest extends TestCase {
 		$this->assertStringContainsString( "'has_archive'", $types );
 		$this->assertStringContainsString( "'staff_department' => 'sanitize_text_field'", $types );
 		$this->assertMatchesRegularExpression( "/'supports'\\s*=>\\s*array\\( 'title', 'editor', 'excerpt', 'thumbnail'/", $types );
+		$this->assertStringContainsString( "'page-attributes', 'custom-fields'", $types, 'Registered Staff metadata must appear through REST.' );
 
 		$helper = (string) file_get_contents( $this->root . '/includes/functions.php' );
 		$this->assertStringContainsString( "'position', 'department', 'email', 'phone'", $helper );
