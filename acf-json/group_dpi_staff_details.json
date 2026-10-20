@@ -7,10 +7,33 @@
       "label": "Position",
       "name": "staff_position",
       "type": "text",
-      "instructions": "",
+      "instructions": "Optional role or job title shown on Staff Cards, e.g. Pastor or Business Manager.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "33",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "maxlength": "",
+      "placeholder": "",
+      "prepend": "",
+      "append": ""
+    },
+    {
+      "key": "field_dpi_staff_department",
+      "label": "Department",
+      "name": "staff_department",
+      "type": "text",
+      "instructions": "Required organizational department, e.g. Parish Office, School, Faith Formation.",
       "required": 1,
       "conditional_logic": 0,
-      "wrapper": { "width": "33", "class": "", "id": "" },
+      "wrapper": {
+        "width": "33",
+        "class": "",
+        "id": ""
+      },
       "default_value": "",
       "maxlength": "",
       "placeholder": "",
@@ -25,7 +48,11 @@
       "instructions": "",
       "required": 0,
       "conditional_logic": 0,
-      "wrapper": { "width": "33", "class": "", "id": "" },
+      "wrapper": {
+        "width": "33",
+        "class": "",
+        "id": ""
+      },
       "default_value": "",
       "placeholder": "",
       "prepend": "",
@@ -39,7 +66,11 @@
       "instructions": "",
       "required": 0,
       "conditional_logic": 0,
-      "wrapper": { "width": "34", "class": "", "id": "" },
+      "wrapper": {
+        "width": "34",
+        "class": "",
+        "id": ""
+      },
       "default_value": "",
       "maxlength": "",
       "placeholder": "",
@@ -47,7 +78,15 @@
       "append": ""
     }
   ],
-  "location": [[{ "param": "post_type", "operator": "==", "value": "staff" }]],
+  "location": [
+    [
+      {
+        "param": "post_type",
+        "operator": "==",
+        "value": "staff"
+      }
+    ]
+  ],
   "menu_order": 0,
   "position": "acf_after_title",
   "style": "default",
