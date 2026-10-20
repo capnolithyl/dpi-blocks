@@ -7,8 +7,8 @@
       "label": "Position",
       "name": "staff_position",
       "type": "text",
-      "instructions": "",
-      "required": 1,
+      "instructions": "Optional role or job title shown on Staff Cards, e.g. Pastor or Business Manager.",
+      "required": 0,
       "conditional_logic": 0,
       "wrapper": {
         "width": "33",
@@ -26,8 +26,8 @@
       "label": "Department",
       "name": "staff_department",
       "type": "text",
-      "instructions": "For example: Parish Office, Faith Formation, or School.",
-      "required": 0,
+      "instructions": "Required organizational department, e.g. Parish Office, School, Faith Formation.",
+      "required": 1,
       "conditional_logic": 0,
       "wrapper": {
         "width": "33",
