@@ -40,6 +40,9 @@ final class StaffDirectoryTest extends TestCase {
 		$this->assertStringContainsString( 'admin_post_nopriv_dpi_staff_contact', $php );
 		$this->assertStringContainsString( "wp_verify_nonce( \$nonce, 'dpi_staff_contact' )", $php );
 		$this->assertStringContainsString( 'get_post_status( $staff_id )', $php );
+		$this->assertStringContainsString( "str_starts_with( \$selection, 'department:' )", $php );
+		$this->assertStringContainsString( "sanitize_title( \$candidate ) === \$department", $php );
+		$this->assertStringContainsString( "$recipient = \$is_group ? ''", $php );
 		$this->assertStringContainsString( 'sanitize_email(', $php );
 		$this->assertStringContainsString( 'sanitize_textarea_field(', $php );
 		$this->assertStringContainsString( "get_transient( \$key )", $php );
