@@ -102,6 +102,7 @@ final class ContentTypes {
 
 		foreach ( array(
 			'staff_position' => 'sanitize_text_field',
+			'staff_department' => 'sanitize_text_field',
 			'staff_email'    => 'sanitize_email',
 			'staff_phone'    => 'sanitize_text_field',
 		) as $key => $sanitize_callback ) {
