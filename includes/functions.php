@@ -280,7 +280,7 @@ if ( ! function_exists( 'dpi_blocks_get_staff_mode' ) ) {
 if ( ! function_exists( 'dpi_blocks_get_staff_field' ) ) {
 	/** Retrieve one normalized staff field. */
 	function dpi_blocks_get_staff_field( int $post_id, string $name ): string {
-		if ( ! in_array( $name, array( 'position', 'email', 'phone' ), true ) || 'staff' !== get_post_type( $post_id ) ) {
+		if ( ! in_array( $name, array( 'position', 'department', 'email', 'phone' ), true ) || 'staff' !== get_post_type( $post_id ) ) {
 			return '';
 		}
 
