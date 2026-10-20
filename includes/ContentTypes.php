@@ -76,7 +76,7 @@ final class ContentTypes {
 					'slug'       => Settings::get( 'staff_single_slug', 'staff' ),
 					'with_front' => false,
 				),
-				'supports'           => array( 'title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'page-attributes' ),
+				'supports'           => array( 'title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'page-attributes', 'custom-fields' ),
 				'taxonomies'         => array( 'staff_group' ),
 			)
 		);
