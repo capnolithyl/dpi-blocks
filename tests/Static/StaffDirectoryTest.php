@@ -21,6 +21,8 @@ final class StaffDirectoryTest extends TestCase {
 		);
 		$this->assertSame( array( 'staff_position', 'staff_department', 'staff_email', 'staff_phone' ), array_column( $schema['fields'], 'name' ) );
 		$this->assertSame( 'email', $schema['fields'][2]['type'] );
+		$this->assertSame( 1, $schema['fields'][1]['required'], 'Department is required for every staff member.' );
+		$this->assertSame( 0, $schema['fields'][0]['required'], 'Position is optional; department can be used as a card subtitle.' );
 		$this->assertSame( 'post_type', $schema['location'][0][0]['param'] );
 		$this->assertSame( 'staff', $schema['location'][0][0]['value'] );
 
